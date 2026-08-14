@@ -1,0 +1,57 @@
+:root{
+--font-display:"Archivo","Noto Kufi Arabic",ui-sans-serif,system-ui,sans-serif;
+--font-body:"Inter","Noto Sans Arabic",ui-sans-serif,system-ui,sans-serif;
+--font-display-ar:"Noto Kufi Arabic","Archivo",system-ui,sans-serif;
+--font-body-ar:"Noto Sans Arabic","Inter",system-ui,sans-serif;
+--display-stretch:114%; /* @kind other */
+--display-stretch-tight:104%; /* @kind other */
+/* fluid scale */
+--fs-cinema:clamp(3.4rem,1rem + 7.6vw,7.25rem); /* @kind other */
+--fs-hero:clamp(2.7rem,1.2rem + 4.8vw,5rem); /* @kind other */
+--fs-display-lg:clamp(2.3rem,1.4rem + 2.9vw,3.6rem); /* @kind other */
+--fs-display-md:clamp(1.9rem,1.35rem + 1.8vw,2.6rem); /* @kind other */
+--fs-h1:clamp(1.75rem,1.4rem + 1.2vw,2.25rem); /* @kind other */
+--fs-h2:clamp(1.45rem,1.25rem + .7vw,1.75rem); /* @kind other */
+--fs-h3:1.25rem;--fs-h4:1.0625rem;
+--fs-body-lg:1.1875rem;--fs-body:1rem;--fs-body-sm:.875rem;
+--fs-nav:.9375rem;--fs-cta:.9375rem;--fs-label:.8125rem;--fs-caption:.8125rem;--fs-meta:.75rem;--fs-eyebrow:.78125rem;
+--fs-quote:clamp(1.5rem,1.2rem + 1.4vw,2.1rem); /* @kind other */
+--fs-metric:clamp(2.6rem,2rem + 2.6vw,4rem); /* @kind other */
+--track-display:-0.028em; /* @kind other */
+--track-tight:-0.014em; /* @kind other */
+--track-eyebrow:.14em; /* @kind other */
+--track-label:.05em; /* @kind other */
+--lh-cinema:.98; /* @kind other */
+--lh-display:1.05; /* @kind other */
+--lh-heading:1.16; /* @kind other */
+--lh-body:1.6; /* @kind other */
+--lh-tight:1.4; /* @kind other */
+/* Arabic rhythm */
+--lh-body-ar:1.85; /* @kind other */
+--lh-display-ar:1.32; /* @kind other */
+--lh-heading-ar:1.45; /* @kind other */
+}
+/* utility text classes — foundations, theme-agnostic */
+.sc-cinema{font-family:var(--font-display);font-size:var(--fs-cinema);font-weight:640;font-stretch:var(--display-stretch);letter-spacing:var(--track-display);line-height:var(--lh-cinema);color:var(--text-display);text-wrap:balance;margin:0}
+.sc-hero{font-family:var(--font-display);font-size:var(--fs-hero);font-weight:620;font-stretch:var(--display-stretch);letter-spacing:var(--track-display);line-height:1.02;color:var(--text-display);text-wrap:balance;margin:0}
+.sc-display-lg{font-family:var(--font-display);font-size:var(--fs-display-lg);font-weight:600;font-stretch:var(--display-stretch);letter-spacing:var(--track-tight);line-height:var(--lh-display);color:var(--text-display);text-wrap:balance;margin:0}
+.sc-display-md{font-family:var(--font-display);font-size:var(--fs-display-md);font-weight:600;font-stretch:var(--display-stretch);letter-spacing:var(--track-tight);line-height:1.1;color:var(--text-display);text-wrap:balance;margin:0}
+.sc-h1{font-family:var(--font-display);font-size:var(--fs-h1);font-weight:620;font-stretch:var(--display-stretch-tight);letter-spacing:var(--track-tight);line-height:var(--lh-heading);color:var(--text-display);margin:0}
+.sc-h2{font-family:var(--font-display);font-size:var(--fs-h2);font-weight:600;font-stretch:var(--display-stretch-tight);letter-spacing:var(--track-tight);line-height:var(--lh-heading);color:var(--text-display);margin:0}
+.sc-h3{font-family:var(--font-body);font-size:var(--fs-h3);font-weight:600;letter-spacing:-.01em;line-height:var(--lh-tight);color:var(--text-display);margin:0}
+.sc-h4{font-family:var(--font-body);font-size:var(--fs-h4);font-weight:600;line-height:var(--lh-tight);color:var(--text-display);margin:0}
+.sc-eyebrow{font-family:var(--font-body);font-size:var(--fs-eyebrow);font-weight:600;letter-spacing:var(--track-eyebrow);text-transform:uppercase;color:var(--text-tertiary);margin:0}
+.sc-body-lg{font-family:var(--font-body);font-size:var(--fs-body-lg);font-weight:400;line-height:var(--lh-body);color:var(--text-secondary);margin:0;text-wrap:pretty}
+.sc-body{font-family:var(--font-body);font-size:var(--fs-body);line-height:var(--lh-body);color:var(--text-secondary);margin:0;text-wrap:pretty}
+.sc-body-sm{font-family:var(--font-body);font-size:var(--fs-body-sm);line-height:1.55;color:var(--text-secondary);margin:0}
+.sc-caption{font-family:var(--font-body);font-size:var(--fs-caption);line-height:1.5;color:var(--text-tertiary);margin:0}
+.sc-meta{font-family:var(--font-body);font-size:var(--fs-meta);font-weight:500;letter-spacing:.04em;color:var(--text-tertiary);margin:0;font-variant-numeric:tabular-nums}
+.sc-label{font-family:var(--font-body);font-size:var(--fs-label);font-weight:600;letter-spacing:var(--track-label);color:var(--text-primary);margin:0}
+.sc-quote{font-family:var(--font-display);font-size:var(--fs-quote);font-weight:520;font-stretch:var(--display-stretch-tight);letter-spacing:-.012em;line-height:1.3;color:var(--text-display);margin:0;text-wrap:balance}
+.sc-metric{font-family:var(--font-display);font-size:var(--fs-metric);font-weight:640;font-stretch:var(--display-stretch);letter-spacing:-.02em;line-height:1;color:var(--text-display);margin:0;font-variant-numeric:tabular-nums}
+/* Arabic overrides — Kufi display, looser rhythm, no Latin tracking, no fake uppercase */
+:lang(ar) .sc-cinema,:lang(ar) .sc-hero,:lang(ar) .sc-display-lg,:lang(ar) .sc-display-md,:lang(ar) .sc-h1,:lang(ar) .sc-h2,:lang(ar) .sc-quote,:lang(ar) .sc-metric{font-family:var(--font-display-ar);font-stretch:100%;letter-spacing:0;line-height:var(--lh-display-ar);font-weight:600}
+:lang(ar) .sc-h1,:lang(ar) .sc-h2{line-height:var(--lh-heading-ar)}
+:lang(ar) .sc-body-lg,:lang(ar) .sc-body,:lang(ar) .sc-body-sm{font-family:var(--font-body-ar);line-height:var(--lh-body-ar)}
+:lang(ar) .sc-eyebrow{text-transform:none;letter-spacing:0;font-family:var(--font-body-ar);font-weight:600}
+:lang(ar) .sc-label,:lang(ar) .sc-caption,:lang(ar) .sc-meta{font-family:var(--font-body-ar);letter-spacing:0}

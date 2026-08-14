@@ -1,0 +1,113 @@
+/* ============================================================================
+   SCRIPE — animations.css
+   Scroll-reveal states, card hover and the page-enter transition.
+   ============================================================================ */
+
+/* ============================================================================
+   Website-level additions (navigation, reveals, route transitions)
+   ========================================================================= */
+
+/* scroll reveal — resolved state is always reachable, so content can never be
+   trapped invisible if the observer never fires */
+[data-rv] {
+  opacity: 0.001;
+  transform: translate3d(0, var(--rv-y, 22px), 0);
+  filter: blur(var(--rv-blur, 7px));
+  transition: opacity var(--motion-reveal) var(--ease-enter),
+    transform var(--motion-reveal) var(--ease-enter),
+    filter var(--motion-reveal) var(--ease-enter);
+}
+[data-rv][data-rv-shown] {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-rv] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
+/* JS-off safety, and the window before the scripts run: never ship an
+   invisible page */
+.no-js [data-rv] {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/* card hover — replaces the prototype's style-hover attribute */
+.sc-card-hover {
+  transition: border-color var(--motion-micro) var(--ease-standard),
+    background var(--motion-micro) var(--ease-standard),
+    transform var(--motion-control) var(--ease-settle);
+}
+.sc-card-hover:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-2);
+  transform: translate3d(0, calc(-3px * var(--motion-travel)), 0);
+}
+/* reveal + hover compose: only lift once the reveal has resolved */
+[data-rv].sc-card-hover:hover {
+  transform: translate3d(0, calc(-3px * var(--motion-travel)), 0);
+}
+[data-rv]:not([data-rv-shown]).sc-card-hover:hover {
+  transform: translate3d(0, var(--rv-y, 22px), 0);
+}
+
+/* route transition — subtle, premium, fast */
+#page-root {
+  animation: sc-page-in 320ms var(--ease-enter) both;
+}
+@keyframes sc-page-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, calc(10px * var(--motion-travel)), 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* outgoing page dims slightly between the click and the new route committing */
+html[data-nav-leaving] #page-root {
+  opacity: 0.82;
+  transition: opacity 140ms var(--ease-standard);
+}
+@media (prefers-reduced-motion: reduce) {
+  #page-root {
+    animation-duration: 1ms;
+  }
+  html[data-nav-leaving] #page-root {
+    opacity: 1;
+  }
+}
+
+/* ── Theme swap ────────────────────────────────────────────────────────────
+   Only while the theme is actually changing, and only the properties that
+   repaint. `:where()` gives this zero specificity, so any element that already
+   owns a transition (buttons, cards, nav links) keeps its own timing rather
+   than being overridden. The hero is excluded: it is a photograph, and its
+   camera must never be handed a transition.
+   ------------------------------------------------------------------------- */
+
+:where([data-theme-changing]) :where(:not([data-story], [data-story] *)) {
+  transition: background-color 240ms var(--ease-standard),
+    border-color 240ms var(--ease-standard),
+    color 240ms var(--ease-standard),
+    fill 240ms var(--ease-standard),
+    stroke 240ms var(--ease-standard),
+    box-shadow 240ms var(--ease-standard);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where([data-theme-changing]) :where(*) {
+    transition: none;
+  }
+}
+
+/* Language swaps are a content change, never an animation. */
+[data-lang-changing] #page-root {
+  animation: none;
+}

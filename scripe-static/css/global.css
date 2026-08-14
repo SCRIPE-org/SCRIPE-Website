@@ -1,0 +1,729 @@
+/* ============================================================================
+   SCRIPE — global.css
+   Design tokens, fonts, typography scale, spacing, motion and base elements.
+   Every value is carried over unchanged from the approved design system.
+   ============================================================================ */
+
+/* ============================================================================
+   SCRIPE — Public Website Experience System
+   Ported verbatim from _ds/.../tokens/*.css + styles.css.
+   Do not re-author values here; this is the approved design system.
+   ========================================================================= */
+
+/* ── fonts ───────────────────────────────────────────────────────────────── */
+/* WOFF2 first (identical outlines and variable axes to the source TTFs, roughly
+   40% of the transfer), TTF kept as the fallback source for anything without
+   WOFF2 support. Nothing about the type design changes. */
+@font-face {
+  font-family: "Archivo";
+  src:
+    url("../assets/fonts/Archivo-var.woff2") format("woff2-variations"),
+    url("../assets/fonts/Archivo-var.ttf") format("truetype");
+  font-weight: 100 900;
+  font-stretch: 62.5% 125%;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inter";
+  src:
+    url("../assets/fonts/Inter-var.woff2") format("woff2-variations"),
+    url("../assets/fonts/Inter-var.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Arabic faces. `unicode-range` limits them to the Arabic blocks, so a browser
+   only downloads them when Arabic glyphs are actually painted — an English
+   visitor never pays for them. */
+@font-face {
+  font-family: "Noto Kufi Arabic";
+  src: url("../assets/fonts/NotoKufiArabic-var.woff2") format("woff2-variations");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+08A0-08FF, U+200C-200F,
+    U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FEFF;
+}
+@font-face {
+  font-family: "Noto Sans Arabic";
+  src: url("../assets/fonts/NotoSansArabic-var.woff2") format("woff2-variations");
+  font-weight: 100 900;
+  font-stretch: 62.5% 100%;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+08A0-08FF, U+200C-200F,
+    U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+/* ── colors ──────────────────────────────────────────────────────────────── */
+:root {
+  /* primitives: shared neutral ramp (dark end → light end) */
+  --obsidian: #07111f;
+  --carbon: #0d1828;
+  --charcoal: #111f31;
+  --graphite: #17263a;
+  --slate: #5f6b7a;
+  --fog: #7e8da1;
+  --silver: #c5d0dd;
+  --soft-white: #f6f8fb;
+  --clean-white: #ffffff;
+  /* primitives: SCRIPE brand violet — restrained signature, never universal fill */
+  --violet-100: #efeafd;
+  --violet-200: #dcd0fb;
+  --violet-300: #c3b0f7;
+  --violet-400: #9b7cff;
+  --violet-500: #8a68f5;
+  --violet-600: #7c5aed;
+  --violet-700: #6a47d1;
+  --violet-900: #3a2b6b;
+  /* primitives: indigo — Football Intelligence context */
+  --indigo-400: #7c72ff;
+  --indigo-600: #5b4fe0;
+  --indigo-700: #4a3fc0;
+  /* primitives: blue — primary interaction */
+  --blue-300: #6ea2ff;
+  --blue-400: #4f8cff;
+  --blue-500: #3b76f0;
+  --blue-600: #2563eb;
+  --blue-700: #1d4ed8;
+  /* primitives: cyan — live/connected/focus */
+  --cyan-400: #22d3ee;
+  --cyan-600: #06b6d4;
+  --cyan-700: #0891b2;
+  /* primitives: emerald — positive / Venue */
+  --emerald-400: #34d399;
+  --emerald-600: #10b981;
+  --emerald-700: #0d9467;
+  /* primitives: amber — attention / Club */
+  --amber-400: #fbbf24;
+  --amber-600: #f59e0b;
+  --amber-700: #d68408;
+  /* primitives: red — critical only */
+  --red-300: #f87171;
+  --red-600: #ef4444;
+  --red-700: #dc2626;
+
+  /* semantic: LIGHT (default) */
+  color-scheme: light;
+  --surface-page: #f6f8fb;
+  --surface-1: #ffffff;
+  --surface-2: #eef2f7;
+  --surface-inverse: var(--carbon);
+  --text-display: #0d1626;
+  --text-primary: #0d1626;
+  --text-secondary: #5f6b7a;
+  --text-tertiary: #7e8998;
+  --text-inverse: #f5f5f7;
+  --text-on-accent: #ffffff;
+  --interactive: var(--blue-600);
+  --interactive-hover: var(--blue-700);
+  --interactive-press: #173fae;
+  --interactive-tint: #e7efff;
+  --accent-primary: var(--violet-600);
+  --accent-primary-hover: var(--violet-700);
+  --accent-primary-press: #5b3ab8;
+  --accent-tint: var(--violet-100);
+  --live: var(--cyan-600);
+  --positive: var(--emerald-600);
+  --attention: var(--amber-600);
+  --critical: var(--red-600);
+  --accent-academy: var(--cyan-600);
+  --accent-venue: var(--emerald-600);
+  --accent-club: var(--amber-600);
+  --accent-football: var(--indigo-600);
+  --border-hairline: #dce3ec;
+  --border-strong: #c5d0dd;
+  --focus-ring: var(--cyan-700);
+  --link: var(--interactive);
+  --link-hover: var(--interactive-hover);
+  --text-on-media: #f5f5f7;
+  --icon-on-media: #f5f5f7;
+  --text-on-positive: #ffffff;
+  --text-on-warning: #231400;
+  --text-on-critical: #ffffff;
+  --text-disabled: #97a2b3;
+  --icon-disabled: #97a2b3;
+  --surface-disabled: #eef1f5;
+  --border-disabled: #d6dde6;
+  --border-focus: var(--focus-ring);
+  --shadow-1: 0 1px 2px rgb(14 16 24 / 0.05), 0 4px 14px rgb(14 16 24 / 0.06);
+  --shadow-2: 0 2px 6px rgb(14 16 24 / 0.06), 0 18px 44px rgb(14 16 24 / 0.11);
+  --shadow-3: 0 4px 10px rgb(14 16 24 / 0.07), 0 34px 90px rgb(14 16 24 / 0.17);
+  --wash-brand: radial-gradient(120% 90% at 78% -10%, rgb(37 99 235 / 0.05), transparent 60%),
+    radial-gradient(80% 60% at 6% 108%, rgb(124 90 237 / 0.035), transparent 55%);
+  --scrim-media: linear-gradient(to top, rgb(7 8 13 / 0.72), rgb(7 8 13 / 0.18) 46%, rgb(7 8 13 / 0) 68%);
+  --surface-media: #101218;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --surface-page: #07111f;
+  --surface-1: #0d1828;
+  --surface-2: #111f31;
+  --surface-inverse: var(--soft-white);
+  --text-display: #f5f8fc;
+  --text-primary: #f5f8fc;
+  --text-secondary: #a7b3c3;
+  --text-tertiary: #7e8da1;
+  --text-inverse: #14161f;
+  --text-on-accent: #071019;
+  --interactive: var(--blue-400);
+  --interactive-hover: var(--blue-300);
+  --interactive-press: #3e7bef;
+  --interactive-tint: #122c54;
+  --accent-primary: var(--violet-400);
+  --accent-primary-hover: #b39dff;
+  --accent-primary-press: var(--violet-500);
+  --accent-tint: rgb(155 124 255 / 0.14);
+  --live: var(--cyan-400);
+  --positive: var(--emerald-400);
+  --attention: var(--amber-400);
+  --critical: var(--red-300);
+  --accent-academy: var(--cyan-400);
+  --accent-venue: var(--emerald-400);
+  --accent-club: var(--amber-400);
+  --accent-football: var(--indigo-400);
+  --border-hairline: #26384e;
+  --border-strong: #354a64;
+  --focus-ring: var(--cyan-400);
+  --link: var(--interactive);
+  --link-hover: var(--interactive-hover);
+  --text-on-media: #f5f5f7;
+  --icon-on-media: #f5f5f7;
+  --text-on-positive: #04140f;
+  --text-on-warning: #231400;
+  --text-on-critical: #1a0505;
+  --text-disabled: #5b6678;
+  --icon-disabled: #5b6678;
+  --surface-disabled: #15202e;
+  --border-disabled: #243347;
+  --border-focus: var(--focus-ring);
+  --shadow-1: inset 0 1px 0 rgb(255 255 255 / 0.04), 0 10px 28px rgb(0 0 0 / 0.38);
+  --shadow-2: inset 0 1px 0 rgb(255 255 255 / 0.05), 0 22px 60px rgb(0 0 0 / 0.5);
+  --shadow-3: inset 0 1px 0 rgb(255 255 255 / 0.05), 0 40px 120px rgb(0 0 0 / 0.62);
+  --wash-brand: radial-gradient(110% 80% at 74% -12%, rgb(79 140 255 / 0.1), transparent 58%),
+    radial-gradient(90% 70% at 6% 110%, rgb(34 211 238 / 0.06), transparent 55%),
+    radial-gradient(65% 50% at 94% 102%, rgb(155 124 255 / 0.05), transparent 50%);
+  --scrim-media: linear-gradient(to top, rgb(7 8 13 / 0.82), rgb(7 8 13 / 0.26) 46%, rgb(7 8 13 / 0) 70%);
+  --surface-media: #0b0d14;
+}
+
+/* ── typography ──────────────────────────────────────────────────────────── */
+:root {
+  --font-display: "Archivo", "Noto Kufi Arabic", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", "Noto Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+  --font-display-ar: "Noto Kufi Arabic", "Archivo", system-ui, sans-serif;
+  --font-body-ar: "Noto Sans Arabic", "Inter", system-ui, sans-serif;
+  --display-stretch: 114%;
+  --display-stretch-tight: 104%;
+  --fs-cinema: clamp(3.4rem, 1rem + 7.6vw, 7.25rem);
+  --fs-hero: clamp(2.7rem, 1.2rem + 4.8vw, 5rem);
+  --fs-display-lg: clamp(2.3rem, 1.4rem + 2.9vw, 3.6rem);
+  --fs-display-md: clamp(1.9rem, 1.35rem + 1.8vw, 2.6rem);
+  --fs-h1: clamp(1.75rem, 1.4rem + 1.2vw, 2.25rem);
+  --fs-h2: clamp(1.45rem, 1.25rem + 0.7vw, 1.75rem);
+  --fs-h3: 1.25rem;
+  --fs-h4: 1.0625rem;
+  --fs-body-lg: 1.1875rem;
+  --fs-body: 1rem;
+  --fs-body-sm: 0.875rem;
+  --fs-nav: 0.9375rem;
+  --fs-cta: 0.9375rem;
+  --fs-label: 0.8125rem;
+  --fs-caption: 0.8125rem;
+  --fs-meta: 0.75rem;
+  --fs-eyebrow: 0.78125rem;
+  --fs-quote: clamp(1.5rem, 1.2rem + 1.4vw, 2.1rem);
+  --fs-metric: clamp(2.6rem, 2rem + 2.6vw, 4rem);
+  --track-display: -0.028em;
+  --track-tight: -0.014em;
+  --track-eyebrow: 0.14em;
+  --track-label: 0.05em;
+  --lh-cinema: 0.98;
+  --lh-display: 1.05;
+  --lh-heading: 1.16;
+  --lh-body: 1.6;
+  --lh-tight: 1.4;
+  --lh-body-ar: 1.85;
+  --lh-display-ar: 1.32;
+  --lh-heading-ar: 1.45;
+}
+
+.sc-cinema {
+  font-family: var(--font-display);
+  font-size: var(--fs-cinema);
+  font-weight: 640;
+  font-stretch: var(--display-stretch);
+  letter-spacing: var(--track-display);
+  line-height: var(--lh-cinema);
+  color: var(--text-display);
+  text-wrap: balance;
+  margin: 0;
+}
+.sc-hero {
+  font-family: var(--font-display);
+  font-size: var(--fs-hero);
+  font-weight: 620;
+  font-stretch: var(--display-stretch);
+  letter-spacing: var(--track-display);
+  line-height: 1.02;
+  color: var(--text-display);
+  text-wrap: balance;
+  margin: 0;
+}
+.sc-display-lg {
+  font-family: var(--font-display);
+  font-size: var(--fs-display-lg);
+  font-weight: 600;
+  font-stretch: var(--display-stretch);
+  letter-spacing: var(--track-tight);
+  line-height: var(--lh-display);
+  color: var(--text-display);
+  text-wrap: balance;
+  margin: 0;
+}
+.sc-display-md {
+  font-family: var(--font-display);
+  font-size: var(--fs-display-md);
+  font-weight: 600;
+  font-stretch: var(--display-stretch);
+  letter-spacing: var(--track-tight);
+  line-height: 1.1;
+  color: var(--text-display);
+  text-wrap: balance;
+  margin: 0;
+}
+.sc-h1 {
+  font-family: var(--font-display);
+  font-size: var(--fs-h1);
+  font-weight: 620;
+  font-stretch: var(--display-stretch-tight);
+  letter-spacing: var(--track-tight);
+  line-height: var(--lh-heading);
+  color: var(--text-display);
+  margin: 0;
+}
+.sc-h2 {
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  font-weight: 600;
+  font-stretch: var(--display-stretch-tight);
+  letter-spacing: var(--track-tight);
+  line-height: var(--lh-heading);
+  color: var(--text-display);
+  margin: 0;
+}
+.sc-h3 {
+  font-family: var(--font-body);
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: var(--lh-tight);
+  color: var(--text-display);
+  margin: 0;
+}
+.sc-h4 {
+  font-family: var(--font-body);
+  font-size: var(--fs-h4);
+  font-weight: 600;
+  line-height: var(--lh-tight);
+  color: var(--text-display);
+  margin: 0;
+}
+.sc-eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin: 0;
+}
+.sc-body-lg {
+  font-family: var(--font-body);
+  font-size: var(--fs-body-lg);
+  font-weight: 400;
+  line-height: var(--lh-body);
+  color: var(--text-secondary);
+  margin: 0;
+  text-wrap: pretty;
+}
+.sc-body {
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--text-secondary);
+  margin: 0;
+  text-wrap: pretty;
+}
+.sc-body-sm {
+  font-family: var(--font-body);
+  font-size: var(--fs-body-sm);
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin: 0;
+}
+.sc-caption {
+  font-family: var(--font-body);
+  font-size: var(--fs-caption);
+  line-height: 1.5;
+  color: var(--text-tertiary);
+  margin: 0;
+}
+.sc-meta {
+  font-family: var(--font-body);
+  font-size: var(--fs-meta);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--text-tertiary);
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+.sc-label {
+  font-family: var(--font-body);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: var(--track-label);
+  color: var(--text-primary);
+  margin: 0;
+}
+.sc-quote {
+  font-family: var(--font-display);
+  font-size: var(--fs-quote);
+  font-weight: 520;
+  font-stretch: var(--display-stretch-tight);
+  letter-spacing: -0.012em;
+  line-height: 1.3;
+  color: var(--text-display);
+  margin: 0;
+  text-wrap: balance;
+}
+.sc-metric {
+  font-family: var(--font-display);
+  font-size: var(--fs-metric);
+  font-weight: 640;
+  font-stretch: var(--display-stretch);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--text-display);
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* ── Arabic typography ───────────────────────────────────────────────────────
+   Authored rhythm, not a mirrored Latin one: Kufi for display, Noto Sans Arabic
+   for body, no Latin tracking, looser line-height, and never a fake uppercase.
+   Latin product names inside Arabic copy keep their Latin face via the stack. */
+
+:lang(ar) body,
+body:lang(ar) {
+  font-family: var(--font-body-ar);
+  line-height: var(--lh-body-ar);
+}
+:lang(ar) h1,
+:lang(ar) h2,
+:lang(ar) h3,
+:lang(ar) h4,
+:lang(ar) h5,
+:lang(ar) h6 {
+  font-family: var(--font-display-ar);
+}
+
+:lang(ar) .sc-cinema,
+:lang(ar) .sc-hero,
+:lang(ar) .sc-display-lg,
+:lang(ar) .sc-display-md,
+:lang(ar) .sc-quote,
+:lang(ar) .sc-metric {
+  font-family: var(--font-display-ar);
+  font-stretch: 100%;
+  letter-spacing: 0;
+  line-height: var(--lh-display-ar);
+  font-weight: 600;
+}
+:lang(ar) .sc-h1,
+:lang(ar) .sc-h2 {
+  font-family: var(--font-display-ar);
+  font-stretch: 100%;
+  letter-spacing: 0;
+  line-height: var(--lh-heading-ar);
+  font-weight: 600;
+}
+:lang(ar) .sc-body-lg,
+:lang(ar) .sc-body,
+:lang(ar) .sc-body-sm {
+  font-family: var(--font-body-ar);
+  line-height: var(--lh-body-ar);
+}
+:lang(ar) .sc-eyebrow {
+  font-family: var(--font-body-ar);
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 600;
+}
+:lang(ar) .sc-label,
+:lang(ar) .sc-caption,
+:lang(ar) .sc-meta {
+  font-family: var(--font-body-ar);
+  letter-spacing: 0;
+}
+
+/* Elements that carry the display face as an inline style (dashboard figures,
+   step numbers, the hero lockup) need the same treatment — the negative Latin
+   tracking and the 114% width axis are wrong for Arabic. */
+:lang(ar) [style*="--font-display"] {
+  font-family: var(--font-display-ar);
+  font-stretch: 100%;
+  letter-spacing: 0;
+}
+/* …but a figure that is still Latin digits keeps its tabular alignment */
+:lang(ar) [data-count],
+:lang(ar) .u-nums,
+:lang(ar) [style*="tabular-nums"] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Numbers, currency and phone numbers stay LTR inside RTL text. */
+:lang(ar) bdi,
+:lang(ar) [data-ltr] {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/* ── spacing / layout ────────────────────────────────────────────────────── */
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+  --space-9: 48px;
+  --space-10: 64px;
+  --space-11: 80px;
+  --space-12: 96px;
+  --space-13: 128px;
+  --space-14: 160px;
+  --section-gap: clamp(96px, 12vh, 160px);
+  --section-gap-sm: clamp(56px, 7vh, 96px);
+  --container-max: 1360px;
+  --container-pad: clamp(20px, 4vw, 48px);
+  --content-max: 720px;
+  --form-max: 560px;
+  --grid-cols: 12;
+  --grid-gutter: clamp(16px, 2vw, 32px);
+  --bp-narrow: 320px;
+  --bp-mobile: 390px;
+  --bp-tablet: 768px;
+  --bp-laptop: 1024px;
+  --bp-desktop: 1440px;
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-control: 10px;
+  --radius-card: 16px;
+  --radius-media: 18px;
+  --radius-tile: 24px;
+  --radius-full: 999px;
+  --border-w: 1px;
+  --border-w-strong: 1.5px;
+  --icon-sm: 16px;
+  --icon-md: 20px;
+  --icon-lg: 24px;
+  --control-h: 44px;
+  --control-h-lg: 52px;
+  --control-h-sm: 36px;
+  --hit-min: 44px;
+  --ratio-cinema: 21/9;
+  --ratio-wide: 16/9;
+  --ratio-photo: 4/3;
+  --ratio-portrait: 3/4;
+  --ratio-square: 1;
+  --opacity-disabled: 0.45;
+  --opacity-scrim: 0.62;
+  --z-nav: 100;
+  --z-megamenu: 90;
+  --z-overlay: 200;
+  --z-toast: 300;
+  /* app-level: height of the global navbar, used for internal page offsets */
+  --nav-h: 72px;
+}
+
+/* ── motion ──────────────────────────────────────────────────────────────── */
+:root {
+  --motion-immediate: 100ms;
+  --motion-micro: 180ms;
+  --motion-control: 240ms;
+  --motion-nav: 360ms;
+  --motion-media: 600ms;
+  --motion-reveal: 800ms;
+  --motion-narrative: 1000ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-emphasized: cubic-bezier(0.3, 0, 0, 1);
+  --ease-cinematic: cubic-bezier(0.65, 0, 0.15, 1);
+  --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-scrub: linear;
+  --motion-travel: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-travel: 0;
+    --motion-media: 240ms;
+    --motion-reveal: 240ms;
+    --motion-narrative: 280ms;
+    --motion-nav: 200ms;
+  }
+}
+
+/* ── base ────────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  background: var(--surface-page);
+  /* every route starts at the top; browser back/forward keeps its own position */
+  scroll-behavior: auto;
+}
+body {
+  margin: 0;
+  background: var(--surface-page);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* no page should ever scroll sideways */
+  overflow-x: clip;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+  color: var(--text-display);
+  margin: 0;
+}
+p {
+  margin: 0;
+}
+img,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+}
+a {
+  color: var(--link);
+  text-decoration: none;
+  transition: color var(--motion-micro) var(--ease-standard);
+}
+a:hover {
+  color: var(--link-hover);
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-tertiary);
+  opacity: 1;
+}
+:disabled {
+  cursor: not-allowed;
+}
+::selection {
+  background: var(--interactive);
+  color: var(--text-on-accent);
+}
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+button {
+  font: inherit;
+  cursor: pointer;
+}
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.sc-container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+.sc-prose {
+  max-width: var(--content-max);
+}
+/* marking-line motif: hairline rule with kick-off center tick */
+.sc-marking {
+  position: relative;
+  height: 1px;
+  background: var(--border-hairline);
+  border: 0;
+  margin: 0;
+}
+.sc-marking::after {
+  content: "";
+  position: absolute;
+  top: -3.5px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  transform: translateX(-50%);
+  background: var(--surface-page);
+}
+[dir="rtl"] .sc-rtl-flip {
+  transform: scaleX(-1);
+}
+.sc-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+/* Fixed, not absolute: an absolutely-positioned skip link is placed relative to
+   the document, so tabbing into the page after scrolling parks it far above the
+   viewport where a keyboard user can never see it. */
+.sc-skip {
+  position: fixed;
+  inset-inline-start: 16px;
+  top: -48px;
+  z-index: calc(var(--z-nav) + 1);
+  background: var(--accent-primary);
+  color: var(--text-on-accent);
+  padding: 10px 18px;
+  border-radius: var(--radius-control);
+  font-weight: 600;
+  font-size: var(--fs-body-sm);
+  transition: top var(--motion-control) var(--ease-standard);
+}
+.sc-skip:focus-visible {
+  top: 16px;
+  color: var(--text-on-accent);
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+}

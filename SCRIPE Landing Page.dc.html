@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="_ds/scripe-public-website-experience-system-31d3ea31-59d4-4e85-a0ca-dfbe2396e187/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/scripe-public-website-experience-system-31d3ea31-59d4-4e85-a0ca-dfbe2396e187/tokens/colors.css">
+<link rel="stylesheet" href="_ds/scripe-public-website-experience-system-31d3ea31-59d4-4e85-a0ca-dfbe2396e187/tokens/typography.css">
+<link rel="stylesheet" href="_ds/scripe-public-website-experience-system-31d3ea31-59d4-4e85-a0ca-dfbe2396e187/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/scripe-public-website-experience-system-31d3ea31-59d4-4e85-a0ca-dfbe2396e187/tokens/motion.css">
+<link rel="stylesheet" href="_ds/scripe-public-website-experience-system-31d3ea31-59d4-4e85-a0ca-dfbe2396e187/tokens/base.css">
+<link rel="stylesheet" href="_ds/scripe-public-website-experience-system-31d3ea31-59d4-4e85-a0ca-dfbe2396e187/styles.css">
+<script src="_ds/scripe-public-website-experience-system-31d3ea31-59d4-4e85-a0ca-dfbe2396e187/_ds_bundle.js"></script>
+<style>
+html,body{margin:0;padding:0;background:#07111F;color:#F5F8FC;overflow-x:hidden;}
+a{color:var(--link);}a:hover{color:var(--link-hover);}
+@media (prefers-reduced-motion: reduce){[data-rv]{opacity:1 !important;transform:none !important;filter:none !important;}}
+</style>
+</helmet>
+<div ref="{{ rootRef }}" data-theme="dark" data-page="scripe" style="background:var(--surface-page);color:var(--text-primary);font-family:var(--font-body);">
+  <div data-screen-label="Hero — cinematic camera story (locked)">
+    <dc-import name="Academy Camera Story" hint-size="100%,600vh" style="display:block;width:100%;"></dc-import>
+  </div>
+  <div aria-hidden="true" style="height:clamp(96px,14vh,168px);background:linear-gradient(180deg,rgba(7,17,31,0) 0%,rgba(7,17,31,.55) 44%,var(--surface-page) 100%);"></div>
+
+  <!-- 01 · Trusted organizations -->
+  <section data-screen-label="01 Trusted organizations" style="padding-block:clamp(8px,2vh,24px) var(--section-gap);">
+    <div class="sc-container" style="display:grid;gap:var(--space-8);">
+      <div data-rv style="display:grid;gap:var(--space-4);justify-items:center;text-align:center;max-width:min(760px,100%);min-width:0;margin-inline:auto;opacity:.001;transform:translate3d(0,20px,0);filter:blur(7px);transition:opacity 800ms var(--ease-enter),transform 800ms var(--ease-enter),filter 800ms var(--ease-enter);">
+        <h2 class="sc-h2" style="max-width:640px;">Trusted by modern sports organizations</h2>
+        <p class="sc-body" style="color:var(--text-secondary);max-width:560px;">One platform for clubs, academies, venues and multi-sport organizations.</p>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:var(--space-3);justify-content:center;">
+        <sc-for list="{{ trusted }}" as="org" hint-placeholder-count="5">
+          <div data-rv data-rv-d="{{ org.delay }}" style="flex:1 1 200px;max-width:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:104px;padding:var(--space-6) var(--space-5);border:1px solid var(--border-hairline);border-radius:var(--radius-card);text-align:center;opacity:.001;transform:translate3d(0,12px,0);transition:opacity 700ms var(--ease-enter),transform 700ms var(--ease-enter),border-color 200ms var(--ease-standard),background 200ms var(--ease-standard);" style-hover="border-color:var(--border-strong);background:var(--surface-1);">
+            <span aria-hidden="true" style="display:block;width:26px;height:1px;background:var(--border-strong);"></span>
+            <span style="font-family:var(--font-display);font-variation-settings:'wdth' 114,'wght' 600;font-size:.8125rem;letter-spacing:.09em;text-transform:uppercase;color:var(--text-tertiary);">{{ org.name }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <p class="sc-caption" style="text-align:center;color:var(--text-tertiary);">Category placeholders — replace with partner marks once approved.</p>
+    </div>
+  </section>
+
+  <hr class="sc-marking" />
+
+  <!-- 02 · Platform introduction -->
+  <section data-screen-label="02 Platform introduction" style="padding-block:var(--section-gap);">
+    <div class="sc-container" style="display:flex;flex-wrap:wrap;gap:var(--space-9) var(--space-8);align-items:center;">
+      <div data-rv style="flex:1 1 380px;max-width:560px;display:grid;gap:var(--space-6);opacity:.001;transform:translate3d(0,26px,0);filter:blur(8px);transition:opacity 800ms var(--ease-enter),transform 800ms var(--ease-enter),filter 800ms var(--ease-enter);">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span class="sc-meta" style="color:var(--accent-primary);">02</span>
+          <span aria-hidden="true" style="display:block;width:20px;height:1px;background:var(--border-strong);"></span>
+          <span class="sc-eyebrow" style="color:var(--text-tertiary);">Platform</span>
+        </div>
+        <h2 class="sc-display-lg" style="overflow-wrap:break-word;">Everything your sports organization needs. One operating system.</h2>
+        <p class="sc-body-lg" style="max-width:560px;">SCRIPE brings memberships, reservations, payments, coaching, competitions, communication and business intelligence into one connected platform.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;padding-top:var(--space-2);">
+          <x-import component-from-global-scope="SCRIPEPublicWebsiteExperienceSystem_31d3ea.Button" variant="primary" arrow="{{ true }}" hint-size="190px,44px">Explore the platform</x-import>
+          <x-import component-from-global-scope="SCRIPEPublicWebsiteExperienceSystem_31d3ea.Button" variant="secondary" hint-size="140px,44px">Book a demo</x-import>
+        </div>
+      </div>
+      <div data-rv data-px="0.05" style="flex:2 1 520px;opacity:.001;transform:translate3d(0,28px,0);filter:blur(10px);transition:opacity 800ms var(--ease-enter),filter 800ms var(--ease-enter);">
+        <div style="background:var(--surface-1);border:1px solid var(--border-hairline);border-radius:var(--radius-media);box-shadow:var(--shadow-2);overflow:hidden;">
+          <div style="display:flex;align-items:center;gap:12px;padding:var(--space-5) var(--space-6);border-bottom:1px solid var(--border-hairline);">
+            <span aria-hidden="true" style="width:9px;height:9px;border-radius:2px;background:var(--live);"></span>
+            <span class="sc-label" style="color:var(--text-primary);">Today · Tuesday</span>
+            <span style="flex:1;"></span>
+            <span class="sc-meta" style="border:1px solid var(--border-hairline);border-radius:var(--radius-xs);padding:2px 7px;color:var(--text-tertiary);">Product evidence</span>
+          </div>
+          <sc-for list="{{ board }}" as="row" hint-placeholder-count="5">
+            <div style="display:flex;flex-wrap:wrap;gap:var(--space-4) var(--space-5);align-items:center;padding:var(--space-5) var(--space-6);border-bottom:1px solid var(--border-hairline);">
+              <span class="sc-label" style="width:56px;color:var(--text-secondary);font-variant-numeric:tabular-nums;">{{ row.time }}</span>
+              <span style="flex:1 1 180px;min-width:0;display:grid;gap:3px;">
+                <span class="sc-body-sm" style="color:var(--text-primary);font-weight:600;">{{ row.group }}</span>
+                <span class="sc-caption">{{ row.place }}</span>
+              </span>
+              <span class="sc-caption" style="color:var(--text-tertiary);">{{ row.coach }}</span>
+              <span class="sc-meta" style="border:1px solid var(--border-hairline);border-radius:var(--radius-xs);padding:3px 8px;color:{{ row.tone }};">{{ row.state }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 · Solutions -->
+  <section data-screen-label="03 Solutions" style="padding-block:var(--section-gap);">
+    <div class="sc-container" style="display:grid;gap:var(--space-9);">
+      <div data-rv style="display:grid;gap:var(--space-5);max-width:820px;opacity:.001;transform:translate3d(0,24px,0);filter:blur(8px);transition:opacity 800ms var(--ease-enter),transform 800ms var(--ease-enter),filter 800ms var(--ease-enter);">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span class="sc-meta" style="color:var(--accent-primary);">03</span>
+          <span aria-hidden="true" style="display:block;width:20px;height:1px;background:var(--border-strong);"></span>
+          <span class="sc-eyebrow" style="color:var(--text-tertiary);">Solutions</span>
+        </div>
+        <h2 class="sc-display-lg" style="overflow-wrap:break-word;">Four ways sport is organized. One system underneath.</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--space-6);">
+        <article data-rv data-rv-d="0" style="display:grid;gap:var(--space-6);align-content:start;padding:var(--space-7);background:var(--surface-1);border:1px solid var(--border-hairline);border-radius:var(--radius-card);opacity:.001;transform:translate3d(0,22px,0);filter:blur(7px);transition:opacity 700ms var(--ease-enter),transform 320ms var(--ease-settle),filter 700ms var(--ease-enter),border-color 200ms var(--ease-standard),background 200ms var(--ease-standard);" style-hover="border-color:var(--border-strong);background:var(--surface-2);transform:translate3d(0,-3px,0);">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);">
+            <span style="color:var(--accent-club);display:grid;place-items:center;width:40px;height:40px;border:1px solid var(--border-hairline);border-radius:var(--radius-control);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            </span>
+            <span class="sc-meta" style="color:var(--text-tertiary);">01</span>
+          </div>
+          <div style="display:grid;gap:10px;">
+            <h3 class="sc-h3">Sports Clubs</h3>
+            <p class="sc-body-sm">Manage teams, members, competitions and club operations from one place.</p>
+          </div>
+          <div style="display:grid;gap:7px;padding-top:var(--space-2);border-top:1px solid var(--border-hairline);">
+            <div style="display:flex;align-items:center;gap:10px;"><span aria-hidden="true" style="width:6px;height:6px;border-radius:1px;background:var(--accent-club);flex-shrink:0;"></span><span class="sc-caption" style="flex:1;">Squads</span><span class="sc-meta" style="color:var(--text-tertiary);font-variant-numeric:tabular-nums;">14</span></div>
+            <div style="display:flex;align-items:center;gap:10px;"><span aria-hidden="true" style="width:6px;height:6px;border-radius:1px;background:var(--accent-academy);flex-shrink:0;"></span><span class="sc-caption" style="flex:1;">Members</span><span class="sc-meta" style="color:var(--text-tertiary);font-variant-numeric:tabular-nums;">1,860</span></div>
+            <div style="display:flex;align-items:center;gap:10px;"><span aria-hidden="true" style="width:6px;height:6px;border-radius:1px;background:var(--interactive);flex-shrink:0;"></span><span class="sc-caption" style="flex:1;">Fixtures this month</span><span class="sc-meta" style="color:var(--text-tertiary);font-variant-numeric:tabular-nums;">23</span></div>
+          </div>
+        </article>
+        <article data-rv data-rv-d="90" style="display:grid;gap:var(--space-6);align-content:start;padding:var(--space-7);background:var(--surface-1);border:1px solid var(--border-hairline);border-radius:var(--radius-card);opacity:.001;transform:translate3d(0,22px,0);filter:blur(7px);transition:opacity 700ms var(--ease-enter),transform 320ms var(--ease-settle),filter 700ms var(--ease-enter),border-color 200ms var(--ease-standard),background 200ms var(--ease-standard);" style-hover="border-color:var(--border-strong);background:var(--surface-2);transform:translate3d(0,-3px,0);">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);">
+            <span style="color:var(--accent-academy);display:grid;place-items:center;width:40px;height:40px;border:1px solid var(--border-hairline);border-radius:var(--radius-control);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path></svg>
+            </span>
+            <span class="sc-meta" style="color:var(--text-tertiary);">02</span>
+          </div>
+          <div style="display:grid;gap:10px;">
+            <h3 class="sc-h3">Sports Academies</h3>
+            <p class="sc-body-sm">Manage development programs, coaches, parents and athletes.</p>
+          </div>
+          <div style="display:grid;gap:7px;padding-top:var(--space-2);border-top:1px solid var(--border-hairline);">
+            <div style="display:flex;align-items:center;gap:10px;"><span aria-hidden="true" style="width:6px;height:6px;border-radius:1px;background:var(--accent-academy);flex-shrink:0;"></span><span class="sc-caption" style="flex:1;">Programs</span><span class="sc-meta" style="color:var(--text-tertiary);font-variant-numeric:tabular-nums;">31</span></div>
+            <div style="display:flex;align-items:center;gap:10px;"><span aria-hidden="true" style="width:6px;height:6px;border-radius:1px;background:var(--interactive);flex-shrink:0;"></span><span class="sc-caption" style="flex:1;">Sessions per week</span><span class="sc-meta" style="color:var(--text-tertiary);font-variant-numeric:tabular-nums;">412</span></div>
+            <div style="display:flex;align-items:center;gap:10px;"><span aria-hidden="true" style="width:6px;height:6px;border-radius:1px;background:var(--positive);flex-shrink:0;"></span><span class="sc-caption" style="flex:1;">Attendance marked</span><span class="sc-meta" style="color:var(--text-tertiary);font-variant-numeric:tabular-nums;">97%</span></div>
+          </div>
+        </article>
+        <article data-rv data-rv-d="180" style="display:grid;gap:var(--space-6);align-content:start;padding:var(--space-7);background:var(--surface-1);border:1px solid var(--border-hairline);border-radius:var(--radius-card);opacity:.001;transform:translate3d(0,22px,0);filter:blur(7px);transition:opacity 700ms var(--ease-enter),transform 320ms var(--ease-settle),filter 700ms var(--ease-enter),border-color 200ms var(--ease-standard),background 200ms var(--ease-standard);" style-hover="border-color:var(--border-strong);background:var(--surface-2);transform:translate3d(0,-3px,0);">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);">
+            <span style="color:var(--accent-venue);display:grid;place-items:center;width:40px;height:40px;border:1px solid var(--border-hairline);border-radius:var(--radius-control);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            </span>
+            <span class="sc-meta" style="color:var(--text-tertiary);">03</span>
+          </div>
+          <div style="display:grid;gap:10px;">
+            <h3 class="sc-h3">Sports Venues</h3>
+            <p class="sc-body-sm">Manage courts, fields, pools, bookings and utilization.</p>
+          </div>
+          <div style="display:grid;gap:7px;padding-top:var(--space-2);border-top:1px solid var(--border-hairline);">
+            <div style="display:flex;align-items:center;gap:10px;"><span aria-hidden="true" style="width:6px;height:6px;border-radius:1px;background:var(--accent-venue);flex-shrink:0;"></span><span class="sc-caption" style="flex:1;">Surfaces</span><span class="sc-meta" style="color:var(--text-tertiary);font-variant-numeric:tabular-nums;">9</span></div>
+            <div style="display:flex;align-items:center;gap:10px;"><span aria-hidden="true" style="width:6px;height:6px;border-radius:1px;background:var(--interactive);flex-shrink:0;"></span><span class="sc-caption" style="flex:1;">Bookings this week</span><span class="sc-meta" style="color:var(--text-tertiary);font-variant-numeric:tabular-nums;">268</span></div>
+            <div style="display:flex;align-items:center;gap:10px;"><span aria-hidden="true" style="width:6px;height:6px;border-radius:1px;background:var(--positive);flex-shrink:0;"></span><span class="sc-caption" style="flex:1;">Utilization</span><span class="sc-meta" style="color:var(--text-tertiary);font-variant-numeric:tabular-nums;">92%</span></div>
+          </div>
+        </article>
+        <article data-rv data-rv-d="270" style="display:grid;gap:var(--space-6);align-content:start;padding:var(--space-7);background:var(--surface-1);border:1px solid var(--border-hairline);border-radius:var(--radius-card);opacity:.001;transform:translate3d(0,22px,0);filter:blur(7px);transition:opacity 700ms var(--ease-enter),transform 320ms var(--ease-settle),filter 700ms var(--ease-enter),border-color 200ms var(--ease-standard),background 200ms var(--ease-standard);" style-hover="border-color:var(--border-strong);background:var(--surface-2);transform:translate3d(0,-3px,0);">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);">
+            <span style="color:var(--accent-football);display:grid;place-items:center;width:40px;height:40px;border:1px solid var(--border-hairline);border-radius:var(--radius-control);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20"></path><path d="M12 2a14.5 14.5 0 0 1 0 20"></path><path d="M2 12h20"></path></svg>
+            </span>
+            <span class="sc-meta" style="color:var(--text-tertiary);">04</span>
+          </div>
+          <div style="display:grid;gap:10px;">
+            <h3 class="sc-h3">Multi-Sports Organizations</h3>
+            <p class="sc-body-sm">Manage multiple branches, sports and operations through one system.</p>
+          </div>
+          <div style="display:grid;gap:7px;padding-top:var(--space-2);border-top:1px solid var(--border-hairline);">
+            <div style="display:flex;align-items:center;gap:10px;"><span aria-hidden="true" style="width:6px;height:6px;border-radius:1px;background:var(--accent-football);flex-shrink:0;"></span><span class="sc-caption" style="flex:1;">Branches</span><span class="sc-meta" style="color:var(--text-tertiary);font-variant-numeric:tabular-nums;">4</span></div>
+            <div style="display:flex;align-items:center;gap:10px;"><span aria-hidden="true" style="width:6px;height:6px;border-radius:1px;background:var(--accent-club);flex-shrink:0;"></span><span class="sc-caption" style="flex:1;">Sports</span><span class="sc-meta" style="color:var(--text-tertiary);font-variant-numeric:tabular-nums;">7</span></div>
+            <div style="display:flex;align-items:center;gap:10px;"><span aria-hidden="true" style="width:6px;height:6px;border-radius:1px;background:var(--accent-primary);flex-shrink:0;"></span><span class="sc-caption" style="flex:1;">One reporting line</span><span class="sc-meta" style="color:var(--text-tertiary);">Group</span></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 · Core modules -->
+  <section data-screen-label="04 Core modules" style="padding-block:var(--section-gap);">
+    <div class="sc-container" style="display:grid;gap:var(--space-9);">
+      <div data-rv style="display:flex;align-items:flex-end;justify-content:space-between;gap:var(--space-8);flex-wrap:wrap;opacity:.001;transform:translate3d(0,24px,0);filter:blur(8px);transition:opacity 800ms var(--ease-enter),transform 800ms var(--ease-enter),filter 800ms var(--ease-enter);">
+        <div style="display:grid;gap:var(--space-5);max-width:640px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span class="sc-meta" style="color:var(--accent-primary);">04</span>
+            <span aria-hidden="true" style="display:block;width:20px;height:1px;background:var(--border-strong);"></span>
+            <span class="sc-eyebrow" style="color:var(--text-tertiary);">Core modules</span>
+          </div>
+          <h2 class="sc-display-lg" style="overflow-wrap:break-word;">One operating system, module by module.</h2>
+        </div>
+        <p class="sc-body-sm" style="max-width:300px;">Switch modules on as the organization grows. The record underneath stays the same.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--space-4);">
+        <div data-rv data-rv-d="0" style="display:flex;align-items:center;gap:14px;min-height:76px;padding:var(--space-5) var(--space-6);background:var(--surface-1);border:1px solid var(--border-hairline);border-radius:var(--radius-card);opacity:.001;transform:translate3d(0,16px,0);transition:opacity 700ms var(--ease-enter),transform 300ms var(--ease-settle),border-color 200ms var(--ease-standard),background 200ms var(--ease-standard);" style-hover="border-color:var(--border-strong);background:var(--surface-2);transform:translate3d(0,-3px,0);">
+          <span aria-hidden="true" style="display:grid;place-items:center;width:34px;height:34px;flex-shrink:0;border:1px solid var(--border-hairline);border-radius:9px;color:var(--accent-academy);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span>
+          <span class="sc-body-sm" style="min-width:0;color:var(--text-primary);font-weight:600;">Members</span>
+          <span style="flex:1;"></span>
+        </div>
+        <div data-rv data-rv-d="50" style="display:flex;align-items:center;gap:14px;min-height:76px;padding:var(--space-5) var(--space-6);background:var(--surface-1);border:1px solid var(--border-hairline);border-radius:var(--radius-card);opacity:.001;transform:translate3d(0,16px,0);transition:opacity 700ms var(--ease-enter),transform 300ms var(--ease-settle),border-color 200ms var(--ease-standard),background 200ms var(--ease-standard);" style-hover="border-color:var(--border-strong);background:var(--surface-2);transform:translate3d(0,-3px,0);">
+          <span aria-hidden="true" style="display:grid;place-items:center;width:34px;height:34px;flex-shrink:0;border:1px solid var(--border-hairline);border-radius:9px;color:var(--accent-club);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m17 2 4 4-4 4"></path><path d="M3 11v-1a4 4 0 0 1 4-4h14"></path><path d="m7 22-4-4 4-4"></path><path d="M21 13v1a4 4 0 0 1-4 4H3"></path></svg></span>
+          <span class="sc-body-sm" style="min-width:0;color:var(--text-primary);font-weight:600;">Subscriptions</span>
+          <span style="flex:1;"></span>
+        </div>
+        <div data-rv data-rv-d="100" style="display:flex;align-items:center;gap:14px;min-height:76px;padding:var(--space-5) var(--space-6);background:var(--surface-1);border:1px solid var(--border-hairline);border-radius:var(--radius-card);opacity:.001;transform:translate3d(0,16px,0);transition:opacity 700ms var(--ease-enter),transform 300ms var(--ease-settle),border-color 200ms var(--ease-standard),background 200ms var(--ease-standard);" style-hover="border-color:var(--border-strong);background:var(--surface-2);transform:translate3d(0,-3px,0);">
+          <span aria-hidden="true" style="display:grid;place-items:center;width:34px;height:34px;flex-shrink:0;border:1px solid var(--border-hairline);border-radius:9px;color:var(--accent-venue);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path><path d="m9 16 2 2 4-4"></path></svg></span>
+          <span class="sc-body-sm" style="min-width:0;color:var(--text-primary);font-weight:600;">Reservations</span>
+          <span style="flex:1;"></span>
+        </div>
+        <div data-rv data-rv-d="150" style="display:flex;align-items:center;gap:14px;min-height:76px;padding:var(--space-5) var(--space-6);background:var(--surface-1);border:1px solid var(--border-hairline);border-radius:var(--radius-card);opacity:.001;transform:translate3d(0,16px,0);transition:opacity 700ms var(--ease-enter),transform 300ms var(--ease-settle),border-color 200ms var(--ease-standard),background 200ms var(--ease-standard);" style-hover="border-color:var(--border-strong);background:var(--surface-2);transform:translate3d(0,-3px,0);">
+          <span aria-hidden="true" style="display:grid;place-items:center;width:34px;height:34px;flex-shrink:0;border:1px solid var(--border-hairline);border-radius:9px;color:var(--positive);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"></rect><path d="M2 10h20"></path></svg></span>
+          <span class="sc-body-sm" style="min-width:0;color:var(--text-primary);font-weight:600;">Payments</span>
+          <span style="flex:1;"></span>
+        </div>
+        <div data-rv data-rv-d="200" style="display:flex;align-items:center;gap:14px;min-height:76px;padding:var(--space-5) var(--space-6);background:var(--surface-1);border:1px solid var(--border-hairline);border-radius:var(--radius-card);opacity:.001;transform:translate3d(0,16px,0);transition:opacity 700ms var(--ease-enter),transform 300ms var(--ease-settle),border-color 200ms var(--ease-standard),background 200ms var(--ease-standard);" style-hover="border-color:var(--border-strong);background:var(--surface-2);transform:translate3d(0,-3px,0);">
+          <span aria-hidden="true" style="display:grid;place-items:center;width:34px;height:34px;flex-shrink:0;border:1px solid var(--border-hairline);border-radius:9px;color:var(--accent-academy);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11 3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg></span>
+          <span class="sc-body-sm" style="min-width:0;color:var(--text-primary);font-weight:600;">Attendance</span>
+          <span style="flex:1;"></span>
+        </div>
+        <div data-rv data-rv-d="250" style="display:flex;align-items:center;gap:14px;min-height:76px;padding:var(--space-5) var(--space-6);background:var(--surface-1);border:1px solid var(--border-hairline);border-radius:var(--radius-card);opacity:.001;transform:translate3d(0,16px,0);transition:opacity 700ms var(--ease-enter),transform 300ms var(--ease-settle),border-color 200ms var(--ease-standard),background 200ms var(--ease-standard);" style-hover="border-color:var(--border-strong);background:var(--surface-2);transform:translate3d(0,-3px,0);">
+          <span aria-hidden="true" style="display:grid;place-items:center;width:34px;height:34px;flex-shrink:0;border:1px solid var(--border-hairline);border-radius:9px;color:var(--accent-club);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg></span>
+          <span class="sc-body-sm" style="min-width:0;color:var(--text-primary);font-weight:600;">Competitions</span>
+          <span style="flex:1;"></span>
+        </div>
+        <div data-rv data-rv-d="300" style="display:flex;align-items:center;gap:14px;min-height:76px;padding:var(--space-5) var(--space-6);background:var(--surface-1);border:1px solid var(--border-hairline);border-radius:var(--radius-card);opacity:.001;transform:translate3d(0,16px,0);transition:opacity 700ms var(--ease-enter),transform 300ms var(--ease-settle),border-color 200ms var(--ease-standard),background 200ms var(--ease-standard);" style-hover="border-color:var(--border-strong);background:var(--surface-2);transform:translate3d(0,-3px,0);">
+          <span aria-hidden="true" style="display:grid;place-items:center;width:34px;height:34px;flex-shrink:0;border:1px solid var(--border-hairline);border-radius:9px;color:var(--accent-football);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="M12 11h4"></path><path d="M12 16h4"></path><path d="M8 11h.01"></path><path d="M8 16h.01"></path></svg></span>
+          <span class="sc-body-sm" style="min-width:0;color:var(--text-primary);font-weight:600;">Coaches</span>
+          <span style="flex:1;"></span>
+        </div>
+        <div data-rv data-rv-d="350" style="display:flex;align-items:center;gap:14px;min-height:76px;padding:var(--space-5) var(--space-6);background:var(--surface-1);border:1px solid var(--border-hairline);border-radius:var(--radius-card);opacity:.001;transform:translate3d(0,16px,0);transition:opacity 700ms var(--ease-enter),transform 300ms var(--ease-settle),border-color 200ms var(--ease-standard),background 200ms var(--ease-standard);" style-hover="border-color:var(--border-strong);background:var(--surface-2);transform:translate3d(0,-3px,0);">
+          <span aria-hidden="true" style="display:grid;place-items:center;width:34px;height:34px;flex-shrink:0;border:1px solid var(--border-hairline);border-radius:9px;color:var(--accent-academy);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M19 8v6"></path><path d="M22 11h-6"></path></svg></span>
+          <span class="sc-body-sm" style="min-width:0;color:var(--text-primary);font-weight:600;">Parents</span>
+          <span style="flex:1;"></span>
+          <span class="sc-meta" style="border:1px solid var(--border-hairline);border-radius:var(--radius-xs);padding:2px 6px;color:var(--text-tertiary);flex-shrink:0;">Planned</span>
+        </div>
+        <div data-rv data-rv-d="400" style="display:flex;align-items:center;gap:14px;min-height:76px;padding:var(--space-5) var(--space-6);background:var(--surface-1);border:1px solid var(--border-hairline);border-radius:var(--radius-card);opacity:.001;transform:translate3d(0,16px,0);transition:opacity 700ms var(--ease-enter),transform 300ms var(--ease-settle),border-color 200ms var(--ease-standard),background 200ms var(--ease-standard);" style-hover="border-color:var(--border-strong);background:var(--surface-2);transform:translate3d(0,-3px,0);">
+          <span aria-hidden="true" style="display:grid;place-items:center;width:34px;height:34px;flex-shrink:0;border:1px solid var(--border-hairline);border-radius:9px;color:var(--attention);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg></span>
+          <span class="sc-body-sm" style="min-width:0;color:var(--text-primary);font-weight:600;">Notifications</span>
+          <span style="flex:1;"></span>
+        </div>
+        <div data-rv data-rv-d="450" style="display:flex;align-items:center;gap:14px;min-height:76px;padding:var(--space-5) var(--space-6);background:var(--surface-1);border:1px solid var(--border-hairline);border-radius:var(--radius-card);opacity:.001;transform:translate3d(0,16px,0);transition:opacity 700ms var(--ease-enter),transform 300ms var(--ease-settle),border-color 200ms var(--ease-standard),background 200ms var(--ease-standard);" style-hover="border-color:var(--border-strong);background:var(--surface-2);transform:translate3d(0,-3px,0);">
+          <span aria-hidden="true" style="display:grid;place-items:center;width:34px;height:34px;flex-shrink:0;border:1px solid var(--border-hairline);border-radius:9px;color:var(--interactive);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg></span>
+          <span class="sc-body-sm" style="min-width:0;color:var(--text-primary);font-weight:600;">Reports</span>
+          <span style="flex:1;"></span>
+        </div>
+        <div data-rv data-rv-d="500" style="display:flex;align-items:center;gap:14px;min-height:76px;padding:var(--space-5) var(--space-6);background:var(--surface-1);border:1px solid var(--border-hairline);border-radius:var(--radius-card);opacity:.001;transform:translate3d(0,16px,0);transition:opacity 700ms var(--ease-enter),transform 300ms var(--ease-settle),border-color 200ms var(--ease-standard),background 200ms var(--ease-standard);" style-hover="border-color:var(--border-strong);background:var(--surface-2);transform:translate3d(0,-3px,0);">
+          <span aria-hidden="true" style="display:grid;place-items:center;width:34px;height:34px;flex-shrink:0;border:1px solid var(--border-hairline);border-radius:9px;color:var(--interactive);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg></span>
+          <span class="sc-body-sm" style="min-width:0;color:var(--text-primary);font-weight:600;">CRM</span>
+          <span style="flex:1;"></span>
+        </div>
+        <div data-rv data-rv-d="550" style="display:flex;align-items:center;gap:14px;min-height:76px;padding:var(--space-5) var(--space-6);background:var(--surface-1);border:1px solid var(--border-hairline);border-radius:var(--radius-card);opacity:.001;transform:translate3d(0,16px,0);transition:opacity 700ms var(--ease-enter),transform 300ms var(--ease-settle),border-color 200ms var(--ease-standard),background 200ms var(--ease-standard);" style-hover="border-color:var(--border-strong);background:var(--surface-2);transform:translate3d(0,-3px,0);">
+          <span aria-hidden="true" style="display:grid;place-items:center;width:34px;height:34px;flex-shrink:0;border:1px solid var(--border-hairline);border-radius:9px;color:var(--accent-primary);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v12"></path><circle cx="18" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><path d="M18 9a9 9 0 0 1-9 9"></path></svg></span>
+          <span class="sc-body-sm" style="min-width:0;color:var(--text-primary);font-weight:600;">Branches</span>
+          <span style="flex:1;"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="sc-marking" />
+
+  <!-- 05 · Product experience -->
+  <section data-screen-label="05 Product experience" style="padding-block:var(--section-gap);background:var(--wash-brand);">
+    <div class="sc-container" style="display:grid;gap:var(--space-9);">
+      <div data-rv style="display:grid;gap:var(--space-5);justify-items:center;text-align:center;max-width:min(760px,100%);min-width:0;margin-inline:auto;opacity:.001;transform:translate3d(0,24px,0);filter:blur(8px);transition:opacity 800ms var(--ease-enter),transform 800ms var(--ease-enter),filter 800ms var(--ease-enter);">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span class="sc-meta" style="color:var(--accent-primary);">05</span>
+          <span aria-hidden="true" style="display:block;width:20px;height:1px;background:var(--border-strong);"></span>
+          <span class="sc-eyebrow" style="color:var(--text-tertiary);">Product experience</span>
+        </div>
+        <h2 class="sc-display-lg" style="overflow-wrap:break-word;">Run the entire operation from one dashboard.</h2>
+      </div>
+      <div data-rv data-px="0.04" style="background:var(--surface-1);border:1px solid var(--border-hairline);border-radius:var(--radius-media);box-shadow:var(--shadow-3);overflow:hidden;opacity:.001;transform:translate3d(0,30px,0);filter:blur(11px);transition:opacity 800ms var(--ease-enter),filter 800ms var(--ease-enter);">
+        <div style="display:flex;align-items:center;gap:10px;padding:clamp(12px,3.34vw,20px) clamp(15px,4vw,24px);border-bottom:1px solid var(--border-hairline);flex-wrap:wrap;">
+          <img src="assets/scripe-logo.png" alt="" style="width:26px;height:26px;border-radius:6px;flex-shrink:0;" />
+          <span class="sc-label" style="color:var(--text-primary);white-space:nowrap;">Operations overview</span>
+          <span aria-hidden="true" style="width:1px;height:18px;background:var(--border-hairline);flex-shrink:0;"></span>
+          <span style="display:flex;align-items:center;gap:7px;min-height:28px;padding:0 11px;border:1px solid var(--border-hairline);border-radius:999px;flex-shrink:0;">
+            <span aria-hidden="true" style="width:6px;height:6px;border-radius:50%;background:var(--accent-primary);"></span>
+            <span class="sc-meta" style="color:var(--text-secondary);white-space:nowrap;">All branches</span>
+          </span>
+          <span style="flex:1;"></span>
+          <span aria-hidden="true" style="display:flex;align-items:center;gap:8px;min-height:30px;padding:0 12px;border:1px solid var(--border-hairline);border-radius:var(--radius-control);color:var(--text-tertiary);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg><span class="sc-meta" style="color:var(--text-tertiary);">Search</span></span>
+          <span class="sc-meta" style="color:var(--text-tertiary);white-space:nowrap;">Sample data</span>
+          <span aria-hidden="true" style="display:grid;place-items:center;width:28px;height:28px;border-radius:50%;border:1px solid var(--border-hairline);background:var(--surface-2);font-family:var(--font-display);font-size:.6875rem;font-variation-settings:'wght' 620;color:var(--text-secondary);flex-shrink:0;">OD</span>
+        </div>
+        <div style="display:flex;align-items:stretch;flex-wrap:wrap;">
+          <div aria-hidden="true" style="flex:0 0 auto;display:flex;flex-direction:column;gap:clamp(4px,1vw,6px);padding:clamp(10px,3.34vw,20px) clamp(6px,2.17vw,13px);border-inline-end:1px solid var(--border-hairline);">
+            <span style="display:grid;place-items:center;width:clamp(26px,6vw,36px);height:clamp(26px,6vw,36px);border-radius:9px;background:color-mix(in srgb, var(--accent-primary) 16%, transparent);color:var(--accent-primary);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg></span>
+            <span style="display:grid;place-items:center;width:clamp(26px,6vw,36px);height:clamp(26px,6vw,36px);border-radius:9px;color:var(--text-tertiary);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path></svg></span>
+            <span style="display:grid;place-items:center;width:clamp(26px,6vw,36px);height:clamp(26px,6vw,36px);border-radius:9px;color:var(--text-tertiary);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path></svg></span>
+            <span style="display:grid;place-items:center;width:clamp(26px,6vw,36px);height:clamp(26px,6vw,36px);border-radius:9px;color:var(--text-tertiary);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"></rect><path d="M2 10h20"></path></svg></span>
+            <span style="display:grid;place-items:center;width:clamp(26px,6vw,36px);height:clamp(26px,6vw,36px);border-radius:9px;color:var(--text-tertiary);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path></svg></span>
+            <span style="display:grid;place-items:center;width:clamp(26px,6vw,36px);height:clamp(26px,6vw,36px);border-radius:9px;color:var(--text-tertiary);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg></span>
+          </div>
+          <div style="flex:1 1 200px;min-width:0;display:grid;align-content:start;">
+            <div style="overflow:hidden;border-bottom:1px solid var(--border-hairline);">
+              <div style="display:flex;flex-wrap:wrap;margin-block-start:-1px;margin-inline-start:-1px;">
+              <div style="flex:2 1 300px;min-width:0;border-block-start:1px solid var(--border-hairline);border-inline-start:1px solid var(--border-hairline);display:grid;gap:clamp(7px,1.84vw,10px);align-content:start;padding:clamp(15px,4vw,24px);background:color-mix(in srgb, var(--accent-primary) 7%, var(--surface-1));">
+                <div style="display:flex;align-items:center;gap:10px;min-width:0;">
+                  <span class="sc-eyebrow" style="color:var(--text-secondary);">Revenue this month</span>
+                  <span style="flex:1;"></span>
+                  <span class="sc-meta" style="border:1px solid var(--border-hairline);border-radius:var(--radius-xs);padding:2px 7px;color:var(--positive);white-space:nowrap;">+34%</span>
+                </div>
+                <span data-count="214" data-count-suffix="K" style="font-family:var(--font-display);font-variation-settings:'wdth' 114,'wght' 640;font-size:clamp(2.25rem,1.9rem + 1.1vw,3rem);line-height:1;letter-spacing:-.02em;color:var(--text-display);font-variant-numeric:tabular-nums;white-space:nowrap;">0</span>
+                <span class="sc-caption">SAR · bookings + memberships</span>
+                <svg viewBox="0 0 300 56" width="100%" height="56" preserveAspectRatio="none" aria-hidden="true" style="margin-top:2px;min-width:0;height:clamp(38px,9.35vw,56px);">
+                  <defs><linearGradient id="dashfill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#9B7CFF" stop-opacity=".34"></stop><stop offset="100%" stop-color="#9B7CFF" stop-opacity="0"></stop></linearGradient></defs>
+                  <path d="M0 44 L50 39 L100 33 L150 27 L200 18 L250 13 L300 6 L300 56 L0 56 Z" fill="url(#dashfill)"></path>
+                  <path data-spark="1" d="M0 44 L50 39 L100 33 L150 27 L200 18 L250 13 L300 6" fill="none" stroke="#9B7CFF" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="stroke-dasharray:320;stroke-dashoffset:320;transition:stroke-dashoffset 1400ms var(--ease-cinematic);"></path>
+                </svg>
+              </div>
+            <div style="flex-grow:1;flex-shrink:1;flex-basis:clamp(152px, 190px - 6.34vw, 190px);min-width:0;border-block-start:1px solid var(--border-hairline);border-inline-start:1px solid var(--border-hairline);display:grid;gap:7px;align-content:start;padding:clamp(15px,4vw,24px);background:var(--surface-1);">
+              <div style="display:flex;align-items:center;gap:9px;min-width:0;">
+                <span aria-hidden="true" style="width:16px;height:2px;background:var(--accent-academy);flex-shrink:0;"></span>
+                <span class="sc-eyebrow" style="color:var(--text-tertiary);">Active members</span>
+              </div>
+              <span data-count="1860" data-count-suffix="" style="font-family:var(--font-display);font-variation-settings:'wdth' 114,'wght' 620;font-size:clamp(1.375rem,4.67vw,1.75rem);line-height:1.05;letter-spacing:-.015em;color:var(--text-display);font-variant-numeric:tabular-nums;white-space:nowrap;">0</span>
+              <span class="sc-caption">+124 this month</span>
+            </div>
+            <div style="flex-grow:1;flex-shrink:1;flex-basis:clamp(152px, 190px - 6.34vw, 190px);min-width:0;border-block-start:1px solid var(--border-hairline);border-inline-start:1px solid var(--border-hairline);display:grid;gap:7px;align-content:start;padding:clamp(15px,4vw,24px);background:var(--surface-1);">
+              <div style="display:flex;align-items:center;gap:9px;min-width:0;">
+                <span aria-hidden="true" style="width:16px;height:2px;background:var(--accent-venue);flex-shrink:0;"></span>
+                <span class="sc-eyebrow" style="color:var(--text-tertiary);">Today's reservations</span>
+              </div>
+              <span data-count="47" data-count-suffix="" style="font-family:var(--font-display);font-variation-settings:'wdth' 114,'wght' 620;font-size:clamp(1.375rem,4.67vw,1.75rem);line-height:1.05;letter-spacing:-.015em;color:var(--text-display);font-variant-numeric:tabular-nums;white-space:nowrap;">0</span>
+              <span class="sc-caption">9 surfaces in use</span>
+            </div>
+            <div style="flex-grow:1;flex-shrink:1;flex-basis:clamp(152px, 190px - 6.34vw, 190px);min-width:0;border-block-start:1px solid var(--border-hairline);border-inline-start:1px solid var(--border-hairline);display:grid;gap:7px;align-content:start;padding:clamp(15px,4vw,24px);background:var(--surface-1);">
+              <div style="display:flex;align-items:center;gap:9px;min-width:0;">
+                <span aria-hidden="true" style="width:16px;height:2px;background:var(--interactive);flex-shrink:0;"></span>
+                <span class="sc-eyebrow" style="color:var(--text-tertiary);">Attendance marked</span>
+              </div>
+              <span data-count="97" data-count-suffix="%" style="font-family:var(--font-display);font-variation-settings:'wdth' 114,'wght' 620;font-size:clamp(1.375rem,4.67vw,1.75rem);line-height:1.05;letter-spacing:-.015em;color:var(--text-display);font-variant-numeric:tabular-nums;white-space:nowrap;">0</span>
+              <span class="sc-caption">Same-day close rate</span>
+            </div>
+              </div>
+            </div>
+            <div style="overflow:hidden;border-bottom:1px solid var(--border-hairline);">
+              <div style="display:flex;flex-wrap:wrap;margin-block-start:-1px;margin-inline-start:-1px;">
+              <div style="flex:1 1 268px;min-width:0;border-block-start:1px solid var(--border-hairline);border-inline-start:1px solid var(--border-hairline);display:grid;align-content:start;background:var(--surface-1);">
+              <div style="display:flex;align-items:center;gap:var(--space-4);min-width:0;padding:clamp(10px,3.34vw,20px) clamp(14px,4vw,24px);border-bottom:1px solid var(--border-hairline);">
+                <span class="sc-eyebrow" style="color:var(--text-tertiary);">Attendance · this week</span>
+                <span style="flex:1;"></span>
+                <span class="sc-meta" style="color:var(--text-tertiary);text-align:end;">97% marked</span>
+              </div>
+                <div style="min-width:0;padding:clamp(15px,4vw,24px);display:grid;gap:clamp(12px,3.34vw,20px);">
+                  <div style="position:relative;display:flex;align-items:flex-end;gap:clamp(4px,1.87vw,7px);min-width:0;height:clamp(84px,20.7vw,124px);">
+                    <span aria-hidden="true" style="position:absolute;inset-inline:0;top:0;height:1px;background:var(--border-hairline);"></span>
+                    <span aria-hidden="true" style="position:absolute;inset-inline:0;top:50%;height:1px;background:var(--border-hairline);"></span>
+                    <span data-bar="58%" style="position:relative;flex:1;height:4px;min-height:4px;border-radius:3px 3px 0 0;background:linear-gradient(180deg,var(--interactive),color-mix(in srgb,var(--interactive) 26%,transparent));transition:height 900ms var(--ease-cinematic);"></span>
+                    <span data-bar="72%" style="position:relative;flex:1;height:4px;min-height:4px;border-radius:3px 3px 0 0;background:linear-gradient(180deg,var(--interactive),color-mix(in srgb,var(--interactive) 26%,transparent));transition:height 900ms var(--ease-cinematic);"></span>
+                    <span data-bar="64%" style="position:relative;flex:1;height:4px;min-height:4px;border-radius:3px 3px 0 0;background:linear-gradient(180deg,var(--interactive),color-mix(in srgb,var(--interactive) 26%,transparent));transition:height 900ms var(--ease-cinematic);"></span>
+                    <span data-bar="86%" style="position:relative;flex:1;height:4px;min-height:4px;border-radius:3px 3px 0 0;background:linear-gradient(180deg,var(--interactive),color-mix(in srgb,var(--interactive) 26%,transparent));transition:height 900ms var(--ease-cinematic);"></span>
+                    <span data-bar="79%" style="position:relative;flex:1;height:4px;min-height:4px;border-radius:3px 3px 0 0;background:linear-gradient(180deg,var(--interactive),color-mix(in srgb,var(--interactive) 26%,transparent));transition:height 900ms var(--ease-cinematic);"></span>
+                    <span data-bar="94%" style="position:relative;flex:1;height:4px;min-height:4px;border-radius:3px 3px 0 0;background:linear-gradient(180deg,var(--interactive),color-mix(in srgb,var(--interactive) 26%,transparent));transition:height 900ms var(--ease-cinematic);"></span>
+                    <span data-bar="68%" style="position:relative;flex:1;height:4px;min-height:4px;border-radius:3px 3px 0 0;background:linear-gradient(180deg,var(--interactive),color-mix(in srgb,var(--interactive) 26%,transparent));transition:height 900ms var(--ease-cinematic);"></span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;min-width:0;">
+                    <span class="sc-meta" style="color:var(--text-tertiary);">Mon</span>
+                    <span class="sc-meta" style="color:var(--text-tertiary);">Tue</span>
+                    <span class="sc-meta" style="color:var(--text-tertiary);">Wed</span>
+                    <span class="sc-meta" style="color:var(--text-tertiary);">Thu</span>
+                    <span class="sc-meta" style="color:var(--text-tertiary);">Fri</span>
+                    <span class="sc-meta" style="color:var(--text-tertiary);">Sat</span>
+                    <span class="sc-meta" style="color:var(--text-tertiary);">Sun</span>
+                  </div>
+                </div>
+              </div>
+              <div style="flex:1 1 268px;min-width:0;border-block-start:1px solid var(--border-hairline);border-inline-start:1px solid var(--border-hairline);display:grid;align-content:start;background:var(--surface-1);">
+              <div style="display:flex;align-items:center;gap:var(--space-4);min-width:0;padding:clamp(10px,3.34vw,20px) clamp(14px,4vw,24px);border-bottom:1px solid var(--border-hairline);">
+                <span class="sc-eyebrow" style="color:var(--text-tertiary);">Upcoming events</span>
+                <span style="flex:1;"></span>
+                <span class="sc-meta" style="color:var(--text-tertiary);text-align:end;">Next 7 days</span>
+              </div>
+                <div style="min-width:0;padding:clamp(12px,3.34vw,20px) clamp(15px,4vw,24px) clamp(15px,4vw,24px);display:grid;">
+                  <div style="display:flex;align-items:center;gap:10px;padding-block:clamp(8px,1.84vw,11px);border-bottom:1px solid var(--border-hairline);">
+                    <span aria-hidden="true" style="width:7px;height:7px;border-radius:2px;background:var(--accent-club);flex-shrink:0;"></span>
+                    <span style="flex:1;min-width:0;display:grid;gap:2px;">
+                      <span class="sc-body-sm" style="color:var(--text-primary);">U16 league · away</span>
+                      <span class="sc-caption">Sat 09:00 · Alexandria</span>
+                    </span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;padding-block:clamp(8px,1.84vw,11px);border-bottom:1px solid var(--border-hairline);">
+                    <span aria-hidden="true" style="width:7px;height:7px;border-radius:2px;background:var(--accent-academy);flex-shrink:0;"></span>
+                    <span style="flex:1;min-width:0;display:grid;gap:2px;">
+                      <span class="sc-body-sm" style="color:var(--text-primary);">Swim time trials</span>
+                      <span class="sc-caption">Sat 14:00 · Olympic pool</span>
+                    </span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;padding-block:clamp(8px,1.84vw,11px);border-bottom:1px solid var(--border-hairline);">
+                    <span aria-hidden="true" style="width:7px;height:7px;border-radius:2px;background:var(--accent-venue);flex-shrink:0;"></span>
+                    <span style="flex:1;min-width:0;display:grid;gap:2px;">
+                      <span class="sc-body-sm" style="color:var(--text-primary);">Padel members night</span>
+                      <span class="sc-caption">Sun 19:00 · Courts 1–3</span>
+                    </span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;padding-block:clamp(8px,1.84vw,11px);">
+                    <span aria-hidden="true" style="width:7px;height:7px;border-radius:2px;background:var(--accent-football);flex-shrink:0;"></span>
+                    <span style="flex:1;min-width:0;display:grid;gap:2px;">
+                      <span class="sc-body-sm" style="color:var(--text-primary);">Position trials · U14</span>
+                      <span class="sc-caption">Mon 17:30 · Main stadium</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div style="flex:1 1 268px;min-width:0;border-block-start:1px solid var(--border-hairline);border-inline-start:1px solid var(--border-hairline);display:grid;align-content:start;background:var(--surface-1);">
+              <div style="display:flex;align-items:center;gap:var(--space-4);min-width:0;padding:clamp(10px,3.34vw,20px) clamp(14px,4vw,24px);border-bottom:1px solid var(--border-hairline);">
+                <span class="sc-eyebrow" style="color:var(--text-tertiary);">Recent payments</span>
+                <span style="flex:1;"></span>
+                <span class="sc-meta" style="color:var(--text-tertiary);text-align:end;">Reconciled</span>
+              </div>
+                <div style="min-width:0;padding:clamp(12px,3.34vw,20px) clamp(15px,4vw,24px) clamp(15px,4vw,24px);display:grid;">
+                  <div style="display:flex;align-items:center;gap:10px;padding-block:clamp(8px,1.84vw,11px);border-bottom:1px solid var(--border-hairline);">
+                    <span style="flex:1;min-width:0;display:grid;gap:2px;">
+                      <span class="sc-body-sm" style="color:var(--text-primary);">H. Kamal</span>
+                      <span class="sc-caption">Academy term · U14</span>
+                    </span>
+                    <span class="sc-label" style="color:var(--positive);font-variant-numeric:tabular-nums;white-space:nowrap;">SAR 2,400</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;padding-block:clamp(8px,1.84vw,11px);border-bottom:1px solid var(--border-hairline);">
+                    <span style="flex:1;min-width:0;display:grid;gap:2px;">
+                      <span class="sc-body-sm" style="color:var(--text-primary);">Padel · Court 2</span>
+                      <span class="sc-caption">Recurring booking · 8 weeks</span>
+                    </span>
+                    <span class="sc-label" style="color:var(--positive);font-variant-numeric:tabular-nums;white-space:nowrap;">SAR 3,200</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;padding-block:clamp(8px,1.84vw,11px);border-bottom:1px solid var(--border-hairline);">
+                    <span style="flex:1;min-width:0;display:grid;gap:2px;">
+                      <span class="sc-body-sm" style="color:var(--text-primary);">R. Sabri</span>
+                      <span class="sc-caption">Swim squad · monthly</span>
+                    </span>
+                    <span class="sc-label" style="color:var(--positive);font-variant-numeric:tabular-nums;white-space:nowrap;">SAR 850</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;padding-block:clamp(8px,1.84vw,11px);">
+                    <span style="flex:1;min-width:0;display:grid;gap:2px;">
+                      <span class="sc-body-sm" style="color:var(--text-primary);">Corporate · Pitch 1</span>
+                      <span class="sc-caption">Friday block · 6 weeks</span>
+                    </span>
+                    <span class="sc-label" style="color:var(--positive);font-variant-numeric:tabular-nums;white-space:nowrap;">SAR 5,100</span>
+                  </div>
+                </div>
+              </div>
+              </div>
+            </div>
+            <div style="overflow:hidden;">
+              <div style="display:flex;flex-wrap:wrap;margin-block-start:-1px;margin-inline-start:-1px;">
+              <div style="flex:1 1 268px;min-width:0;border-block-start:1px solid var(--border-hairline);border-inline-start:1px solid var(--border-hairline);display:grid;align-content:start;background:var(--surface-1);">
+              <div style="display:flex;align-items:center;gap:var(--space-4);min-width:0;padding:clamp(10px,3.34vw,20px) clamp(14px,4vw,24px);border-bottom:1px solid var(--border-hairline);">
+                <span class="sc-eyebrow" style="color:var(--text-tertiary);">Notifications</span>
+                <span style="flex:1;"></span>
+                <span class="sc-meta" style="color:var(--text-tertiary);text-align:end;">3 open</span>
+              </div>
+                <div style="min-width:0;padding:clamp(12px,3.34vw,20px) clamp(15px,4vw,24px) clamp(15px,4vw,24px);display:grid;gap:clamp(12px,3.34vw,20px);">
+                  <div style="display:flex;align-items:flex-start;gap:11px;">
+                    <span aria-hidden="true" style="width:7px;height:7px;border-radius:2px;background:var(--attention);flex-shrink:0;margin-top:6px;"></span>
+                    <span style="flex:1;min-width:0;display:grid;gap:2px;">
+                      <span class="sc-body-sm" style="color:var(--text-primary);">Coach cover needed for U16 position trials.</span>
+                      <span class="sc-caption">12 min ago</span>
+                    </span>
+                  </div>
+                  <div style="display:flex;align-items:flex-start;gap:11px;">
+                    <span aria-hidden="true" style="width:7px;height:7px;border-radius:2px;background:var(--interactive);flex-shrink:0;margin-top:6px;"></span>
+                    <span style="flex:1;min-width:0;display:grid;gap:2px;">
+                      <span class="sc-body-sm" style="color:var(--text-primary);">11 subscriptions renew this week.</span>
+                      <span class="sc-caption">1 hour ago</span>
+                    </span>
+                  </div>
+                  <div style="display:flex;align-items:flex-start;gap:11px;">
+                    <span aria-hidden="true" style="width:7px;height:7px;border-radius:2px;background:var(--critical);flex-shrink:0;margin-top:6px;"></span>
+                    <span style="flex:1;min-width:0;display:grid;gap:2px;">
+                      <span class="sc-body-sm" style="color:var(--text-primary);">Pool lane 4 maintenance closes Thursday 06:00.</span>
+                      <span class="sc-caption">3 hours ago</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div style="flex:1 1 268px;min-width:0;border-block-start:1px solid var(--border-hairline);border-inline-start:1px solid var(--border-hairline);display:grid;align-content:start;background:color-mix(in srgb, var(--accent-primary) 5%, var(--surface-1));">
+              <div style="display:flex;align-items:center;gap:var(--space-4);min-width:0;padding:clamp(10px,3.34vw,20px) clamp(14px,4vw,24px);border-bottom:1px solid var(--border-hairline);">
+                <span class="sc-eyebrow" style="color:var(--accent-primary);">Business insights</span>
+                <span style="flex:1;"></span>
+                <span class="sc-meta" style="color:var(--text-tertiary);text-align:end;">This week</span>
+              </div>
+                <div style="min-width:0;padding:clamp(15px,4vw,24px);display:grid;gap:clamp(12px,3.34vw,20px);align-content:start;">
+                  <p class="sc-body-sm" style="margin:0;color:var(--text-primary);">Padel courts are the first surface to sell out each week. Two of five evening slots on Pitch 2 stay unsold.</p>
+                  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                    <span class="sc-meta" style="border:1px solid var(--border-hairline);border-radius:var(--radius-xs);padding:3px 8px;color:var(--accent-venue);white-space:nowrap;">Padel · 98% sold</span>
+                    <span class="sc-meta" style="border:1px solid var(--border-hairline);border-radius:var(--radius-xs);padding:3px 8px;color:var(--attention);white-space:nowrap;">Pitch 2 · 61% sold</span>
+                  </div>
+                </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="sc-marking" />
+
+  <!-- 06 · Business intelligence -->
+  <section data-screen-label="06 Business intelligence" style="padding-block:var(--section-gap);">
+    <div class="sc-container" style="display:grid;gap:var(--space-9);">
+      <div data-rv style="display:flex;align-items:flex-end;justify-content:space-between;gap:var(--space-8);flex-wrap:wrap;opacity:.001;transform:translate3d(0,24px,0);filter:blur(8px);transition:opacity 800ms var(--ease-enter),transform 800ms var(--ease-enter),filter 800ms var(--ease-enter);">
+        <div style="display:grid;gap:var(--space-5);max-width:660px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span class="sc-meta" style="color:var(--accent-primary);">06</span>
+            <span aria-hidden="true" style="display:block;width:20px;height:1px;background:var(--border-strong);"></span>
+            <span class="sc-eyebrow" style="color:var(--text-tertiary);">Business intelligence</span>
+          </div>
+          <h2 class="sc-display-lg" style="overflow-wrap:break-word;">Turn operations into decisions.</h2>
+        </div>
+        <span class="sc-meta" style="border:1px solid var(--border-hairline);border-radius:var(--radius-xs);padding:4px 9px;color:var(--text-tertiary);">Sample data</span>
+      </div>
+      <div data-rv style="display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-5) var(--space-7);padding:var(--space-8) var(--space-7);border:1px solid var(--border-strong);border-radius:var(--radius-card);background:color-mix(in srgb, var(--accent-primary) 8%, var(--surface-1));opacity:.001;transform:translate3d(0,20px,0);filter:blur(7px);transition:opacity 800ms var(--ease-enter),transform 800ms var(--ease-enter),filter 800ms var(--ease-enter);">
+        <span aria-hidden="true" style="display:block;width:3px;align-self:stretch;min-height:52px;background:var(--accent-primary);border-radius:2px;"></span>
+        <div style="flex:1 1 320px;display:grid;gap:6px;">
+          <span class="sc-eyebrow" style="color:var(--accent-primary);">Highlighted insight</span>
+          <p class="sc-h3" style="margin:0;">Peak booking hours increased by 18%.</p>
+        </div>
+        <p class="sc-body-sm" style="flex:1 1 260px;max-width:380px;">Evening demand moved earlier across padel and five-a-side. Two coaches were reassigned to cover the new peak.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:var(--space-6);">
+        <div data-rv style="padding:var(--space-7);background:var(--surface-1);border:1px solid var(--border-hairline);border-radius:var(--radius-card);display:grid;gap:var(--space-6);opacity:.001;transform:translate3d(0,22px,0);filter:blur(7px);transition:opacity 800ms var(--ease-enter),transform 800ms var(--ease-enter),filter 800ms var(--ease-enter);">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:var(--space-5);flex-wrap:wrap;padding-bottom:var(--space-5);border-bottom:1px solid var(--border-hairline);">
+            <span class="sc-eyebrow" style="color:var(--text-tertiary);">Revenue trend · 6 months</span>
+            <span class="sc-caption" style="color:var(--positive);">+34% vs last season</span>
+          </div>
+          <svg viewBox="0 0 460 150" width="100%" height="150" preserveAspectRatio="none" aria-hidden="true">
+            <defs><linearGradient id="revfill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4F8CFF" stop-opacity=".28"></stop><stop offset="100%" stop-color="#4F8CFF" stop-opacity="0"></stop></linearGradient></defs>
+            <path d="M0 118 L92 104 L184 88 L276 74 L368 46 L460 28 L460 150 L0 150 Z" fill="url(#revfill)"></path>
+            <path data-spark="1" d="M0 118 L92 104 L184 88 L276 74 L368 46 L460 28" fill="none" stroke="#4F8CFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="stroke-dasharray:520;stroke-dashoffset:520;transition:stroke-dashoffset 1400ms var(--ease-cinematic);"></path>
+          </svg>
+          <div style="display:flex;justify-content:space-between;"><span class="sc-meta" style="color:var(--text-tertiary);">Mar</span><span class="sc-meta" style="color:var(--text-tertiary);">Aug</span></div>
+        </div>
+        <div data-rv data-rv-d="100" style="padding:var(--space-7);background:var(--surface-1);border:1px solid var(--border-hairline);border-radius:var(--radius-card);display:grid;gap:var(--space-6);opacity:.001;transform:translate3d(0,22px,0);filter:blur(7px);transition:opacity 800ms var(--ease-enter),transform 800ms var(--ease-enter),filter 800ms var(--ease-enter);">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:var(--space-5);flex-wrap:wrap;padding-bottom:var(--space-5);border-bottom:1px solid var(--border-hairline);">
+            <span class="sc-eyebrow" style="color:var(--text-tertiary);">Membership growth</span>
+            <span class="sc-caption" style="color:var(--accent-academy);">+124 this month</span>
+          </div>
+          <div style="position:relative;display:flex;align-items:flex-end;gap:8px;height:150px;">
+            <span aria-hidden="true" style="position:absolute;inset-inline:0;top:0;height:1px;background:var(--border-hairline);"></span>
+            <span aria-hidden="true" style="position:absolute;inset-inline:0;top:50%;height:1px;background:var(--border-hairline);"></span>
+            <sc-for list="{{ growthBars }}" as="g" hint-placeholder-count="6">
+              <span data-bar="{{ g.h }}" style="position:relative;flex:1;height:4px;min-height:4px;border-radius:3px 3px 0 0;background:linear-gradient(180deg,var(--accent-academy),color-mix(in srgb,var(--accent-academy) 26%,transparent));transition:height 900ms var(--ease-cinematic);"></span>
+            </sc-for>
+          </div>
+          <div style="display:flex;justify-content:space-between;"><span class="sc-meta" style="color:var(--text-tertiary);">Mar</span><span class="sc-meta" style="color:var(--text-tertiary);">Aug</span></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--space-6);">
+        <div data-rv style="padding:var(--space-7);background:var(--surface-1);border:1px solid var(--border-hairline);border-radius:var(--radius-card);display:grid;gap:var(--space-5);align-content:start;opacity:.001;transform:translate3d(0,20px,0);filter:blur(6px);transition:opacity 700ms var(--ease-enter),transform 700ms var(--ease-enter),filter 700ms var(--ease-enter);">
+          <span class="sc-eyebrow" style="display:block;padding-bottom:var(--space-5);border-bottom:1px solid var(--border-hairline);color:var(--text-tertiary);">Attendance by sport</span>
+          <sc-for list="{{ sports }}" as="s" hint-placeholder-count="5">
+            <div style="display:grid;gap:8px;">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;">
+                <span class="sc-body-sm" style="color:var(--text-primary);">{{ s.name }}</span>
+                <span class="sc-caption" style="font-variant-numeric:tabular-nums;">{{ s.pct }}</span>
+              </div>
+              <span style="display:block;height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden;">
+                <span data-fill="{{ s.w }}" style="display:block;height:100%;width:0;border-radius:3px;background:{{ s.tone }};transition:width 1000ms var(--ease-cinematic);"></span>
+              </span>
+            </div>
+          </sc-for>
+        </div>
+        <div data-rv data-rv-d="90" style="padding:var(--space-7);background:var(--surface-1);border:1px solid var(--border-hairline);border-radius:var(--radius-card);display:grid;gap:var(--space-5);align-content:start;opacity:.001;transform:translate3d(0,20px,0);filter:blur(6px);transition:opacity 700ms var(--ease-enter),transform 700ms var(--ease-enter),filter 700ms var(--ease-enter);">
+          <span class="sc-eyebrow" style="display:block;padding-bottom:var(--space-5);border-bottom:1px solid var(--border-hairline);color:var(--text-tertiary);">Venue utilization</span>
+          <sc-for list="{{ venues }}" as="v" hint-placeholder-count="5">
+            <div style="display:grid;gap:8px;">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;">
+                <span class="sc-body-sm" style="color:var(--text-primary);">{{ v.name }}</span>
+                <span class="sc-caption" style="font-variant-numeric:tabular-nums;">{{ v.pct }}</span>
+              </div>
+              <span style="display:block;height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden;">
+                <span data-fill="{{ v.w }}" style="display:block;height:100%;width:0;border-radius:3px;background:{{ v.tone }};transition:width 1000ms var(--ease-cinematic);"></span>
+              </span>
+            </div>
+          </sc-for>
+        </div>
+        <div data-rv data-rv-d="180" style="padding:var(--space-7);background:var(--surface-1);border:1px solid var(--border-hairline);border-radius:var(--radius-card);display:grid;gap:var(--space-5);align-content:start;opacity:.001;transform:translate3d(0,20px,0);filter:blur(6px);transition:opacity 700ms var(--ease-enter),transform 700ms var(--ease-enter),filter 700ms var(--ease-enter);">
+          <span class="sc-eyebrow" style="display:block;padding-bottom:var(--space-5);border-bottom:1px solid var(--border-hairline);color:var(--text-tertiary);">Coach load · sessions per week</span>
+          <sc-for list="{{ coaches }}" as="c" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;gap:12px;padding-bottom:10px;border-bottom:1px solid var(--border-hairline);">
+              <span style="flex:1;min-width:0;display:grid;gap:2px;">
+                <span class="sc-body-sm" style="color:var(--text-primary);">{{ c.name }}</span>
+                <span class="sc-caption">{{ c.role }}</span>
+              </span>
+              <span class="sc-label" style="color:var(--text-primary);font-variant-numeric:tabular-nums;">{{ c.n }}</span>
+            </div>
+          </sc-for>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;">
+            <span class="sc-caption">Booking trend</span>
+            <span class="sc-caption" style="color:var(--positive);">Evenings +18%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="sc-marking" />
+
+  <!-- 07 · Automation -->
+  <section data-screen-label="07 Automation" style="padding-block:var(--section-gap);">
+    <div class="sc-container" style="display:grid;gap:var(--space-10);">
+      <div data-rv style="display:grid;gap:var(--space-5);max-width:760px;opacity:.001;transform:translate3d(0,24px,0);filter:blur(8px);transition:opacity 800ms var(--ease-enter),transform 800ms var(--ease-enter),filter 800ms var(--ease-enter);">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span class="sc-meta" style="color:var(--accent-primary);">07</span>
+          <span aria-hidden="true" style="display:block;width:20px;height:1px;background:var(--border-strong);"></span>
+          <span class="sc-eyebrow" style="color:var(--text-tertiary);">Automation</span>
+        </div>
+        <h2 class="sc-display-lg" style="overflow-wrap:break-word;">Your operations should run themselves.</h2>
+      </div>
+      <div style="padding:var(--space-8) var(--space-7);background:var(--surface-1);border:1px solid var(--border-hairline);border-radius:var(--radius-card);">
+        <div ref="{{ flowRef }}" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(146px,1fr));gap:var(--space-8) var(--space-4);">
+          <sc-for list="{{ steps }}" as="st" hint-placeholder-count="7">
+            <div data-rv data-rv-d="{{ st.delay }}" style="display:grid;gap:var(--space-4);align-content:start;min-width:0;opacity:.001;transform:translate3d(0,18px,0);filter:blur(6px);transition:opacity 700ms var(--ease-enter),transform 700ms var(--ease-enter),filter 700ms var(--ease-enter);">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span aria-hidden="true" style="display:grid;place-items:center;width:30px;height:30px;flex-shrink:0;box-sizing:border-box;border-radius:50%;border:1px solid var(--border-strong);background:var(--surface-page);font-family:var(--font-display);font-size:.6875rem;font-variation-settings:'wdth' 114,'wght' 620;color:var(--text-secondary);font-variant-numeric:tabular-nums;">{{ st.n }}</span>
+                <span aria-hidden="true" style="position:relative;flex:1;min-width:0;height:1px;background:var(--border-hairline);">
+                  <span data-seg="{{ st.i }}" style="position:absolute;inset-block:0;inset-inline-start:0;width:0;background:linear-gradient(90deg,var(--interactive),var(--accent-primary));"></span>
+                </span>
+                <span aria-hidden="true" style="color:var(--text-tertiary);flex-shrink:0;display:grid;place-items:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg></span>
+              </div>
+              <span class="sc-body-sm" style="color:var(--text-primary);font-weight:600;">{{ st.name }}</span>
+              <span class="sc-caption">{{ st.note }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 · Multi-branch management -->
+  <section data-screen-label="08 Multi-branch management" style="padding-block:var(--section-gap);">
+    <div class="sc-container" style="display:grid;gap:var(--space-9);">
+      <div data-rv style="display:grid;gap:var(--space-5);max-width:760px;opacity:.001;transform:translate3d(0,24px,0);filter:blur(8px);transition:opacity 800ms var(--ease-enter),transform 800ms var(--ease-enter),filter 800ms var(--ease-enter);">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span class="sc-meta" style="color:var(--accent-primary);">08</span>
+          <span aria-hidden="true" style="display:block;width:20px;height:1px;background:var(--border-strong);"></span>
+          <span class="sc-eyebrow" style="color:var(--text-tertiary);">Multi-branch</span>
+        </div>
+        <h2 class="sc-display-lg" style="overflow-wrap:break-word;">One organization. Every branch. One operational picture.</h2>
+      </div>
+      <div data-rv style="display:grid;gap:var(--space-7);padding:var(--space-7);background:var(--surface-1);border:1px solid var(--border-hairline);border-radius:var(--radius-card);opacity:.001;transform:translate3d(0,22px,0);filter:blur(8px);transition:opacity 800ms var(--ease-enter),transform 800ms var(--ease-enter),filter 800ms var(--ease-enter);">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-5);padding-bottom:var(--space-6);border-bottom:1px solid var(--border-hairline);">
+          <div style="display:flex;flex-wrap:wrap;gap:7px;min-width:0;">
+            <span style="display:flex;align-items:center;gap:7px;min-height:28px;padding:0 11px;border:1px solid var(--border-hairline);border-radius:999px;">
+              <span aria-hidden="true" style="width:6px;height:6px;border-radius:50%;background:var(--accent-football);"></span>
+              <span class="sc-meta" style="color:var(--text-secondary);white-space:nowrap;">Cairo</span>
+            </span>
+            <span style="display:flex;align-items:center;gap:7px;min-height:28px;padding:0 11px;border:1px solid var(--border-hairline);border-radius:999px;">
+              <span aria-hidden="true" style="width:6px;height:6px;border-radius:50%;background:var(--accent-venue);"></span>
+              <span class="sc-meta" style="color:var(--text-secondary);white-space:nowrap;">Maadi</span>
+            </span>
+            <span style="display:flex;align-items:center;gap:7px;min-height:28px;padding:0 11px;border:1px solid var(--border-hairline);border-radius:999px;">
+              <span aria-hidden="true" style="width:6px;height:6px;border-radius:50%;background:var(--accent-academy);"></span>
+              <span class="sc-meta" style="color:var(--text-secondary);white-space:nowrap;">Nasr City</span>
+            </span>
+            <span style="display:flex;align-items:center;gap:7px;min-height:28px;padding:0 11px;border:1px solid var(--border-hairline);border-radius:999px;">
+              <span aria-hidden="true" style="width:6px;height:6px;border-radius:50%;background:var(--accent-club);"></span>
+              <span class="sc-meta" style="color:var(--text-secondary);white-space:nowrap;">Alexandria</span>
+            </span>
+          </div>
+          <span aria-hidden="true" style="color:var(--text-tertiary);display:grid;place-items:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg></span>
+          <div style="display:flex;align-items:center;gap:9px;">
+            <img src="assets/scripe-logo.png" alt="" style="width:22px;height:22px;border-radius:5px;" />
+            <span class="sc-label" style="color:var(--text-primary);white-space:nowrap;">One organization</span>
+          </div>
+          <span aria-hidden="true" style="color:var(--text-tertiary);display:grid;place-items:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg></span>
+          <span class="sc-label" style="color:var(--accent-primary);white-space:nowrap;">One operational picture</span>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+          <sc-for list="{{ branches }}" as="b" hint-placeholder-count="5">
+            <button type="button" onClick="{{ b.pick }}" style="display:flex;align-items:center;gap:9px;min-height:40px;padding:0 16px;border-radius:var(--radius-control);border:1px solid {{ b.border }};background:{{ b.bg }};color:{{ b.fg }};font-family:var(--font-body);font-size:var(--fs-body-sm);font-weight:500;transition:border-color 200ms var(--ease-standard),background 200ms var(--ease-standard),color 200ms var(--ease-standard);" style-hover="border-color:var(--border-strong);">
+              <span aria-hidden="true" style="width:7px;height:7px;border-radius:2px;background:{{ b.dot }};"></span>{{ b.name }}
+            </button>
+          </sc-for>
+          <span style="flex:1;"></span>
+          <span class="sc-meta" style="color:var(--text-tertiary);">{{ branchNote }}</span>
+        </div>
+        <div style="border:1px solid var(--border-hairline);border-radius:var(--radius-media);overflow:hidden;">
+          <div style="display:flex;flex-wrap:wrap;margin-block-start:-1px;margin-inline-start:-1px;">
+          <sc-for list="{{ branchKpis }}" as="k" hint-placeholder-count="5">
+            <div style="flex:1 1 156px;min-width:0;border-block-start:1px solid var(--border-hairline);border-inline-start:1px solid var(--border-hairline);display:grid;gap:7px;padding:var(--space-6);background:var(--surface-1);">
+              <span aria-hidden="true" style="width:22px;height:2px;background:{{ k.tone }};"></span>
+              <span style="font-family:var(--font-display);font-variation-settings:'wdth' 114,'wght' 620;font-size:1.75rem;line-height:1.05;letter-spacing:-.015em;color:var(--text-display);font-variant-numeric:tabular-nums;white-space:nowrap;opacity:{{ kpiOp }};transition:opacity 320ms var(--ease-standard);">{{ k.val }}</span>
+              <span class="sc-label" style="color:var(--text-secondary);">{{ k.label }}</span>
+            </div>
+          </sc-for>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:var(--space-4);">
+          <sc-for list="{{ branchRows }}" as="r" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;gap:12px;padding:var(--space-5);border:1px solid var(--border-hairline);border-radius:var(--radius-control);background:{{ r.bg }};transition:background 240ms var(--ease-standard);">
+              <span aria-hidden="true" style="width:7px;height:7px;border-radius:2px;background:{{ r.dot }};flex-shrink:0;"></span>
+              <span style="flex:1;min-width:0;display:grid;gap:2px;">
+                <span class="sc-body-sm" style="color:var(--text-primary);font-weight:600;">{{ r.name }}</span>
+                <span class="sc-caption">{{ r.detail }}</span>
+              </span>
+              <span class="sc-label" style="color:var(--text-secondary);font-variant-numeric:tabular-nums;">{{ r.util }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 · Testimonials -->
+  <section data-screen-label="09 Testimonials" style="padding-block:var(--section-gap);">
+    <div class="sc-container" style="display:grid;gap:var(--space-9);">
+      <div data-rv style="display:flex;align-items:flex-end;justify-content:space-between;gap:var(--space-8);flex-wrap:wrap;opacity:.001;transform:translate3d(0,24px,0);filter:blur(8px);transition:opacity 800ms var(--ease-enter),transform 800ms var(--ease-enter),filter 800ms var(--ease-enter);">
+        <div style="display:grid;gap:var(--space-5);max-width:640px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span class="sc-meta" style="color:var(--accent-primary);">09</span>
+            <span aria-hidden="true" style="display:block;width:20px;height:1px;background:var(--border-strong);"></span>
+            <span class="sc-eyebrow" style="color:var(--text-tertiary);">Voices</span>
+          </div>
+          <h2 class="sc-display-lg" style="overflow-wrap:break-word;">From the people who run the timetable.</h2>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button type="button" onClick="{{ prevQuote }}" aria-label="Previous testimonial" style="width:44px;height:44px;display:grid;place-items:center;border-radius:var(--radius-control);border:1px solid var(--border-hairline);background:transparent;color:var(--text-primary);transition:border-color 200ms var(--ease-standard),background 200ms var(--ease-standard);" style-hover="border-color:var(--border-strong);background:var(--surface-2);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+          </button>
+          <button type="button" onClick="{{ nextQuote }}" aria-label="Next testimonial" style="width:44px;height:44px;display:grid;place-items:center;border-radius:var(--radius-control);border:1px solid var(--border-hairline);background:transparent;color:var(--text-primary);transition:border-color 200ms var(--ease-standard),background 200ms var(--ease-standard);" style-hover="border-color:var(--border-strong);background:var(--surface-2);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+          </button>
+        </div>
+      </div>
+      <div data-rv style="overflow:hidden;opacity:.001;filter:blur(8px);transition:opacity 800ms var(--ease-enter),filter 800ms var(--ease-enter);">
+        <div style="display:flex;gap:var(--space-6);transform:{{ quoteShift }};transition:transform 700ms var(--ease-emphasized);">
+          <sc-for list="{{ quotes }}" as="q" hint-placeholder-count="3">
+            <div style="flex:0 0 min(100%,520px);padding:var(--space-8);background:var(--surface-1);border:1px solid var(--border-hairline);border-radius:var(--radius-card);display:grid;gap:var(--space-6);align-content:start;">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:var(--space-5);">
+                <span aria-hidden="true" style="font-family:var(--font-display);font-size:3.5rem;line-height:.6;color:{{ q.tone }};">&#8220;</span>
+                <span class="sc-meta" style="border:1px solid var(--border-hairline);border-radius:var(--radius-xs);padding:3px 8px;color:{{ q.tone }};">{{ q.theme }}</span>
+              </div>
+              <p class="sc-quote" style="margin:0;">{{ q.quote }}</p>
+              <div style="display:flex;align-items:center;gap:12px;padding-top:var(--space-2);border-top:1px solid var(--border-hairline);">
+                <span aria-hidden="true" style="display:grid;place-items:center;width:38px;height:38px;border-radius:50%;border:1px solid var(--border-hairline);background:var(--surface-2);font-family:var(--font-display);font-size:.8125rem;font-variation-settings:'wght' 620;color:var(--text-secondary);">{{ q.initials }}</span>
+                <span style="flex:1;min-width:0;display:grid;gap:2px;">
+                  <span class="sc-label" style="color:var(--text-primary);">{{ q.role }}</span>
+                  <span class="sc-caption">{{ q.org }}</span>
+                </span>
+                <span class="sc-meta" style="color:var(--text-tertiary);">Illustrative</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 · Pricing -->
+  <section data-screen-label="10 Pricing" style="padding-block:var(--section-gap);">
+    <div class="sc-container" style="display:grid;gap:var(--space-9);">
+      <div data-rv style="display:grid;gap:var(--space-6);justify-items:center;text-align:center;max-width:min(720px,100%);min-width:0;margin-inline:auto;opacity:.001;transform:translate3d(0,24px,0);filter:blur(8px);transition:opacity 800ms var(--ease-enter),transform 800ms var(--ease-enter),filter 800ms var(--ease-enter);">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span class="sc-meta" style="color:var(--accent-primary);">10</span>
+          <span aria-hidden="true" style="display:block;width:20px;height:1px;background:var(--border-strong);"></span>
+          <span class="sc-eyebrow" style="color:var(--text-tertiary);">Pricing</span>
+        </div>
+        <h2 class="sc-display-lg" style="overflow-wrap:break-word;">Priced around branches, sports and volume.</h2>
+        <div style="display:inline-flex;padding:4px;gap:4px;border:1px solid var(--border-hairline);border-radius:var(--radius-control);background:var(--surface-1);">
+          <button type="button" onClick="{{ setMonthly }}" style="min-height:36px;padding:0 18px;border:0;border-radius:8px;background:{{ mBg }};color:{{ mFg }};font-family:var(--font-body);font-size:var(--fs-body-sm);font-weight:500;transition:background 200ms var(--ease-standard),color 200ms var(--ease-standard);">Monthly</button>
+          <button type="button" onClick="{{ setYearly }}" style="display:flex;align-items:center;gap:8px;min-height:36px;padding:0 18px;border:0;border-radius:8px;background:{{ yBg }};color:{{ yFg }};font-family:var(--font-body);font-size:var(--fs-body-sm);font-weight:500;transition:background 200ms var(--ease-standard),color 200ms var(--ease-standard);">Yearly<span class="sc-meta" style="color:{{ ySave }};">−2 months</span></button>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(288px,1fr));gap:var(--space-6);align-items:start;">
+        <div data-rv style="opacity:.001;transform:translate3d(0,24px,0);filter:blur(7px);transition:opacity 800ms var(--ease-enter),transform 800ms var(--ease-enter),filter 800ms var(--ease-enter);">
+          <x-import component-from-global-scope="SCRIPEPublicWebsiteExperienceSystem_31d3ea.PricingTier" name="Starter" product="academy" blurb="For small academies." price-note="{{ p1 }}" price-meta="{{ pMeta }}" includes="{{ tierStarter }}" cta-label="Start Free Trial" hint-size="100%,540px"></x-import>
+        </div>
+        <div data-rv data-rv-d="110" style="opacity:.001;transform:translate3d(0,24px,0);filter:blur(7px);transition:opacity 800ms var(--ease-enter),transform 800ms var(--ease-enter),filter 800ms var(--ease-enter);">
+          <x-import component-from-global-scope="SCRIPEPublicWebsiteExperienceSystem_31d3ea.PricingTier" name="Growth" product="club" featured="{{ true }}" badge="Most chosen" blurb="For growing clubs and venues." price-note="{{ p2 }}" price-meta="{{ pMeta }}" includes="{{ tierGrowth }}" cta-label="Book a Demo" footnote="Includes onboarding with your operations team." hint-size="100%,580px"></x-import>
+        </div>
+        <div data-rv data-rv-d="220" style="opacity:.001;transform:translate3d(0,24px,0);filter:blur(7px);transition:opacity 800ms var(--ease-enter),transform 800ms var(--ease-enter),filter 800ms var(--ease-enter);">
+          <x-import component-from-global-scope="SCRIPEPublicWebsiteExperienceSystem_31d3ea.PricingTier" name="Enterprise" product="venue" blurb="For multi-branch organizations." price-note="Custom" price-meta="Quoted on branches, sports and volume" includes="{{ tierEnterprise }}" cta-label="Talk to sales" hint-size="100%,540px"></x-import>
+        </div>
+      </div>
+      <p class="sc-caption" style="text-align:center;color:var(--text-tertiary);">Indicative pricing — every plan is confirmed with your operations team before signing.</p>
+    </div>
+  </section>
+
+  <!-- 11 · FAQ -->
+  <section data-screen-label="11 FAQ" style="padding-block:var(--section-gap);">
+    <div class="sc-container" style="display:flex;flex-wrap:wrap;gap:var(--space-8);align-items:flex-start;">
+      <div data-rv style="flex:1 1 300px;max-width:420px;display:grid;gap:var(--space-5);align-content:start;opacity:.001;transform:translate3d(0,24px,0);filter:blur(8px);transition:opacity 800ms var(--ease-enter),transform 800ms var(--ease-enter),filter 800ms var(--ease-enter);">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span class="sc-meta" style="color:var(--accent-primary);">11</span>
+          <span aria-hidden="true" style="display:block;width:20px;height:1px;background:var(--border-strong);"></span>
+          <span class="sc-eyebrow" style="color:var(--text-tertiary);">Questions</span>
+        </div>
+        <h2 class="sc-display-md">Before you talk to sales.</h2>
+      </div>
+      <div data-rv data-faq-list="1" style="flex:2 1 460px;display:grid;opacity:.001;transform:translate3d(0,24px,0);filter:blur(8px);transition:opacity 800ms var(--ease-enter),transform 800ms var(--ease-enter),filter 800ms var(--ease-enter);">
+        <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="8">
+          <div style="border-top:1px solid var(--border-hairline);">
+            <button type="button" onClick="{{ f.toggle }}" style="width:100%;display:flex;align-items:center;gap:var(--space-5);min-height:44px;padding:var(--space-6) 0;background:transparent;border:0;text-align:start;color:var(--text-primary);transition:color 200ms var(--ease-standard);" style-hover="color:var(--link-hover);">
+              <span class="sc-h4" style="flex:1;">{{ f.q }}</span>
+              <span aria-hidden="true" style="display:grid;place-items:center;width:26px;height:26px;flex-shrink:0;transform:{{ f.spin }};transition:transform 360ms var(--ease-settle);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+              </span>
+            </button>
+            <div data-faq-panel="1" style="overflow:hidden;height:0px;transition:height 420ms var(--ease-emphasized);">
+              <div data-faq-inner="1">
+                <p class="sc-body" style="margin:0;max-width:620px;padding-bottom:var(--space-6);">{{ f.a }}</p>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 · Final CTA -->
+  <section data-screen-label="12 Final CTA" style="padding-block:clamp(128px,17vh,208px);background:var(--wash-brand);border-top:1px solid var(--border-hairline);">
+    <div class="sc-container" style="display:grid;gap:var(--space-8);justify-items:center;text-align:center;min-width:0;">
+      <div data-rv style="display:grid;gap:var(--space-6);justify-items:center;max-width:min(840px,100%);min-width:0;opacity:.001;transform:translate3d(0,26px,0);filter:blur(9px);transition:opacity 800ms var(--ease-enter),transform 800ms var(--ease-enter),filter 800ms var(--ease-enter);">
+        <img src="assets/scripe-logo.png" alt="SCRIPE" style="width:52px;height:52px;border-radius:12px;" />
+        <h2 class="sc-hero" style="max-width:min(780px,100%);min-width:0;overflow-wrap:anywhere;">Ready to run your sports organization differently?</h2>
+        <p class="sc-body-lg" style="max-width:min(600px,100%);min-width:0;">Bring your teams, members, venues, coaches and operations together in one powerful platform.</p>
+      </div>
+      <div data-rv data-rv-d="180" style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;opacity:.001;transform:translate3d(0,18px,0);transition:opacity 700ms var(--ease-enter),transform 700ms var(--ease-enter);">
+        <x-import component-from-global-scope="SCRIPEPublicWebsiteExperienceSystem_31d3ea.Button" variant="primary" size="lg" arrow="{{ true }}" hint-size="180px,52px">Start Free Trial</x-import>
+        <x-import component-from-global-scope="SCRIPEPublicWebsiteExperienceSystem_31d3ea.Button" variant="secondary" size="lg" hint-size="160px,52px">Book a Demo</x-import>
+      </div>
+      <span class="sc-caption" style="color:var(--text-tertiary);">Sales-assisted onboarding · typically live within one season break.</span>
+    </div>
+  </section>
+
+  <!-- 13 · Footer -->
+  <x-import component-from-global-scope="SCRIPEPublicWebsiteExperienceSystem_31d3ea.SiteFooter" logo-src="assets/scripe-logo.png" tagline="The Operating System for Modern Sports Organizations" columns="{{ footerCols }}" legal="{{ footerLegal }}" hint-size="100%,460px">
+    <div style="display:flex;gap:var(--space-5);flex-wrap:wrap;">
+      <a href="#" style="font-size:var(--fs-body-sm);color:var(--text-secondary);text-decoration:none;">LinkedIn</a>
+      <a href="#" style="font-size:var(--fs-body-sm);color:var(--text-secondary);text-decoration:none;">X</a>
+      <a href="#" style="font-size:var(--fs-body-sm);color:var(--text-secondary);text-decoration:none;">Instagram</a>
+      <a href="#" style="font-size:var(--fs-body-sm);color:var(--text-secondary);text-decoration:none;">YouTube</a>
+    </div>
+  </x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;revealMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;parallaxDepth&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1,&quot;min&quot;:0,&quot;max&quot;:2,&quot;step&quot;:0.1,&quot;unit&quot;:&quot;×&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Motion&quot;}}">
+class Component extends DCLogic {
+  state = { quote: 0, faq: -1, branch: 0, yearly: false, kpiOp: 1 };
+  rootRef = (el)=>{ this._root = el; };
+  flowRef = (el)=>{ this._flow = el; };
+
+  componentDidMount(){
+    const root = this._root; if(!root) return;
+    this._reduced = (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) || (this.props.revealMotion === false);
+    this._revealAll = ()=> root.querySelectorAll('[data-rv]').forEach((el)=>this._show(el, 0));
+    if(this._reduced || typeof IntersectionObserver === 'undefined'){ this._revealAll(); }
+    else {
+      this._io = new IntersectionObserver((entries)=>{
+        entries.forEach((e)=>{ if(e.isIntersecting){ this._show(e.target, parseFloat(e.target.dataset.rvD || 0)); this._io.unobserve(e.target); } });
+      }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+      root.querySelectorAll('[data-rv]').forEach((el)=>this._io.observe(el));
+      this._fallback = setTimeout(this._revealAll, 2600);
+    }
+    this._onScroll = ()=>{ if(!this._q){ this._q = requestAnimationFrame(()=>{ this._q = 0; this._parallax(); }); } };
+    window.addEventListener('scroll', this._onScroll, { passive:true });
+    window.addEventListener('resize', this._onScroll, { passive:true });
+    this._parallax();
+  }
+  componentWillUnmount(){
+    if(this._io) this._io.disconnect();
+    clearTimeout(this._fallback); clearTimeout(this._kpiT);
+    if(this._q) cancelAnimationFrame(this._q);
+    window.removeEventListener('scroll', this._onScroll);
+    window.removeEventListener('resize', this._onScroll);
+  }
+
+  _show(el, delay){
+    el.style.transitionDelay = (this._reduced ? 0 : (delay || 0)) + 'ms';
+    el.style.opacity = '1'; el.style.transform = 'none'; el.style.filter = 'none';
+    el.querySelectorAll('[data-bar]').forEach((b,i)=>{ b.style.transitionDelay = (i*45)+'ms'; b.style.height = b.dataset.bar; });
+    el.querySelectorAll('[data-fill]').forEach((b,i)=>{ b.style.transitionDelay = (i*70)+'ms'; b.style.width = b.dataset.fill; });
+    el.querySelectorAll('[data-spark]').forEach((s)=>{ s.style.strokeDashoffset = '0'; });
+    el.querySelectorAll('[data-count]').forEach((c,i)=>this._count(c, (delay||0) + i*90));
+  }
+  _count(el, delay){
+    if(el.dataset.counted) return; el.dataset.counted = '1';
+    const to = parseFloat(el.dataset.count) || 0;
+    const pre = el.dataset.countPrefix || '', suf = el.dataset.countSuffix || '';
+    const fmt = (v)=> pre + Math.round(v).toLocaleString('en-US') + suf;
+    if(this._reduced){ el.textContent = fmt(to); return; }
+    const dur = 1300, t0 = performance.now() + (delay||0);
+    const step = (now)=>{
+      const p = Math.max(0, Math.min(1, (now - t0)/dur));
+      el.textContent = fmt(to * (1 - Math.pow(1-p, 3)));
+      if(p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+    setTimeout(()=>{ el.textContent = fmt(to); }, (delay||0) + dur + 120);
+  }
+  _parallax(){
+    const root = this._root; if(!root || this._reduced) return;
+    const vh = window.innerHeight;
+    if(!this._pxEls) this._pxEls = Array.from(root.querySelectorAll('[data-px]'));
+    this._pxEls.forEach((el)=>{
+      const r = el.getBoundingClientRect();
+      if(r.bottom < -200 || r.top > vh + 200) return;
+      const d = (r.top + r.height/2 - vh/2) / vh;
+      el.style.translate = '0 ' + (-d * parseFloat(el.dataset.px) * 100 * (this.props.parallaxDepth ?? 1)).toFixed(2) + 'px';
+    });
+    if(this._flow){
+      const r = this._flow.getBoundingClientRect();
+      const p = Math.max(0, Math.min(1, (vh*0.86 - r.top) / Math.max(1, r.height + vh*0.34)));
+      const segs = this._flow.querySelectorAll('[data-seg]');
+      const n = segs.length || 1;
+      segs.forEach((s, i)=>{
+        const local = Math.max(0, Math.min(1, p*n - i));
+        s.style.width = (local*100).toFixed(1) + '%';
+      });
+    }
+  }
+  // height transitions resolve immediately here, so the open state is always correct
+  _animFaq(list, openIndex){
+    list.querySelectorAll('[data-faq-panel]').forEach((p, i)=>{
+      const target = (i === openIndex) ? p.firstElementChild.scrollHeight : 0;
+      if(p._faqTo === target) return;
+      p._faqTo = target;
+      p.style.height = target + 'px';
+    });
+  }
+  _pickBranch(i){
+    this.setState({ branch: i, kpiOp: 0.15 });
+    clearTimeout(this._kpiT);
+    this._kpiT = setTimeout(()=>this.setState({ kpiOp: 1 }), 170);
+  }
+
+  renderVals(){
+    const T = { academy:'var(--accent-academy)', venue:'var(--accent-venue)', club:'var(--accent-club)', football:'var(--accent-football)', blue:'var(--interactive)', violet:'var(--accent-primary)', live:'var(--live)', pos:'var(--positive)', warn:'var(--attention)', crit:'var(--critical)' };
+    const trusted = ['Football Clubs','Sports Academies','Padel Clubs','Swimming Academies','Sports Venues'].map((name,i)=>({ name, delay:i*70 }));
+
+    const board = [
+      { time:'16:30', group:'U12 · Technical block', place:'Pitch 2 · 90 min', coach:'A. Haddad', state:'Confirmed', tone:T.pos },
+      { time:'17:00', group:'U14 · Small-sided', place:'Five-a-side · 60 min', coach:'M. Osman', state:'In session', tone:T.live },
+      { time:'17:30', group:'Swim squad · Lanes 3–5', place:'Olympic pool · 75 min', coach:'L. Farah', state:'Confirmed', tone:T.pos },
+      { time:'18:00', group:'Padel · Court 1', place:'Member booking · 90 min', coach:'Reception', state:'Paid', tone:T.pos },
+      { time:'18:45', group:'U16 · Position trials', place:'Main stadium · 120 min', coach:'K. Nasser', state:'Needs coach', tone:T.warn }
+    ];
+
+    const modules = [
+      ['Members',T.academy],['Subscriptions',T.club],['Reservations',T.venue],['Payments',T.pos],
+      ['Attendance',T.academy],['Competitions',T.club],['Coaches',T.football],['Parents',T.academy,true],
+      ['Notifications',T.warn],['Reports',T.blue],['CRM',T.blue],['Branches',T.violet]
+    ].map((m,i)=>({ name:m[0], tone:m[1], planned: !!m[2], delay:i*50 }));
+
+    const dashStats = [
+      { to:214, prefix:'', suffix:'K', label:'Revenue this month', sub:'SAR · bookings + memberships', tone:T.pos },
+      { to:1860, prefix:'', suffix:'', label:'Active members', sub:'+124 this month', tone:T.academy },
+      { to:47, prefix:'', suffix:'', label:"Today's reservations", sub:'9 surfaces in use', tone:T.venue },
+      { to:97, prefix:'', suffix:'%', label:'Attendance marked', sub:'Same-day close rate', tone:T.blue }
+    ];
+    const bars = [58,72,64,86,79,94,68].map((v)=>({ h:v+'%' }));
+    const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map((l)=>({ l }));
+    const events = [
+      { name:'U16 league · away', when:'Sat 09:00 · Alexandria', tone:T.club },
+      { name:'Swim time trials', when:'Sat 14:00 · Olympic pool', tone:T.academy },
+      { name:'Padel members night', when:'Sun 19:00 · Courts 1–3', tone:T.venue },
+      { name:'Position trials · U14', when:'Mon 17:30 · Main stadium', tone:T.football }
+    ];
+    const payments = [
+      { who:'H. Kamal', what:'Academy term · U14', amt:'SAR 2,400' },
+      { who:'Padel · Court 2', what:'Recurring booking · 8 weeks', amt:'SAR 3,200' },
+      { who:'R. Sabri', what:'Swim squad · monthly', amt:'SAR 850' },
+      { who:'Corporate · Pitch 1', what:'Friday block · 6 weeks', amt:'SAR 5,100' }
+    ];
+    const notes = [
+      { text:'Coach cover needed for U16 position trials.', ago:'12 min ago', tone:T.warn },
+      { text:'11 subscriptions renew this week.', ago:'1 hour ago', tone:T.blue },
+      { text:'Pool lane 4 maintenance closes Thursday 06:00.', ago:'3 hours ago', tone:T.crit }
+    ];
+
+    const growthBars = [46,55,61,70,82,96].map((v)=>({ h:v+'%' }));
+    const sports = [
+      { name:'Football', pct:'94%', w:'94%', tone:T.football },
+      { name:'Swimming', pct:'88%', w:'88%', tone:T.academy },
+      { name:'Padel', pct:'81%', w:'81%', tone:T.venue },
+      { name:'Basketball', pct:'76%', w:'76%', tone:T.blue },
+      { name:'Gymnastics', pct:'69%', w:'69%', tone:T.club }
+    ];
+    const venues = [
+      { name:'Padel courts', pct:'98%', w:'98%', tone:T.venue },
+      { name:'Olympic pool', pct:'91%', w:'91%', tone:T.academy },
+      { name:'Main stadium', pct:'84%', w:'84%', tone:T.football },
+      { name:'Five-a-side', pct:'77%', w:'77%', tone:T.blue },
+      { name:'Pitch 2', pct:'61%', w:'61%', tone:T.warn }
+    ];
+    const coaches = [
+      { name:'A. Haddad', role:'Technical · U12–U14', n:'18' },
+      { name:'M. Osman', role:'Small-sided · U14', n:'16' },
+      { name:'L. Farah', role:'Swimming squad', n:'14' },
+      { name:'K. Nasser', role:'Trials and selection', n:'11' }
+    ];
+
+    const steps = [
+      ['Member books training','From the member app or reception.'],
+      ['Reservation confirmed','Surface, coach and time held at once.'],
+      ['Payment recorded','Charged on the rule that fits the slot.'],
+      ['Coach notified','Roster and session plan on the phone.'],
+      ['Member receives reminder','Sent before kick-off, not after it.'],
+      ['Attendance tracked','Marked pitchside, offline if needed.'],
+      ['Dashboard updated','Reconciled and reportable the same day.']
+    ].map((s,i)=>({ i, n:String(i+1).padStart(2,'0'), name:s[0], note:s[1], delay:i*80 }));
+
+    const BR = [
+      { name:'All branches', dot:T.violet, kpis:['12,400','SAR 214K','268','97%','92%'], note:'Group view · 4 branches',
+        rows:[{name:'Cairo',detail:'Main stadium, pool, 3 padel courts',util:'94%',dot:T.football},{name:'Maadi',detail:'Five-a-side, 2 padel courts',util:'88%',dot:T.venue},{name:'Nasr City',detail:'Academy pitches, gym hall',util:'81%',dot:T.academy},{name:'Alexandria',detail:'Pool, tennis, basketball',util:'76%',dot:T.club}] },
+      { name:'Cairo', dot:T.football, kpis:['5,120','SAR 96K','112','98%','94%'], note:'Flagship branch · 5 surfaces',
+        rows:[{name:'Main stadium',detail:'11v11 · floodlit',util:'96%',dot:T.football},{name:'Olympic pool',detail:'8 lanes',util:'91%',dot:T.academy},{name:'Padel courts 1–3',detail:'Glass courts',util:'98%',dot:T.venue},{name:'Gym hall',detail:'Indoor · multi-use',util:'72%',dot:T.club}] },
+      { name:'Maadi', dot:T.venue, kpis:['2,860','SAR 51K','74','96%','88%'], note:'Venue-led branch · 3 surfaces',
+        rows:[{name:'Five-a-side',detail:'Two pitches · floodlit',util:'92%',dot:T.blue},{name:'Padel courts 1–2',detail:'Members and guests',util:'89%',dot:T.venue},{name:'Studio',detail:'Fitness classes',util:'68%',dot:T.club}] },
+      { name:'Nasr City', dot:T.academy, kpis:['2,540','SAR 39K','52','97%','81%'], note:'Academy-led branch · 4 surfaces',
+        rows:[{name:'Academy pitch 1',detail:'U8–U12 programs',util:'86%',dot:T.academy},{name:'Academy pitch 2',detail:'U14–U16 programs',util:'79%',dot:T.academy},{name:'Gym hall',detail:'Gymnastics',util:'74%',dot:T.club},{name:'Classroom',detail:'Coach education',util:'41%',dot:T.blue}] },
+      { name:'Alexandria', dot:T.club, kpis:['1,880','SAR 28K','30','94%','76%'], note:'Coastal branch · 4 surfaces',
+        rows:[{name:'Pool',detail:'6 lanes',util:'88%',dot:T.academy},{name:'Tennis courts',detail:'Two courts',util:'72%',dot:T.venue},{name:'Basketball hall',detail:'Indoor',util:'69%',dot:T.blue},{name:'Beach pitch',detail:'Seasonal',util:'55%',dot:T.warn}] }
+    ];
+    const bi = Math.min(this.state.branch, BR.length-1), cur = BR[bi];
+    const kpiLabels = ['Total members','Revenue','Bookings','Attendance','Utilization'];
+    const kpiTones = [T.academy, T.pos, T.venue, T.blue, T.violet];
+
+    const quotes = [
+      { theme:'Operations', quote:'The 5pm question used to be "who is covering pitch two". Now it is answered before anyone asks.', role:'Operations director', org:'Multi-sport academy · Cairo', initials:'OD', tone:T.academy },
+      { theme:'Coaching', quote:'Trial notes reach selection without being retyped. That alone changed our squad meetings.', role:'Technical director', org:'Football club · Nasr City', initials:'TD', tone:T.football },
+      { theme:'Venue management', quote:'Reception stopped negotiating the timetable over the phone. The grid is the answer.', role:'Venue manager', org:'Padel and swimming club · Maadi', initials:'VM', tone:T.venue }
+    ];
+
+    const faqs = [
+      ['What is SCRIPE?','A sports operations system. Members, programs, sessions, surfaces, bookings, payments and reporting run on one connected record instead of separate tools.'],
+      ['Who is SCRIPE for?','Clubs, academies, venues and multi-branch organizations — owners, directors, operations leads, coaches and reception staff.'],
+      ['Can I manage multiple branches?','Yes. Each branch runs its own timetable and staff, while group reporting reads across all of them without duplicate records.'],
+      ['Can I manage different sports?','Programs, surfaces and bookings are sport-agnostic — padel, swimming, basketball, tennis and gymnastics run alongside football.'],
+      ['Can I manage reservations and payments?','Yes. One-off and recurring bookings, pricing rules, payment and check-in sit on the same grid, reconciled the same day.'],
+      ['Can coaches use SCRIPE?','The Coach App holds session plans, rosters, attendance and observations, and works offline when the pitch has no signal.'],
+      ['Can parents access the platform?','Guardians receive session and attendance updates today. A dedicated guardian portal is on the roadmap rather than in the current release.'],
+      ['Is there a free trial?','Trials are set up with our team so your programs, surfaces and staff are mapped before you test it. Request one and we will scope it with you.']
+    ].map((f,i)=>({
+      q:f[0], a:f[1], i,
+      spin: this.state.faq === i ? 'rotate(180deg)' : 'rotate(0deg)',
+      toggle: (ev)=>{
+        const next = this.state.faq === i ? -1 : i;
+        const list = ev.currentTarget.closest('[data-faq-list]');
+        if(list) this._animFaq(list, next);
+        this.setState({ faq: next });
+      }
+    }));
+
+    const y = this.state.yearly;
+    const on = { bg:'var(--interactive)', fg:'#FFFFFF' }, off = { bg:'transparent', fg:'var(--text-secondary)' };
+
+    return {
+      rootRef:this.rootRef, flowRef:this.flowRef,
+      trusted, board, modules, dashStats, bars, days, events, payments, notes,
+      growthBars, sports, venues, coaches, steps, quotes, faqs,
+      branches: BR.map((b,i)=>({
+        name:b.name, dot:b.dot,
+        border: i===bi ? 'var(--accent-primary)' : 'var(--border-hairline)',
+        bg: i===bi ? 'color-mix(in srgb, var(--accent-primary) 14%, transparent)' : 'transparent',
+        fg: i===bi ? 'var(--text-primary)' : 'var(--text-secondary)',
+        pick: ()=>this._pickBranch(i)
+      })),
+      branchKpis: cur.kpis.map((val,i)=>({ val, label:kpiLabels[i], tone:kpiTones[i] })),
+      branchRows: cur.rows.map((r)=>({ ...r, bg:'transparent' })),
+      branchNote: cur.note,
+      kpiOp: this.state.kpiOp,
+      quoteShift: 'translate3d(calc(' + (-this.state.quote) + ' * (min(100%,520px) + var(--space-6))),0,0)',
+      prevQuote: ()=> this.setState((s)=>({ quote: Math.max(0, s.quote - 1) })),
+      nextQuote: ()=> this.setState((s)=>({ quote: Math.min(quotes.length - 1, s.quote + 1) })),
+      setMonthly: ()=> this.setState({ yearly:false }),
+      setYearly: ()=> this.setState({ yearly:true }),
+      mBg: y ? off.bg : on.bg, mFg: y ? off.fg : on.fg,
+      yBg: y ? on.bg : off.bg, yFg: y ? on.fg : off.fg,
+      ySave: y ? 'rgba(255,255,255,.72)' : 'var(--positive)',
+      p1: y ? 'SAR 9,900' : 'SAR 990',
+      p2: y ? 'SAR 24,900' : 'SAR 2,490',
+      pMeta: y ? 'per year · per branch' : 'per month · per branch',
+      tierStarter: ['Members and subscriptions','Programs, groups and sessions','Attendance and reminders','Payments and invoices','Standard reports'],
+      tierGrowth: ['Everything in Starter','Reservations and pricing rules','Competitions and squads','Coach management','CRM and notifications','Business intelligence'],
+      tierEnterprise: ['Everything in Growth','Multi-branch control and reporting','Football Intelligence evidence','Custom roles and permissions','Priority onboarding and support'],
+      footerCols: [
+        { title:'Platform', links:[{label:'SCRIPE Academy',dot:'var(--accent-academy)'},{label:'SCRIPE Venue',dot:'var(--accent-venue)'},{label:'SCRIPE Football Intelligence',dot:'var(--accent-football)'},{label:'SCRIPE Club',dot:'var(--accent-club)'}] },
+        { title:'Solutions', links:[{label:'Sports clubs'},{label:'Sports academies'},{label:'Sports venues'},{label:'Multi-sports organizations'}] },
+        { title:'Resources', links:[{label:'Blog'},{label:'Case studies'},{label:'Knowledge center'},{label:'Product updates'}] },
+        { title:'Company', links:[{label:'About'},{label:'Careers'},{label:'Contact'},{label:'Trust & security'}] },
+        { title:'Support', links:[{label:'Help center'},{label:'Onboarding'},{label:'Status'},{label:'Talk to sales'}] }
+      ],
+      footerLegal: [{label:'Privacy'},{label:'Terms'},{label:'Contact'},{label:'Cookies'}]
+    };
+  }
+}
+</script>
+</body>
+</html>

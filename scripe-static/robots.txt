@@ -1,0 +1,9 @@
+# SCRIPE — robots.txt
+# Every marketing page is crawlable. Run tools/set-domain.mjs to stamp the
+# production domain into the Sitemap and Host lines below.
+
+User-agent: *
+Allow: /
+
+Host: __SITE_URL__
+Sitemap: __SITE_URL__/sitemap.xml

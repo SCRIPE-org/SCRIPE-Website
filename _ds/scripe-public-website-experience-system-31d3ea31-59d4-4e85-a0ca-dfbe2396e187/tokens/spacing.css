@@ -1,0 +1,29 @@
+:root{
+--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;--space-6:24px;--space-7:32px;--space-8:40px;--space-9:48px;--space-10:64px;--space-11:80px;--space-12:96px;--space-13:128px;--space-14:160px;
+--section-gap:clamp(96px,12vh,160px); /* @kind spacing */
+--section-gap-sm:clamp(56px,7vh,96px); /* @kind spacing */
+--container-max:1360px;--container-pad:clamp(20px,4vw,48px); /* @kind spacing */
+--content-max:720px;--form-max:560px;
+--grid-cols:12; /* @kind other */
+--grid-gutter:clamp(16px,2vw,32px); /* @kind spacing */
+--bp-narrow:320px; /* @kind other */
+--bp-mobile:390px; /* @kind other */
+--bp-tablet:768px; /* @kind other */
+--bp-laptop:1024px; /* @kind other */
+--bp-desktop:1440px; /* @kind other */
+--radius-xs:4px;--radius-sm:8px;--radius-control:10px;--radius-card:16px;--radius-media:18px;--radius-tile:24px;--radius-full:999px;
+--border-w:1px;--border-w-strong:1.5px;
+--icon-sm:16px;--icon-md:20px;--icon-lg:24px;
+--control-h:44px;--control-h-lg:52px;--control-h-sm:36px;--hit-min:44px;
+--ratio-cinema:21/9; /* @kind other */
+--ratio-wide:16/9; /* @kind other */
+--ratio-photo:4/3; /* @kind other */
+--ratio-portrait:3/4; /* @kind other */
+--ratio-square:1; /* @kind other */
+--opacity-disabled:.45; /* @kind other */
+--opacity-scrim:.62; /* @kind other */
+--z-nav:100; /* @kind other */
+--z-megamenu:90; /* @kind other */
+--z-overlay:200; /* @kind other */
+--z-toast:300; /* @kind other */
+}
