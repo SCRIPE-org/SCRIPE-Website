@@ -6,7 +6,9 @@
       "Bash(git add *)",
       "Bash(git branch *)",
       "Bash(git commit *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(node -e ' *)",
+      "Bash(node \"C:/Users/DELL/AppData/Local/Temp/claude/e--Hero-image-cinematic-animations/0938773b-fec3-40dc-a4ec-cfa4b7edba98/scratchpad/check-balance.mjs\")"
     ]
   }
 }

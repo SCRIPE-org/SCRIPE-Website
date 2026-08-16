@@ -37,7 +37,7 @@
       : "dark";
   }
 
-  var SURFACE = { dark: "#07111F", light: "#F6F8FB" };
+  var SURFACE = { dark: "#0B0B0E", light: "#F1F2F2" };
 
   function paintMeta(theme) {
     var meta = document.getElementById("meta-theme-color");

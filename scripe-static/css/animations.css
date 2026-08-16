@@ -37,7 +37,8 @@
   filter: none;
 }
 
-/* card hover — replaces the prototype's style-hover attribute */
+/* card hover — controlled, not floating: a border/surface shift plus a small,
+   mechanical 2px settle rather than a soft lift */
 .sc-card-hover {
   transition: border-color var(--motion-micro) var(--ease-standard),
     background var(--motion-micro) var(--ease-standard),
@@ -46,11 +47,11 @@
 .sc-card-hover:hover {
   border-color: var(--border-strong);
   background: var(--surface-2);
-  transform: translate3d(0, calc(-3px * var(--motion-travel)), 0);
+  transform: translate3d(0, calc(-2px * var(--motion-travel)), 0);
 }
 /* reveal + hover compose: only lift once the reveal has resolved */
 [data-rv].sc-card-hover:hover {
-  transform: translate3d(0, calc(-3px * var(--motion-travel)), 0);
+  transform: translate3d(0, calc(-2px * var(--motion-travel)), 0);
 }
 [data-rv]:not([data-rv-shown]).sc-card-hover:hover {
   transform: translate3d(0, var(--rv-y, 22px), 0);

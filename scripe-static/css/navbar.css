@@ -117,7 +117,7 @@
 .sc-navlink[data-active] {
   color: var(--sc-nav-fg, var(--text-primary));
 }
-/* active state: small violet indicator, never a pill */
+/* active state: small signal-lime indicator, never a pill */
 .sc-navlink[data-active]::after {
   content: "";
   position: absolute;
@@ -142,7 +142,7 @@
 /* over the hero the CTA switches to the on-media treatment */
 [data-nav][data-transparent] .sc-btn-sm {
   background: var(--soft-white);
-  color: #0c0e15;
+  color: var(--obsidian);
 }
 [data-nav][data-transparent] .sc-btn-sm:hover {
   background: var(--clean-white);
@@ -426,7 +426,7 @@ body[data-scroll-locked] {
   height: 26px;
   padding-inline: 7px;
   border: 0;
-  border-radius: 7px;
+  border-radius: var(--radius-control);
   background: transparent;
   color: var(--sc-nav-fg-dim, var(--text-secondary));
   font-family: var(--font-body);

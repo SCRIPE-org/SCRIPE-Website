@@ -94,9 +94,12 @@
   min-width:0;
 }
 
+/* Despite the name, this renders the plan-comparison table's "included"
+   checkmarks — a decorative bullet, not a real status. Kept neutral so
+   --positive stays reserved for genuine success/health signals. */
 .u-icon-positive {
   display:inline-flex;
-  color:var(--positive);
+  color:var(--text-secondary);
 }
 
 .u-icon-dim {
@@ -444,7 +447,7 @@
   place-items:center;
   width:clamp(26px,6vw,36px);
   height:clamp(26px,6vw,36px);
-  border-radius:9px;
+  border-radius:var(--radius-tile);
   color:var(--text-tertiary);
 }
 
@@ -464,7 +467,7 @@
   height:36px;
   flex-shrink:0;
   border:1px solid var(--border-hairline);
-  border-radius:9px;
+  border-radius:var(--radius-tile);
   color:var(--interactive);
 }
 
@@ -906,7 +909,7 @@
   min-height: 36px;
   padding: 0 18px;
   border: 0;
-  border-radius: 8px;
+  border-radius: var(--radius-card);
   background: transparent;
   color: var(--text-secondary);
   font-family: var(--font-body);
@@ -917,11 +920,13 @@
 }
 .sc-billing-tab[aria-pressed="true"] {
   background: var(--interactive);
-  color: #ffffff;
+  /* was a hardcoded #fff — invisible on the new lime fill. text-on-accent is
+     the token every other fill already uses for its label. */
+  color: var(--text-on-accent);
 }
 .sc-billing-save {
   color: var(--positive);
 }
 .sc-billing-tab[aria-pressed="true"] .sc-billing-save {
-  color: rgba(255, 255, 255, 0.72);
+  color: color-mix(in srgb, var(--text-on-accent) 72%, transparent);
 }

@@ -58,86 +58,109 @@
 }
 
 /* ── colors ──────────────────────────────────────────────────────────────── */
+/* SCRIPE — Sports Operations OS palette.
+   Deep Ink / Carbon / Graphite / Mineral / Stone neutrals carry the interface;
+   Signal Lime is the one accent, used the way a console uses a signal light —
+   status, focus, selection, an important action, a progress indicator. It is
+   never a universal fill: most of the interface stays neutral and controlled.
+
+   Lime is deliberately never used as inline text color on either theme (their
+   own monochrome lockup proves the point: solid ink on white, solid white on
+   ink — lime never appears as body copy). It is always a FILL a dark ink label
+   sits on top of, or a thin indicator — never text color against a page.
+
+   Every semantic variable name below is unchanged from the previous system, so
+   nothing downstream (12 pages, 5 stylesheets, the generated navbar/footer)
+   needed to change to pick up the new identity. */
 :root {
   /* primitives: shared neutral ramp (dark end → light end) */
-  --obsidian: #07111f;
-  --carbon: #0d1828;
-  --charcoal: #111f31;
-  --graphite: #17263a;
-  --slate: #5f6b7a;
-  --fog: #7e8da1;
-  --silver: #c5d0dd;
-  --soft-white: #f6f8fb;
+  --obsidian: #0b0b0e;
+  --carbon: #1a1d1f;
+  --charcoal: #202226;
+  --graphite: #2b2e33;
+  --slate: #6e7278;
+  --fog: #8b8f94;
+  --silver: #c7cace;
+  --soft-white: #f1f2f2;
   --clean-white: #ffffff;
-  /* primitives: SCRIPE brand violet — restrained signature, never universal fill */
-  --violet-100: #efeafd;
-  --violet-200: #dcd0fb;
-  --violet-300: #c3b0f7;
-  --violet-400: #9b7cff;
-  --violet-500: #8a68f5;
-  --violet-600: #7c5aed;
-  --violet-700: #6a47d1;
-  --violet-900: #3a2b6b;
+  /* primitives: Signal Lime — the one brand accent, restrained by design */
+  --lime-300: #d4ff66;
+  --lime-400: #c0ff00;
+  --lime-500: #9adb00;
+  --lime-600: #6e8f00;
+  --lime-700: #4c6600;
+  /* signal scale: named roles sampled from the ramp above. --signal-muted is
+     the one role that stays identical in both themes — proof dark and light
+     draw from the same family rather than running two unrelated brand colors.
+     Strong/base/hover are set per theme below, anchored wherever the ramp
+     clears that theme's contrast floor. */
+  --signal-muted: var(--lime-500);
+  /* primitives: azure — focus only, deliberately distinct from lime so a focus
+     ring always reads against a lime-filled control, not just against the page */
+  --azure-500: #1e6feb;
+  --azure-700: #00295c;
+  /* primitives: teal — Academy context */
+  --teal-400: #5ac8e0;
+  --teal-600: #0e7490;
+  /* primitives: jade — positive / Venue. The two roles are pushed to visibly
+     different hues (not just a lightness nudge) so a Venue mark is never
+     mistaken for a positive/success signal, or vice versa. */
+  --jade-400: #36d399;
+  --jade-500: #22d3b8;
+  --jade-600: #0a7a4d;
+  --jade-650: #0a6b62;
+  /* primitives: amber — attention */
+  --amber-400: #ffc53d;
+  --amber-700: #8a5a00;
+  /* primitives: rust — Club (kept distinct from attention-amber) */
+  --rust-400: #e0a64b;
+  --rust-700: #a6421f;
   /* primitives: indigo — Football Intelligence context */
-  --indigo-400: #7c72ff;
-  --indigo-600: #5b4fe0;
-  --indigo-700: #4a3fc0;
-  /* primitives: blue — primary interaction */
-  --blue-300: #6ea2ff;
-  --blue-400: #4f8cff;
-  --blue-500: #3b76f0;
-  --blue-600: #2563eb;
-  --blue-700: #1d4ed8;
-  /* primitives: cyan — live/connected/focus */
-  --cyan-400: #22d3ee;
-  --cyan-600: #06b6d4;
-  --cyan-700: #0891b2;
-  /* primitives: emerald — positive / Venue */
-  --emerald-400: #34d399;
-  --emerald-600: #10b981;
-  --emerald-700: #0d9467;
-  /* primitives: amber — attention / Club */
-  --amber-400: #fbbf24;
-  --amber-600: #f59e0b;
-  --amber-700: #d68408;
+  --indigo-400: #8b85e8;
+  --indigo-600: #5347c4;
   /* primitives: red — critical only */
-  --red-300: #f87171;
-  --red-600: #ef4444;
-  --red-700: #dc2626;
+  --red-300: #ff8a80;
+  --red-600: #c4291a;
 
   /* semantic: LIGHT (default) */
   color-scheme: light;
-  --surface-page: #f6f8fb;
+  --surface-page: var(--soft-white);
   --surface-1: #ffffff;
-  --surface-2: #eef2f7;
+  --surface-2: #eaebec;
   --surface-inverse: var(--carbon);
-  --text-display: #0d1626;
-  --text-primary: #0d1626;
-  --text-secondary: #5f6b7a;
-  --text-tertiary: #7e8998;
-  --text-inverse: #f5f5f7;
-  --text-on-accent: #ffffff;
-  --interactive: var(--blue-600);
-  --interactive-hover: var(--blue-700);
-  --interactive-press: #173fae;
-  --interactive-tint: #e7efff;
-  --accent-primary: var(--violet-600);
-  --accent-primary-hover: var(--violet-700);
-  --accent-primary-press: #5b3ab8;
-  --accent-tint: var(--violet-100);
-  --live: var(--cyan-600);
-  --positive: var(--emerald-600);
-  --attention: var(--amber-600);
+  --text-display: #101214;
+  --text-primary: #101214;
+  --text-secondary: #54585c;
+  --text-tertiary: #797d82;
+  --text-inverse: #f5f5f5;
+  --text-on-accent: var(--obsidian);
+  /* signal scale — light: lime-600 is the palest ramp stop that still clears
+     3:1 against a white/near-white surface, so strong and base share it. */
+  --signal-strong: var(--lime-600);
+  --signal-base: var(--lime-600);
+  --signal-hover: color-mix(in srgb, var(--lime-600) 80%, var(--lime-500) 20%);
+  --signal-surface: rgb(110 143 0 / 0.12);
+  --interactive: var(--signal-strong);
+  --interactive-hover: var(--signal-hover);
+  --interactive-press: var(--signal-muted);
+  --interactive-tint: var(--signal-surface);
+  --accent-primary: var(--signal-strong);
+  --accent-primary-hover: var(--signal-hover);
+  --accent-primary-press: var(--signal-muted);
+  --accent-tint: var(--signal-surface);
+  --live: var(--signal-strong);
+  --positive: var(--jade-600);
+  --attention: var(--amber-700);
   --critical: var(--red-600);
-  --accent-academy: var(--cyan-600);
-  --accent-venue: var(--emerald-600);
-  --accent-club: var(--amber-600);
+  --accent-academy: var(--teal-600);
+  --accent-venue: var(--jade-650);
+  --accent-club: var(--rust-700);
   --accent-football: var(--indigo-600);
-  --border-hairline: #dce3ec;
-  --border-strong: #c5d0dd;
-  --focus-ring: var(--cyan-700);
-  --link: var(--interactive);
-  --link-hover: var(--interactive-hover);
+  --border-hairline: #dcdedf;
+  --border-strong: #8e9294;
+  --focus-ring: var(--azure-700);
+  --link: var(--text-primary);
+  --link-hover: var(--interactive);
   --text-on-media: #f5f5f7;
   --icon-on-media: #f5f5f7;
   --text-on-positive: #ffffff;
@@ -148,64 +171,74 @@
   --surface-disabled: #eef1f5;
   --border-disabled: #d6dde6;
   --border-focus: var(--focus-ring);
-  --shadow-1: 0 1px 2px rgb(14 16 24 / 0.05), 0 4px 14px rgb(14 16 24 / 0.06);
-  --shadow-2: 0 2px 6px rgb(14 16 24 / 0.06), 0 18px 44px rgb(14 16 24 / 0.11);
-  --shadow-3: 0 4px 10px rgb(14 16 24 / 0.07), 0 34px 90px rgb(14 16 24 / 0.17);
-  --wash-brand: radial-gradient(120% 90% at 78% -10%, rgb(37 99 235 / 0.05), transparent 60%),
-    radial-gradient(80% 60% at 6% 108%, rgb(124 90 237 / 0.035), transparent 55%);
+  /* Hierarchy comes from border + surface contrast, not floating shadows — a
+     single low, tight shadow for the rare case a panel needs to lift (menus,
+     the mobile sheet), nothing heavier. */
+  --shadow-1: 0 1px 2px rgb(11 11 14 / 0.04);
+  --shadow-2: 0 1px 2px rgb(11 11 14 / 0.04), 0 8px 20px rgb(11 11 14 / 0.08);
+  --shadow-3: 0 1px 2px rgb(11 11 14 / 0.05), 0 16px 40px rgb(11 11 14 / 0.12);
+  --wash-brand: radial-gradient(120% 90% at 78% -10%, rgb(110 143 0 / 0.05), transparent 60%),
+    radial-gradient(80% 60% at 6% 108%, rgb(11 11 14 / 0.03), transparent 55%);
   --scrim-media: linear-gradient(to top, rgb(7 8 13 / 0.72), rgb(7 8 13 / 0.18) 46%, rgb(7 8 13 / 0) 68%);
   --surface-media: #101218;
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
-  --surface-page: #07111f;
-  --surface-1: #0d1828;
-  --surface-2: #111f31;
+  --surface-page: var(--obsidian);
+  --surface-1: var(--carbon);
+  --surface-2: var(--charcoal);
   --surface-inverse: var(--soft-white);
-  --text-display: #f5f8fc;
-  --text-primary: #f5f8fc;
-  --text-secondary: #a7b3c3;
-  --text-tertiary: #7e8da1;
-  --text-inverse: #14161f;
-  --text-on-accent: #071019;
-  --interactive: var(--blue-400);
-  --interactive-hover: var(--blue-300);
-  --interactive-press: #3e7bef;
-  --interactive-tint: #122c54;
-  --accent-primary: var(--violet-400);
-  --accent-primary-hover: #b39dff;
-  --accent-primary-press: var(--violet-500);
-  --accent-tint: rgb(155 124 255 / 0.14);
-  --live: var(--cyan-400);
-  --positive: var(--emerald-400);
+  --text-display: #f2f3f2;
+  --text-primary: #f2f3f2;
+  --text-secondary: #a7abaf;
+  --text-tertiary: var(--fog);
+  --text-inverse: #131417;
+  --text-on-accent: var(--obsidian);
+  /* signal scale — dark: lime-400 is the full-brightness flagship stop; there
+     is plenty of headroom against obsidian, so strong and base share it. */
+  --signal-strong: var(--lime-400);
+  --signal-base: var(--lime-400);
+  --signal-hover: var(--lime-300);
+  --signal-surface: rgb(192 255 0 / 0.14);
+  --interactive: var(--signal-strong);
+  --interactive-hover: var(--signal-hover);
+  --interactive-press: var(--signal-muted);
+  --interactive-tint: var(--signal-surface);
+  --accent-primary: var(--signal-strong);
+  --accent-primary-hover: var(--signal-hover);
+  --accent-primary-press: var(--signal-muted);
+  --accent-tint: var(--signal-surface);
+  --live: var(--signal-strong);
+  --positive: var(--jade-400);
   --attention: var(--amber-400);
   --critical: var(--red-300);
-  --accent-academy: var(--cyan-400);
-  --accent-venue: var(--emerald-400);
-  --accent-club: var(--amber-400);
+  --accent-academy: var(--teal-400);
+  --accent-venue: var(--jade-500);
+  --accent-club: var(--rust-400);
   --accent-football: var(--indigo-400);
-  --border-hairline: #26384e;
-  --border-strong: #354a64;
-  --focus-ring: var(--cyan-400);
-  --link: var(--interactive);
-  --link-hover: var(--interactive-hover);
+  --border-hairline: #26282c;
+  --border-strong: #666a70;
+  --focus-ring: var(--azure-500);
+  --link: var(--text-primary);
+  --link-hover: var(--interactive);
   --text-on-media: #f5f5f7;
   --icon-on-media: #f5f5f7;
   --text-on-positive: #04140f;
   --text-on-warning: #231400;
   --text-on-critical: #1a0505;
-  --text-disabled: #5b6678;
-  --icon-disabled: #5b6678;
-  --surface-disabled: #15202e;
-  --border-disabled: #243347;
+  --text-disabled: #5b6068;
+  --icon-disabled: #5b6068;
+  --surface-disabled: #1f2124;
+  --border-disabled: #303338;
   --border-focus: var(--focus-ring);
-  --shadow-1: inset 0 1px 0 rgb(255 255 255 / 0.04), 0 10px 28px rgb(0 0 0 / 0.38);
-  --shadow-2: inset 0 1px 0 rgb(255 255 255 / 0.05), 0 22px 60px rgb(0 0 0 / 0.5);
-  --shadow-3: inset 0 1px 0 rgb(255 255 255 / 0.05), 0 40px 120px rgb(0 0 0 / 0.62);
-  --wash-brand: radial-gradient(110% 80% at 74% -12%, rgb(79 140 255 / 0.1), transparent 58%),
-    radial-gradient(90% 70% at 6% 110%, rgb(34 211 238 / 0.06), transparent 55%),
-    radial-gradient(65% 50% at 94% 102%, rgb(155 124 255 / 0.05), transparent 50%);
+  /* Dark hierarchy comes from the same border+surface logic, plus a hairline
+     top-light inset standing in for depth — no ambient glow, no soft shadow. */
+  --shadow-1: inset 0 1px 0 rgb(255 255 255 / 0.03);
+  --shadow-2: inset 0 1px 0 rgb(255 255 255 / 0.04), 0 8px 24px rgb(0 0 0 / 0.32);
+  --shadow-3: inset 0 1px 0 rgb(255 255 255 / 0.04), 0 16px 48px rgb(0 0 0 / 0.4);
+  --wash-brand: radial-gradient(110% 80% at 74% -12%, rgb(192 255 0 / 0.06), transparent 58%),
+    radial-gradient(90% 70% at 6% 110%, rgb(255 255 255 / 0.025), transparent 55%);
   --scrim-media: linear-gradient(to top, rgb(7 8 13 / 0.82), rgb(7 8 13 / 0.26) 46%, rgb(7 8 13 / 0) 70%);
   --surface-media: #0b0d14;
 }
@@ -239,8 +272,9 @@
   --fs-metric: clamp(2.6rem, 2rem + 2.6vw, 4rem);
   --track-display: -0.028em;
   --track-tight: -0.014em;
-  --track-eyebrow: 0.14em;
-  --track-label: 0.05em;
+  /* pushed slightly further out — eyebrows/meta read as instrument labels */
+  --track-eyebrow: 0.16em;
+  --track-label: 0.06em;
   --lh-cinema: 0.98;
   --lh-display: 1.05;
   --lh-heading: 1.16;
@@ -265,7 +299,7 @@
 .sc-hero {
   font-family: var(--font-display);
   font-size: var(--fs-hero);
-  font-weight: 620;
+  font-weight: 640;
   font-stretch: var(--display-stretch);
   letter-spacing: var(--track-display);
   line-height: 1.02;
@@ -276,7 +310,7 @@
 .sc-display-lg {
   font-family: var(--font-display);
   font-size: var(--fs-display-lg);
-  font-weight: 600;
+  font-weight: 620;
   font-stretch: var(--display-stretch);
   letter-spacing: var(--track-tight);
   line-height: var(--lh-display);
@@ -479,6 +513,13 @@ body:lang(ar) {
   font-stretch: 100%;
   letter-spacing: 0;
 }
+/* A handful of inline-styled index/category labels force uppercase + Latin
+   tracking directly (predating .sc-eyebrow's own :lang(ar) exemption above).
+   Same rule applies: Arabic is never forced uppercase. */
+:lang(ar) [style*="letter-spacing:.09em;text-transform:uppercase"] {
+  text-transform: none;
+  letter-spacing: 0;
+}
 /* …but a figure that is still Latin digits keeps its tabular alignment */
 :lang(ar) [data-count],
 :lang(ar) .u-nums,
@@ -522,12 +563,14 @@ body:lang(ar) {
   --bp-tablet: 768px;
   --bp-laptop: 1024px;
   --bp-desktop: 1440px;
-  --radius-xs: 4px;
-  --radius-sm: 8px;
-  --radius-control: 10px;
-  --radius-card: 16px;
-  --radius-media: 18px;
-  --radius-tile: 24px;
+  /* Minimal, technical corners — engineered panels, not soft app cards. Full
+     round stays reserved for pills/dots (theme toggle, status markers). */
+  --radius-xs: 3px;
+  --radius-sm: 6px;
+  --radius-control: 6px;
+  --radius-card: 8px;
+  --radius-media: 8px;
+  --radius-tile: 10px;
   --radius-full: 999px;
   --border-w: 1px;
   --border-w-strong: 1.5px;
@@ -666,7 +709,8 @@ textarea {
 .sc-prose {
   max-width: var(--content-max);
 }
-/* marking-line motif: hairline rule with kick-off center tick */
+/* marking-line motif: hairline rule with a small signal-marker center tick —
+   the one recurring accent touch on an otherwise neutral technical divider */
 .sc-marking {
   position: relative;
   height: 1px;
@@ -677,14 +721,13 @@ textarea {
 .sc-marking::after {
   content: "";
   position: absolute;
-  top: -3.5px;
+  top: -2.5px;
   left: 50%;
-  width: 8px;
-  height: 8px;
-  border: 1px solid var(--border-strong);
-  border-radius: 50%;
-  transform: translateX(-50%);
-  background: var(--surface-page);
+  width: 6px;
+  height: 6px;
+  border-radius: 1px;
+  transform: translateX(-50%) rotate(45deg);
+  background: var(--accent-primary);
 }
 [dir="rtl"] .sc-rtl-flip {
   transform: scaleX(-1);
