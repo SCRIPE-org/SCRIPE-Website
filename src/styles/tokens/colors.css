@@ -1,0 +1,91 @@
+/* ============================================================================
+   SCRIPE — Fusion color tokens
+   Primitives (brand-fixed hex) + two fully authored semantic palettes.
+   Light = :root (default). Dark = [data-theme="dark"]. Both palettes are
+   written out explicitly — no color-mix inversion tricks deriving one theme
+   from the other. On lime fills, the foreground is always ink, never white.
+   ============================================================================ */
+
+:root {
+  /* primitives: shared neutral ramp (dark end -> light end) */
+  --obsidian: #0b0b0e;
+  --carbon: #1a1d1f;
+  --charcoal: #202226;
+  --graphite: #2b2e33;
+  --slate: #6e7278;
+  --fog: #8b8f94;
+  --silver: #c7cace;
+  --soft-white: #f1f2f2;
+  --clean-white: #ffffff;
+
+  /* primitives: Signal Lime — the one brand accent, restrained by design */
+  --lime-300: #d4ff66;
+  --lime-400: #c0ff00;
+  --lime-500: #9adb00;
+  --lime-600: #6e8f00;
+  --lime-700: #4c6600;
+
+  /* primitives: azure — focus only, deliberately distinct from lime so a
+     focus ring always reads against a lime-filled control, not just the page */
+  --azure-500: #1e6feb;
+
+  /* primitives: teal — Academy context */
+  --teal-400: #5ac8e0;
+  --teal-600: #0e7490;
+
+  /* primitives: jade — Venue context */
+  --jade-400: #36d399;
+  --jade-600: #0a7a4d;
+
+  /* primitives: indigo — Football Intelligence context */
+  --indigo-400: #8b85e8;
+  --indigo-600: #5347c4;
+
+  /* primitives: rust — Club context */
+  --rust-400: #e0a64b;
+  --rust-700: #a6421f;
+
+  /* ── semantic: LIGHT (default) ── */
+  color-scheme: light;
+  --surface-page: var(--soft-white);
+  --surface-raised: var(--clean-white);
+  --surface-overlay: #eaebec;
+  --text-primary: #101214;
+  --text-secondary: #54585c;
+  --text-muted: #797d82;
+  /* fill role: brand lime tuned so ink stays comfortably legible on top */
+  --accent: var(--lime-600);
+  --accent-ink: var(--obsidian);
+  /* text role: lime used AS a foreground color needs its own, darker stop —
+     raw lime-400/600 on a near-white page fails contrast as running text */
+  --accent-text: var(--lime-700);
+  --border-subtle: #dcdedf;
+  --border-strong: #8e9294;
+  --focus-ring: var(--azure-500);
+  --accent-academy: var(--teal-600);
+  --accent-venue: var(--jade-600);
+  --accent-fi: var(--indigo-600);
+  --accent-club: var(--rust-700);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --surface-page: var(--obsidian);
+  --surface-raised: var(--carbon);
+  --surface-overlay: var(--charcoal);
+  --text-primary: #f2f3f2;
+  --text-secondary: #a7abaf;
+  --text-muted: var(--fog);
+  /* fill role: full-brightness flagship lime — plenty of headroom on obsidian */
+  --accent: var(--lime-400);
+  --accent-ink: var(--obsidian);
+  /* text role: near-black page gives bright lime all the contrast it needs */
+  --accent-text: var(--lime-400);
+  --border-subtle: #26282c;
+  --border-strong: #666a70;
+  --focus-ring: var(--azure-500);
+  --accent-academy: var(--teal-400);
+  --accent-venue: var(--jade-400);
+  --accent-fi: var(--indigo-400);
+  --accent-club: var(--rust-400);
+}

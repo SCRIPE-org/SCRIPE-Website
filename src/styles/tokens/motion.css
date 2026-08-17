@@ -1,0 +1,30 @@
+/* ============================================================================
+   SCRIPE — Fusion motion tokens
+   Durations, easing curves, and the reduced-motion travel switch. Components
+   multiply translate/expansion distances by --motion-travel so choreography
+   degrades to designed fades/cuts instead of just disabling transitions.
+   ============================================================================ */
+
+:root {
+  --motion-immediate: 100ms;
+  --motion-quick: 200ms;
+  --motion-standard: 320ms;
+  --motion-deliberate: 600ms;
+  --motion-narrative: 1000ms;
+
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-emphasized: cubic-bezier(0.3, 0, 0, 1);
+  --ease-cinematic: cubic-bezier(0.65, 0, 0.15, 1);
+  --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* travel multiplier: 1 = full choreography, 0 = reduced motion */
+  --motion-travel: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-travel: 0;
+  }
+}

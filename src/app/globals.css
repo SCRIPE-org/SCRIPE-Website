@@ -1,1 +1,55 @@
+@import "../styles/tokens/colors.css";
+@import "../styles/tokens/typography.css";
+@import "../styles/tokens/spacing.css";
+@import "../styles/tokens/motion.css";
+@import "../styles/tokens/z.css";
 @import "tailwindcss";
+
+@theme inline {
+  /* colors */
+  --color-surface-page: var(--surface-page);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-overlay: var(--surface-overlay);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-text: var(--accent-text);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
+  --color-focus-ring: var(--focus-ring);
+  --color-accent-academy: var(--accent-academy);
+  --color-accent-venue: var(--accent-venue);
+  --color-accent-fi: var(--accent-fi);
+  --color-accent-club: var(--accent-club);
+
+  /* radius */
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-full: var(--radius-full);
+
+  /* fonts */
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-display-ar: var(--font-display-ar);
+  --font-body-ar: var(--font-body-ar);
+}
+
+body {
+  background: var(--surface-page);
+  color: var(--text-primary);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}

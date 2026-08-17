@@ -1,0 +1,45 @@
+/* ============================================================================
+   SCRIPE — Fusion typography tokens
+   Fluid clamp() scale, font-family hooks (Latin + Arabic), Arabic rhythm.
+   Font files are wired in a later task — these are the hooks components bind
+   to now so nothing has to change when the faces land.
+   ============================================================================ */
+
+:root {
+  --font-display: "Archivo", "Noto Kufi Arabic", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", "Noto Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+  --font-display-ar: "Noto Kufi Arabic", "Archivo", system-ui, sans-serif;
+  --font-body-ar: "Noto Sans Arabic", "Inter", system-ui, sans-serif;
+
+  /* fluid scale: clamp(min, viewport-driven midpoint, max) */
+  --fs-cinema: clamp(3.4rem, 1rem + 7.6vw, 7.25rem);
+  --fs-display: clamp(2.3rem, 1.4rem + 2.9vw, 3.6rem);
+  --fs-h1: clamp(1.75rem, 1.4rem + 1.2vw, 2.25rem);
+  --fs-h2: clamp(1.45rem, 1.25rem + 0.7vw, 1.75rem);
+  --fs-h3: 1.25rem;
+  --fs-lead: 1.1875rem;
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+  --fs-meta: 0.75rem;
+
+  /* Arabic rhythm: looser leading than Latin body copy */
+  --lh-body-ar: 1.85;
+}
+
+/* Arabic overrides: no Latin-style negative tracking, own line-height/face */
+:lang(ar) {
+  letter-spacing: 0;
+}
+:lang(ar) body,
+body:lang(ar) {
+  font-family: var(--font-body-ar);
+  line-height: var(--lh-body-ar);
+}
+:lang(ar) h1,
+:lang(ar) h2,
+:lang(ar) h3,
+:lang(ar) h4,
+:lang(ar) h5,
+:lang(ar) h6 {
+  font-family: var(--font-display-ar);
+}
