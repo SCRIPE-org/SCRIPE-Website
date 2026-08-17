@@ -25,6 +25,7 @@
 - Verification is code-read + build-based. Do not start dev servers/browser previews (standing user rule).
 - Gate per task: `npm run typecheck && npm run lint && npm run build` green before commit (tests too where the task has them).
 - Copy governance: no fake metrics, no invented logos/testimonials; copy source is `backup/scripe-static/` HTML (EN) + `backup/scripe-static/js/lang-ar.js` (AR).
+- Documentation comments (user directive 2026-08-18): every source file gets a concise file-level doc header (purpose + role in the system); every exported function/component/type gets a JSDoc block (what it does, params/returns where non-obvious). No line-by-line narration — document the contract, not the mechanics. Files from Tasks 2–6 get retrofitted in the final fix wave.
 
 ---
 
