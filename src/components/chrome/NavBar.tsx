@@ -11,19 +11,24 @@
  * it rather than a fully opaque bar.
  *
  * Renders `MobileNav` for viewports below `lg`, passing it already-rendered
- * `LocaleSwitch`/`ThemeToggle` instances — see `MobileNav`'s file header for
- * why a Client Component can't import and instantiate `LocaleSwitch`
- * (a Server Component) itself.
+ * `LocaleSwitch`/`ThemeToggle` instances so both controls are composed once,
+ * in one place, and reused in both the desktop row and the mobile sheet.
  */
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/Button";
 import { ThemeToggle } from "@/components/chrome/ThemeToggle";
+import { BrandMark } from "./BrandMark";
 import { LocaleSwitch } from "./LocaleSwitch";
 import { MegaMenu } from "./MegaMenu";
 import { MobileNav } from "./MobileNav";
 import { PRIMARY_CTA, PRIMARY_NAV, SIGN_IN_CTA } from "./ia";
 
+/**
+ * Renders the header: skip link, brand lockup, primary nav, locale/theme
+ * controls, CTAs, and the mobile nav trigger. See the file header for the
+ * full composition contract.
+ */
 export async function NavBar() {
   const t = await getTranslations();
 
@@ -40,10 +45,7 @@ export async function NavBar() {
 
       <div className="mx-auto flex h-[72px] max-w-[1360px] items-center gap-6 px-[clamp(var(--space-5),4vw,var(--space-9))]">
         <Link href="/" aria-label={t("nav.home")} className="inline-flex shrink-0 items-center gap-2.5">
-          <svg width="26" height="27" viewBox="0 0 96 100" fill="none" aria-hidden="true" className="text-text-primary shrink-0">
-            <path fill="currentColor" d="M76 0H0V63H64V74H0V86L14 100H90V37H26V26H90V14L76 0Z" />
-            <path style={{ fill: "var(--accent)" }} d="M82 0H94V12L82 0Z" />
-          </svg>
+          <BrandMark size={26} className="text-text-primary" />
           <span className="font-display text-text-primary text-[1.0625rem] font-semibold tracking-[0.08em]">
             {t("common.brand")}
           </span>

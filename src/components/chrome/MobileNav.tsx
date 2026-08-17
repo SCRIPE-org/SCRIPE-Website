@@ -5,14 +5,13 @@
  * `lg` breakpoint, where `NavBar`'s desktop nav/CTA row is hidden.
  *
  * Client Component because it owns open state, a real focus trap and a
- * scroll lock — one of exactly three "use client" boundaries in the site
- * chrome (the others are `MegaMenu` and `ThemeToggle`). `localeSwitch` and
- * `themeToggle` arrive as already-rendered nodes rather than being imported
- * here: `LocaleSwitch` is a Server Component (it calls `next-intl/server`
- * APIs that only run server-side), and a Client Component can only render a
- * Server Component if a Server Component ancestor passes it down as
- * children/props — it cannot import and instantiate one itself. `NavBar`
- * renders both once and passes them through.
+ * scroll lock — one of the "use client" boundaries in the site chrome
+ * (alongside `MegaMenu`, `LocaleSwitch` and `ThemeToggle`). `localeSwitch`
+ * and `themeToggle` still arrive as already-rendered nodes from `NavBar`
+ * rather than being imported and instantiated here directly: `NavBar`
+ * renders each control exactly once and reuses that same composition point
+ * for both the desktop row and this sheet, instead of each surface owning
+ * its own separate instance.
  *
  * Behavior contract: Escape closes and returns focus to the toggle button;
  * Tab/Shift+Tab cycle only through the sheet's own focusable elements
@@ -40,8 +39,8 @@ import { ACCENT_DOT_CLASS, PRIMARY_CTA, PRIMARY_NAV, SIGN_IN_CTA, SOLUTIONS } fr
 
 /** Props for {@link MobileNav}. */
 export interface MobileNavProps {
-  /** A rendered `LocaleSwitch` instance, supplied by `NavBar` (see the file
-   *  header for why this can't be imported directly here). */
+  /** A rendered `LocaleSwitch` instance, supplied by `NavBar` so both
+   *  surfaces share one composition point (see the file header). */
   localeSwitch: ReactNode;
   /** A rendered `ThemeToggle` instance, supplied by `NavBar`. */
   themeToggle: ReactNode;
@@ -56,6 +55,12 @@ function focusableElements(root: HTMLElement | null): HTMLElement[] {
   );
 }
 
+/**
+ * Renders the hamburger toggle button and, while open, the full-screen nav
+ * sheet. See the file header for the full behavior contract.
+ *
+ * @param props - See {@link MobileNavProps}.
+ */
 export function MobileNav({ localeSwitch, themeToggle }: MobileNavProps) {
   const t = useTranslations();
   const [open, setOpen] = useState(false);
