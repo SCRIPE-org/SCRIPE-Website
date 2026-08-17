@@ -1,4 +1,5 @@
 import "@/app/globals.css";
+import { fontClassesFor } from "@/fonts";
 
 export function generateStaticParams() {
   return [{ locale: "en" }, { locale: "ar" }];
@@ -11,10 +12,10 @@ export default async function LocaleLayout({
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }) {
-  await params;
+  const { locale } = await params;
 
   return (
-    <html>
+    <html className={fontClassesFor(locale as "en" | "ar")}>
       <body>{children}</body>
     </html>
   );

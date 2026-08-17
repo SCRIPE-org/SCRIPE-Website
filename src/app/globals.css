@@ -42,6 +42,7 @@
 body {
   background: var(--surface-page);
   color: var(--text-primary);
+  font-family: var(--font-body);
 }
 
 :focus-visible {
