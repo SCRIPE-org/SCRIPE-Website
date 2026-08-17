@@ -4,6 +4,7 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { dirFor, routing } from "@/i18n/routing";
+import { THEME_SCRIPT } from "@/theme/theme-script";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -29,7 +30,16 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} dir={dirFor(locale)} className={fontClassesFor(locale as "en" | "ar")}>
+    <html
+      lang={locale}
+      dir={dirFor(locale)}
+      className={fontClassesFor(locale as "en" | "ar")}
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+        <meta name="theme-color" content="#0B0B0E" />
+      </head>
       <body>
         <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
       </body>
