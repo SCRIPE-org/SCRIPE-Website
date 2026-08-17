@@ -8,18 +8,45 @@
       "sportsVenues": "Sports Venues",
       "multiSportsOrganizations": "Multi-Sports Organizations"
     },
+    "solutionsDescriptions": {
+      "sportsClubs": "Teams, members, competitions and club operations from one place.",
+      "sportsAcademies": "Development programs, coaches, parents and athletes in one rhythm.",
+      "sportsVenues": "Courts, fields, pools, reservations and utilization.",
+      "multiSportsOrganizations": "Multiple branches, multiple sports, one operational picture."
+    },
     "pricing": "Pricing",
     "resources": "Resources",
     "company": "Company",
     "contact": "Contact",
     "signIn": "Sign In",
-    "bookDemo": "Book a Demo"
+    "bookDemo": "Book a Demo",
+    "allSolutions": "All solutions",
+    "megaMeta": "One platform — four ways sport is organized",
+    "home": "SCRIPE — home",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "primary": "Primary",
+    "siteNav": "Site navigation"
   },
   "common": {
     "themeToggleLabel": "Theme",
     "langSwitchLabel": "Language",
     "skipToContent": "Skip to content",
     "brand": "SCRIPE"
+  },
+  "footer": {
+    "product": "Product",
+    "legal": "Legal",
+    "tagline": "The Operating System for Modern Sports Organizations",
+    "socialNote": "Social channels are not published yet.",
+    "platformOverview": "Platform overview",
+    "membersSubs": "Members and subscriptions",
+    "reservationsPayments": "Reservations and payments",
+    "reportsAnalytics": "Reports and analytics",
+    "aboutScripe": "About SCRIPE",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "rights": "© {year} SCRIPE. All rights reserved."
   },
   "forms": {
     "required": "This field is required.",

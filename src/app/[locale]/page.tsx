@@ -1,5 +1,4 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { ThemeToggle } from "@/components/chrome/ThemeToggle";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -29,7 +28,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </Field>
         </Card>
       </Section>
-      <ThemeToggle />
     </>
   );
 }

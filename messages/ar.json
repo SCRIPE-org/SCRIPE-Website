@@ -8,18 +8,45 @@
       "sportsVenues": "المنشآت الرياضية",
       "multiSportsOrganizations": "المنظمات متعددة الرياضات"
     },
+    "solutionsDescriptions": {
+      "sportsClubs": "الفرق والأعضاء والمسابقات وتشغيل النادي من مكان واحد.",
+      "sportsAcademies": "برامج التطوير والمدربون وأولياء الأمور واللاعبون في إيقاع واحد.",
+      "sportsVenues": "ملاعب وميادين ومسابح وحجوزات ومعدل استخدام.",
+      "multiSportsOrganizations": "فروع متعددة، رياضات متعددة، صورة تشغيلية واحدة."
+    },
     "pricing": "الأسعار",
     "resources": "المصادر",
     "company": "الشركة",
     "contact": "تواصل معنا",
     "signIn": "تسجيل الدخول",
-    "bookDemo": "احجز عرضًا توضيحيًا"
+    "bookDemo": "احجز عرضًا توضيحيًا",
+    "allSolutions": "كل الحلول",
+    "megaMeta": "منصة واحدة — أربع طرق لتنظيم الرياضة",
+    "home": "SCRIPE — الرئيسية",
+    "openMenu": "افتح القائمة",
+    "closeMenu": "أغلق القائمة",
+    "primary": "التنقل الرئيسي",
+    "siteNav": "تنقل الموقع"
   },
   "common": {
     "themeToggleLabel": "المظهر",
     "langSwitchLabel": "اللغة",
     "skipToContent": "تخطَّ إلى المحتوى",
     "brand": "SCRIPE"
+  },
+  "footer": {
+    "product": "المنتج",
+    "legal": "قانوني",
+    "tagline": "نظام تشغيل المنظمات الرياضية الحديثة",
+    "socialNote": "لم تُنشر قنوات التواصل بعد.",
+    "platformOverview": "نظرة عامة على المنصة",
+    "membersSubs": "الأعضاء والاشتراكات",
+    "reservationsPayments": "الحجوزات والمدفوعات",
+    "reportsAnalytics": "التقارير والتحليلات",
+    "aboutScripe": "عن SCRIPE",
+    "privacy": "الخصوصية",
+    "terms": "الشروط",
+    "rights": "© {year} SCRIPE. جميع الحقوق محفوظة."
   },
   "forms": {
     "required": "هذا الحقل مطلوب.",

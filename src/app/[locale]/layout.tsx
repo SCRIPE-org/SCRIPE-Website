@@ -3,6 +3,8 @@ import { fontClassesFor } from "@/fonts";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { Footer } from "@/components/chrome/Footer";
+import { NavBar } from "@/components/chrome/NavBar";
 import { dirFor, routing } from "@/i18n/routing";
 import { THEME_SCRIPT } from "@/theme/theme-script";
 
@@ -41,7 +43,11 @@ export default async function LocaleLayout({
         <meta name="theme-color" content="#0B0B0E" />
       </head>
       <body>
-        <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider messages={messages}>
+          <NavBar />
+          <main id="main">{children}</main>
+          <Footer />
+        </NextIntlClientProvider>
       </body>
     </html>
   );
