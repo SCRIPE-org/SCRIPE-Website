@@ -3,11 +3,11 @@
  *
  * A raised surface for grouping content (evidence tiles, pricing tiers,
  * feature blocks). Optionally takes a product-world `accent`, rendered as a
- * thicker inline-start border edge in that world's accent color — using the
- * logical `border-inline-start` (Tailwind's `border-s-*`) rather than
- * `border-left`, so the accent edge sits on the correct physical side in
- * both LTR and RTL without any direction-specific code. A Server Component
- * — no hooks.
+ * thicker top border edge in that world's accent color, per the design
+ * contract (`border-t-*`). Top/bottom is the block axis — unlike the inline
+ * axis, it's unaffected by LTR/RTL text direction, so a physical `border-t`
+ * is correct here and needs no logical-property substitute. A Server
+ * Component — no hooks.
  */
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { cx } from "./cx";
@@ -16,15 +16,15 @@ import { cx } from "./cx";
 export type CardAccent = "academy" | "venue" | "fi" | "club";
 
 const ACCENT_BORDER_CLASSES: Record<CardAccent, string> = {
-  academy: "border-s-accent-academy",
-  venue: "border-s-accent-venue",
-  fi: "border-s-accent-fi",
-  club: "border-s-accent-club",
+  academy: "border-t-accent-academy",
+  venue: "border-t-accent-venue",
+  fi: "border-t-accent-fi",
+  club: "border-t-accent-club",
 };
 
 export interface CardProps extends Omit<ComponentPropsWithoutRef<"div">, "children"> {
-  /** Product-world accent shown as an inline-start border edge. Omit for a
-   *  neutral card with no accent edge. */
+  /** Product-world accent shown as a top border edge. Omit for a neutral
+   *  card with no accent edge. */
   accent?: CardAccent;
   /** Merged after the internal surface/border classes so callers can extend
    *  (never fully override) the computed styling. */
@@ -34,14 +34,14 @@ export interface CardProps extends Omit<ComponentPropsWithoutRef<"div">, "childr
 
 /**
  * Renders a raised-surface `<div>` with border and radius tokens, and an
- * optional inline-start accent edge.
+ * optional top accent edge.
  *
  * @param props - See {@link CardProps}.
  */
 export function Card({ accent, className, children, ...rest }: CardProps) {
   const classes = cx(
     "rounded-lg border border-border-subtle bg-surface-raised p-6",
-    accent && cx("border-s-4", ACCENT_BORDER_CLASSES[accent]),
+    accent && cx("border-t-4", ACCENT_BORDER_CLASSES[accent]),
     className,
   );
   return (
