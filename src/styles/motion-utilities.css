@@ -1,0 +1,165 @@
+/* ============================================================================
+   SCRIPE — Fusion motion utilities
+   The `.rv` reveal system: the CSS half of the site's scroll-reveal
+   choreography. Every section that wants a "fade + rise into place" entrance
+   marks its root with `data-rv` (done for you by `Reveal.tsx`, or by hand for
+   markup that needs the CSS-only scroll-driven path below) and this file
+   owns both states — hidden-until-shown and revealed — plus the staggered-
+   children helper and the progressive-enhancement scroll-timeline path.
+
+   Doctrine (see `src/styles/tokens/motion.css`): CSS drives the choreography,
+   `--motion-travel` is the single reduced-motion switch. Every distance in
+   this file is multiplied by `--motion-travel`, never gated behind its own
+   `prefers-reduced-motion` query — when the token collapses to 0 the travel
+   disappears and only the opacity fade remains, which is the designed
+   degraded state, not a disabled one.
+
+   Hard contract: content marked `data-rv` must NEVER be permanently hidden.
+   - No JS at all (script blocked, ancient browser): the `.no-js` fallback
+     below forces full visibility. `.no-js` starts on `<html>` in
+     `[locale]/layout.tsx` and a one-line inline script removes it the
+     instant JS runs — see `src/theme/theme-script.ts` (`NO_JS_SCRIPT`).
+   - JS runs but IntersectionObserver never fires (e.g. the element is
+     already off-screen in a way the observer misses, or `Reveal` can't
+     attach for some reason): `Reveal.tsx`'s own effect handles that inside
+     JS-land; this file's job is only the "JS never ran" half of the
+     contract.
+   ============================================================================ */
+
+/* ---------------------------------------------------------------------------
+   1. Core reveal state
+   --------------------------------------------------------------------------- */
+
+[data-rv] {
+  /* --rv-y: the pre-reveal vertical offset, in any CSS length. Defaults to
+     1rem; `Reveal`'s `y` prop overrides it per-instance via inline style. */
+  --rv-y: 1rem;
+
+  opacity: 0;
+  transform: translateY(calc(var(--rv-y) * var(--motion-travel)));
+  transition:
+    opacity var(--motion-standard) var(--ease-enter),
+    transform var(--motion-standard) var(--ease-enter);
+  transition-delay: var(--rv-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+[data-rv].rv-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------------------------------------------------------------------------
+   2. Staggered children
+   Wrap a group's parent in `data-rv-stagger` and each direct child in
+   `data-rv`; children reveal in order with an increasing transition-delay.
+   The step size lives in `--rv-stagger-step` (default 60ms, override on the
+   `data-rv-stagger` element itself) and each child's multiplier comes from
+   the `:nth-child` ladder below — plain CSS has no loop construct, so the
+   ladder is enumerated up to a generous 12 children. Children past #12 (rare
+   for above-the-fold reveal groups) simply inherit no stepped delay and
+   reveal together with #12, which is a harmless degrade, not a break.
+   --------------------------------------------------------------------------- */
+
+[data-rv-stagger] {
+  --rv-stagger-step: 60ms;
+}
+
+[data-rv-stagger] > [data-rv] {
+  --rv-delay: calc(var(--rv-stagger-step) * var(--rv-i, 0));
+}
+
+[data-rv-stagger] > [data-rv]:nth-child(1) {
+  --rv-i: 0;
+}
+[data-rv-stagger] > [data-rv]:nth-child(2) {
+  --rv-i: 1;
+}
+[data-rv-stagger] > [data-rv]:nth-child(3) {
+  --rv-i: 2;
+}
+[data-rv-stagger] > [data-rv]:nth-child(4) {
+  --rv-i: 3;
+}
+[data-rv-stagger] > [data-rv]:nth-child(5) {
+  --rv-i: 4;
+}
+[data-rv-stagger] > [data-rv]:nth-child(6) {
+  --rv-i: 5;
+}
+[data-rv-stagger] > [data-rv]:nth-child(7) {
+  --rv-i: 6;
+}
+[data-rv-stagger] > [data-rv]:nth-child(8) {
+  --rv-i: 7;
+}
+[data-rv-stagger] > [data-rv]:nth-child(9) {
+  --rv-i: 8;
+}
+[data-rv-stagger] > [data-rv]:nth-child(10) {
+  --rv-i: 9;
+}
+[data-rv-stagger] > [data-rv]:nth-child(11) {
+  --rv-i: 10;
+}
+[data-rv-stagger] > [data-rv]:nth-child(12) {
+  --rv-i: 11;
+}
+
+/* ---------------------------------------------------------------------------
+   3. `.no-js` fallback — content must never be trapped hidden
+   Specificity of `.no-js [data-rv]` (0,2,0) beats the bare `[data-rv]` rule
+   above (0,1,0) regardless of source order, so this always wins while
+   `.no-js` is present. It's removed further down for browsers that DO
+   support scroll-driven animation (see section 4) via the cascade rule that
+   a running CSS Animation overrides a plain, non-`!important` declaration
+   no matter its specificity — so `[data-rv-scroll]` still animates on
+   scroll even with `.no-js` still on `<html>` (script-blocked users on a
+   modern browser still get the CSS-only reveal, by design).
+   --------------------------------------------------------------------------- */
+
+.no-js [data-rv] {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+/* ---------------------------------------------------------------------------
+   4. Progressive enhancement: CSS scroll-driven reveal
+   Elements marked `data-rv-scroll` (in addition to `data-rv` — the scroll-
+   driven path reuses the same hidden base state and `--rv-y`/`--motion-
+   travel` distance, it only swaps *how* the reveal is driven) animate off
+   the scrollbar's own view-timeline instead of waiting for JS/IntersectionObserver
+   to run at all. Where the browser lacks `animation-timeline: view()`
+   support, this whole block is skipped by `@supports` and the element falls
+   back to the IntersectionObserver + `.rv-in` class path from `Reveal.tsx` —
+   that's the "IO fallback" this block is progressive enhancement *over*.
+   --------------------------------------------------------------------------- */
+
+@supports (animation-timeline: view()) {
+  [data-rv][data-rv-scroll] {
+    /* The JS-driven transition is redundant once the animation takes over
+       (and would otherwise race the `.rv-in` class Reveal's IO still adds —
+       harmless either way, but turning it off keeps devtools honest about
+       which mechanism is actually driving the element). */
+    transition: none;
+    animation: rv-scroll-in linear both;
+    animation-timeline: view();
+    /* Reveal finishes 40% of the way through the element's entry into the
+       viewport, then holds — matches the "settle in, don't linger" feel of
+       the IO-driven reveal rather than tracking scroll for the element's
+       entire time on screen. */
+    animation-range: entry 0% entry 40%;
+  }
+
+  @keyframes rv-scroll-in {
+    from {
+      opacity: 0;
+      transform: translateY(calc(var(--rv-y, 1rem) * var(--motion-travel)));
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

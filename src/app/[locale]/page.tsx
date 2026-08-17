@@ -1,4 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -22,11 +23,15 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           <Button href="/">{t("bookDemo")}</Button>
           <Button variant="outline">{t("bookDemo")}</Button>
         </div>
-        <Card accent="academy">
-          <Field label={t("bookDemo")} hint="Smoke test hint">
-            <input type="text" />
-          </Field>
-        </Card>
+        {/* Task 10 smoke test: exercises the Reveal motion primitive.
+            Replaced by real page composition in later tasks. */}
+        <Reveal>
+          <Card accent="academy">
+            <Field label={t("bookDemo")} hint="Smoke test hint">
+              <input type="text" />
+            </Field>
+          </Card>
+        </Reveal>
       </Section>
     </>
   );

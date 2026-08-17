@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import { Footer } from "@/components/chrome/Footer";
 import { NavBar } from "@/components/chrome/NavBar";
 import { dirFor, routing } from "@/i18n/routing";
-import { THEME_SCRIPT } from "@/theme/theme-script";
+import { NO_JS_SCRIPT, THEME_SCRIPT } from "@/theme/theme-script";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -35,11 +35,12 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       dir={dirFor(locale)}
-      className={fontClassesFor(locale as "en" | "ar")}
+      className={`${fontClassesFor(locale as "en" | "ar")} no-js`}
       suppressHydrationWarning
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: NO_JS_SCRIPT }} />
         <meta name="theme-color" content="#0B0B0E" />
       </head>
       <body>
