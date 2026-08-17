@@ -25,18 +25,18 @@
   --color-accent-club: var(--accent-club);
 
   /* radius */
-  --radius-xs: var(--radius-xs);
-  --radius-sm: var(--radius-sm);
-  --radius-md: var(--radius-md);
-  --radius-lg: var(--radius-lg);
-  --radius-xl: var(--radius-xl);
-  --radius-full: var(--radius-full);
+  --radius-xs: var(--radius-xs-base);
+  --radius-sm: var(--radius-sm-base);
+  --radius-md: var(--radius-md-base);
+  --radius-lg: var(--radius-lg-base);
+  --radius-xl: var(--radius-xl-base);
+  --radius-full: var(--radius-full-base);
 
   /* fonts */
-  --font-display: var(--font-display);
-  --font-body: var(--font-body);
-  --font-display-ar: var(--font-display-ar);
-  --font-body-ar: var(--font-body-ar);
+  --font-display: var(--font-display-base);
+  --font-body: var(--font-body-base);
+  --font-display-ar: var(--font-display-ar-base);
+  --font-body-ar: var(--font-body-ar-base);
 }
 
 body {

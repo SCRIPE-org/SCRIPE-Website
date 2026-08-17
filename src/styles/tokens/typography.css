@@ -6,20 +6,25 @@
    ============================================================================ */
 
 :root {
-  --font-display: "Archivo", "Noto Kufi Arabic", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Inter", "Noto Sans Arabic", ui-sans-serif, system-ui, sans-serif;
-  --font-display-ar: "Noto Kufi Arabic", "Archivo", system-ui, sans-serif;
-  --font-body-ar: "Noto Sans Arabic", "Inter", system-ui, sans-serif;
+  /* raw font-family primitives — kept distinct from the Tailwind-mapped
+     --font-* semantic names in @theme inline so the mapping in globals.css
+     is never a same-name self-reference */
+  --font-display-base: "Archivo", "Noto Kufi Arabic", ui-sans-serif, system-ui, sans-serif;
+  --font-body-base: "Inter", "Noto Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+  --font-display-ar-base: "Noto Kufi Arabic", "Archivo", system-ui, sans-serif;
+  --font-body-ar-base: "Noto Sans Arabic", "Inter", system-ui, sans-serif;
 
-  /* fluid scale: clamp(min, viewport-driven midpoint, max) */
+  /* fluid scale: clamp(min, viewport-driven midpoint, max). Display tiers
+     swing widely across viewport; body tiers stay narrow so running text
+     never jumps size disruptively while scrolling/resizing. */
   --fs-cinema: clamp(3.4rem, 1rem + 7.6vw, 7.25rem);
   --fs-display: clamp(2.3rem, 1.4rem + 2.9vw, 3.6rem);
   --fs-h1: clamp(1.75rem, 1.4rem + 1.2vw, 2.25rem);
   --fs-h2: clamp(1.45rem, 1.25rem + 0.7vw, 1.75rem);
-  --fs-h3: 1.25rem;
-  --fs-lead: 1.1875rem;
-  --fs-body: 1rem;
-  --fs-small: 0.875rem;
+  --fs-h3: clamp(1.125rem, 1.05rem + 0.35vw, 1.25rem);
+  --fs-lead: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  --fs-body: clamp(0.9375rem, 0.9rem + 0.2vw, 1rem);
+  --fs-small: clamp(0.8125rem, 0.78rem + 0.15vw, 0.875rem);
   --fs-meta: 0.75rem;
 
   /* Arabic rhythm: looser leading than Latin body copy */
@@ -32,7 +37,7 @@
 }
 :lang(ar) body,
 body:lang(ar) {
-  font-family: var(--font-body-ar);
+  font-family: var(--font-body-ar-base);
   line-height: var(--lh-body-ar);
 }
 :lang(ar) h1,
@@ -41,5 +46,5 @@ body:lang(ar) {
 :lang(ar) h4,
 :lang(ar) h5,
 :lang(ar) h6 {
-  font-family: var(--font-display-ar);
+  font-family: var(--font-display-ar-base);
 }
