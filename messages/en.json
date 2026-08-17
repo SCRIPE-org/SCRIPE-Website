@@ -1,0 +1,38 @@
+{
+  "nav": {
+    "platform": "Platform",
+    "solutions": "Solutions",
+    "solutionsItems": {
+      "sportsClubs": "Sports Clubs",
+      "sportsAcademies": "Sports Academies",
+      "sportsVenues": "Sports Venues",
+      "multiSportsOrganizations": "Multi-Sports Organizations"
+    },
+    "pricing": "Pricing",
+    "resources": "Resources",
+    "company": "Company",
+    "contact": "Contact",
+    "signIn": "Sign In",
+    "bookDemo": "Book a Demo"
+  },
+  "common": {
+    "themeToggleLabel": "Theme",
+    "langSwitchLabel": "Language",
+    "skipToContent": "Skip to content",
+    "brand": "SCRIPE"
+  },
+  "forms": {
+    "required": "This field is required.",
+    "emailInvalid": "That email address looks incomplete.",
+    "tooLong": "That's too long.",
+    "sent": "Thanks.",
+    "notConnected": "Your details are captured. This site is not yet connected to a live inbox — until it is, send the same details to your SCRIPE contact and an operations lead will pick it up.",
+    "send": "Send",
+    "name": "Name",
+    "email": "Email",
+    "organization": "Organization",
+    "phone": "Phone",
+    "type": "What kind of organization?",
+    "message": "Message"
+  }
+}

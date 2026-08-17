@@ -1,0 +1,38 @@
+{
+  "nav": {
+    "platform": "المنصة",
+    "solutions": "الحلول",
+    "solutionsItems": {
+      "sportsClubs": "الأندية الرياضية",
+      "sportsAcademies": "الأكاديميات الرياضية",
+      "sportsVenues": "المنشآت الرياضية",
+      "multiSportsOrganizations": "المنظمات متعددة الرياضات"
+    },
+    "pricing": "الأسعار",
+    "resources": "المصادر",
+    "company": "الشركة",
+    "contact": "تواصل معنا",
+    "signIn": "تسجيل الدخول",
+    "bookDemo": "احجز عرضًا توضيحيًا"
+  },
+  "common": {
+    "themeToggleLabel": "المظهر",
+    "langSwitchLabel": "اللغة",
+    "skipToContent": "تخطَّ إلى المحتوى",
+    "brand": "SCRIPE"
+  },
+  "forms": {
+    "required": "هذا الحقل مطلوب.",
+    "emailInvalid": "يبدو أن البريد الإلكتروني غير مكتمل.",
+    "tooLong": "هذا طويل جدًا.",
+    "sent": "شكرًا لك.",
+    "notConnected": "سجّلنا بياناتك. هذا الموقع غير متصل بعد ببريد مباشر — إلى أن يتصل، أرسل البيانات نفسها إلى جهة الاتصال لديك في SCRIPE وسيتابعها أحد مسؤولي التشغيل.",
+    "send": "إرسال",
+    "name": "الاسم",
+    "email": "البريد الإلكتروني",
+    "organization": "المنظمة",
+    "phone": "الهاتف",
+    "type": "ما نوع المنظمة؟",
+    "message": "الرسالة"
+  }
+}
