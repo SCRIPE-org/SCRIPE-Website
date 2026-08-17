@@ -6,8 +6,8 @@
  * Self-contained: reads `PRIMARY_NAV`/`SOLUTIONS` from `ia.ts` and translates
  * its own labels via `useTranslations()`, so `NavBar` renders it with zero
  * props. Client Component because it owns open/close state and keyboard
- * behavior — it is one of exactly three "use client" boundaries in the site
- * chrome (the others are `MobileNav` and `ThemeToggle`).
+ * behavior — one of the "use client" boundaries in the site chrome
+ * (alongside `MobileNav`, `LocaleSwitch` and `ThemeToggle`).
  *
  * Progressive enhancement: the trigger is a real next-intl `Link` to
  * `/solutions` (`PRIMARY_NAV`'s `solutions` entry), not a plain `<button>` —
@@ -30,11 +30,13 @@
  *   path between trigger and panel doesn't flicker-close it.
  * - Closes on Escape (returning focus to the trigger), on outside pointer-
  *   down, and when focus leaves the trigger+panel entirely.
- * - Keyboard: Enter activates the trigger link natively, which fires the
- *   same click handler (toggle); ArrowDown on the trigger opens the panel
- *   and moves focus to the first item; ArrowUp/ArrowDown inside the panel
- *   move between items (wrapping); Escape inside the panel closes and
- *   returns focus to the trigger.
+ * - Keyboard on the trigger: Enter activates the link natively, which fires
+ *   the same click handler (toggle); Space is handled explicitly in
+ *   `onTriggerKeyDown` (an anchor doesn't activate on Space the way a
+ *   `<button>` did before the link swap, so this restores that parity);
+ *   ArrowDown opens the panel and moves focus to the first item. Inside the
+ *   panel: ArrowUp/ArrowDown move between items (wrapping); Escape closes
+ *   and returns focus to the trigger.
  *
  * The trigger carries `aria-haspopup="true"` (not `"menu"`) — matching the
  * legacy navbar's value — because the panel intentionally does not use
@@ -155,6 +157,13 @@ export function MegaMenu() {
     if (event.key === "ArrowDown") {
       event.preventDefault();
       openMenu(true);
+    } else if (event.key === " " || event.key === "Spacebar") {
+      // Anchors don't activate on Space the way the previous <button>
+      // trigger did — restore that parity explicitly rather than relying on
+      // native anchor behavior, which only fires on Enter/click.
+      event.preventDefault();
+      if (open) closeMenu();
+      else openMenu();
     }
   }
 
