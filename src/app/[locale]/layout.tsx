@@ -10,6 +10,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { dirFor, routing, type Locale } from "@/i18n/routing";
 import { buildOrganization } from "@/lib/seo/jsonld";
 import { pageMetadata, siteUrl } from "@/lib/seo/metadata";
+import { ThemeGuard } from "@/theme/ThemeGuard";
 import { NO_JS_SCRIPT, THEME_SCRIPT } from "@/theme/theme-script";
 
 export function generateStaticParams() {
@@ -94,6 +95,7 @@ export default async function LocaleLayout({
       </head>
       <body>
         <JsonLd data={buildOrganization(siteUrl())} />
+        <ThemeGuard />
         <NextIntlClientProvider messages={messages}>
           <NavBar />
           <main id="main">{children}</main>
