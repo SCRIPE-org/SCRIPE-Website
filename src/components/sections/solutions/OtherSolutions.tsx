@@ -57,7 +57,7 @@ export function OtherSolutions({ title, items }: OtherSolutionsProps) {
             <Card accent={toCardAccent(item.accent)} className="atmo-lift flex h-full flex-col gap-4">
               <ShapeGlyph accent={item.accent} />
               <div className="flex-1">
-                <h3 className="font-display text-text-primary text-[length:var(--fs-h3)] font-semibold">
+                <h3 className="font-display text-text-primary text-[length:var(--fs-lead)] font-semibold">
                   {item.title}
                 </h3>
                 <p className="text-text-secondary mt-2 text-[length:var(--fs-small)] leading-relaxed text-pretty">

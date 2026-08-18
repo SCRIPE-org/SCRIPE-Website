@@ -6,9 +6,15 @@
  * keys) except where noted:
  *
  * - `meta` mirrors the legacy `<title>`/`<meta name="description">`.
- * - `hero` ports the `data-story` cinema hero: wordmark scene, the five
- *   chapter captions (`data-cap` 1–5), the progress-rail labels
- *   (`data-tick`), the scroll hint, and the closing scene's two CTAs.
+ * - `hero` ports the `data-story` cinema hero: wordmark scene, the chapter
+ *   captions (`data-cap`), the progress-rail labels (`data-tick`), the
+ *   scroll hint, and the closing scene's two CTAs. Task G2 dropped the
+ *   ported Academies caption (`data-cap` 2) from the flight: it framed the
+ *   same crop of the plate as the Clubs caption, and its copy is already
+ *   carried below the fold by `trusted.categories` ("Sports Academies"),
+ *   `productFamily.products` (the Academy product + "Explore Sports
+ *   Academies") and `solutions.items`. The hero now flies three
+ *   product-distinct chapters plus the destination beat.
  * - `productFamily` is the one recomposed section: the current Sports
  *   Operations OS product framing (SCRIPE Venue / Academy / Football
  *   Intelligence) presented with approved copy lines — descriptions reuse
@@ -48,11 +54,6 @@ export const homeContent: HomeContent = {
         rail: "Clubs",
         title: "Sports Clubs",
         subtitle: "Teams, Members and the Competition Calendar",
-      },
-      {
-        rail: "Academies",
-        title: "Sports Academies",
-        subtitle: "Development Programs, Parents and Coach Management",
       },
       {
         rail: "Venues",

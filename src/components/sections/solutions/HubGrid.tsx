@@ -40,7 +40,7 @@ export interface HubGridProps {
 export function HubGrid({ content }: HubGridProps) {
   return (
     <Section id="all" className="atmo sol-grid-atmo scroll-mt-24">
-      <Reveal className="max-w-[760px]">
+      <Reveal className="max-w-[1040px]">
         <h2 className="atmo-title font-display text-text-primary text-[length:var(--fs-display)] text-balance">
           {content.title}
         </h2>
@@ -63,7 +63,7 @@ export function HubGrid({ content }: HubGridProps) {
             >
               <ShapeGlyph accent={item.accent} />
               <div className="flex-1">
-                <h3 className="font-display text-text-primary text-[length:var(--fs-h3)] font-semibold">
+                <h3 className="font-display text-text-primary text-[length:var(--fs-lead)] font-semibold">
                   {item.title}
                 </h3>
                 <p className="text-text-secondary mt-2 text-[length:var(--fs-small)] leading-relaxed text-pretty">

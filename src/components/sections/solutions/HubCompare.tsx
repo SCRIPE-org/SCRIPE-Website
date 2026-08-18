@@ -34,7 +34,7 @@ export interface HubCompareProps {
 export function HubCompare({ content }: HubCompareProps) {
   return (
     <Section id="compare" className="bg-surface-overlay/40 scroll-mt-24">
-      <Reveal className="max-w-[760px]">
+      <Reveal className="max-w-[1040px]">
         <h2 className="atmo-title font-display text-text-primary text-[length:var(--fs-display)] text-balance">
           {content.title}
         </h2>
@@ -56,7 +56,7 @@ export function HubCompare({ content }: HubCompareProps) {
                   className={`inline-block size-2 shrink-0 rounded-[2px] ${ACCENT_DOT_CLASS[column.accent]}`}
                   aria-hidden="true"
                 />
-                <h3 className="font-display text-text-primary min-w-0 text-[length:var(--fs-h3)] font-semibold">
+                <h3 className="font-display text-text-primary min-w-0 text-[length:var(--fs-lead)] font-semibold">
                   {column.title}
                 </h3>
               </div>

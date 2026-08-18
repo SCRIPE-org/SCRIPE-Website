@@ -30,13 +30,42 @@
  * every beat only move with scroll (scrub), i.e. under direct user control
  * — no self-running motion, so no WCAG 2.2.2 pause control is required.
  *
- * CAMERA MATH (Task E2 — the "felt travel" path)
+ * CAMERA MATH (Task G2 — the three-chapter path)
  * ------------------------------------------------------------------------
- * The previous path was dampened ×0.85 to protect a below-target plate
- * (1915×821) from upscale softness — and the flight became imperceptible
- * (peak scale 1.28, pans ≤ ±3.4). E2 reverses that trade: real travel wins,
- * and the upscale softness at close passes is masked by the night grade +
- * film grain overlay (`.hero-grain`, home.css) — a standard colorist move.
+ * Task E2 bought real travel (peak scale 1.60, pans to ±15) at the price of
+ * a 560svh track: five corner chapters plus a finale, 6,048px of hero on an
+ * 11,813px page — more than half the site was one photograph, and the first
+ * link below the fold sat at y≈6,893. G2 cuts the track to 220svh and the
+ * corner chapters from five to three, because two of the five were not
+ * distinct SHOTS: "Academies" framed the same crop of the plate as "Clubs"
+ * (the audit's "five chapters of the same picture"), and the copy for both
+ * dropped chapters already exists below the fold.
+ *
+ * The rule this path is built on: three destinations, three quadrants,
+ * three scales, no two beats sharing a crop.
+ *
+ *   0.24  CLUBS         (−x, −y)  s 1.53  the lit clubhouse colonnade and
+ *                                         members' walkway — the
+ *                                         organization's built home
+ *   0.46  VENUES        (+x, −y)  s 1.58  the Olympic pool and padel courts
+ *                                         — the bookable surfaces
+ *   0.68  INTELLIGENCE  (−x, +y)  s 1.68  a tight push onto the floodlit
+ *                                         match pitch inside the bowl —
+ *                                         the deepest point of the flight
+ *
+ * The three x/y sign pairs are mutually exclusive quadrants, scale rises
+ * monotonically to a single peak at the last beat, and the pull-back to
+ * 1.20 then releases all of it at once into the finale. Denser, not faster:
+ * the flight makes three large moves where it used to make five small ones.
+ *
+ * Fix round (screenshots in the task report): the clubs keyframe first sat
+ * at (−12.5, −3.5) s 1.46, which framed stadium, practice pitches, pool and
+ * courts all at once — a wide establishing shot that repeated most of what
+ * the intro frame had already shown, and re-committed the exact sin the
+ * audit named. Pushing it to (−14, −6.5) s 1.53 crops the pool and the open
+ * sky out and fills the frame with the colonnade's lit arcade instead, so
+ * clubs reads as architecture, venues as water and court surface, and
+ * intelligence as turf. Three subjects, not three crops of one.
  *
  * Coverage guard (conservative form, as documented since Task 13): at scale
  * `s`, a pan is safe while |x|,|y| ≤ L(s) = (s − 1) / (2s) × 100. This is
@@ -51,30 +80,31 @@
  *
  *   at    scale   L      x used  x slack  y used  y limit        y slack
  *   0.00  1.14   6.14    0       6.14     0       —              —
- *   0.15  1.34  12.69   −9.5     3.19    +3.2     10.66 (0.84L)  7.46
- *   0.31  1.42  14.79   +8.5     6.29    +4.5     12.42 (0.84L)  7.92
- *   0.47  1.52  17.11  +11.5     5.61   −11.0     19.85 (1.16L)  8.85
- *   0.63  1.60  18.75  −15.0     3.75    −6.0     21.75 (1.16L) 15.75
- *   0.82  1.18   7.63    0       7.63    −2.5      8.85 (1.16L)  6.35
- *   1.00  1.22   9.02    0       9.02    −3.2     10.46 (1.16L)  7.26
+ *   0.24  1.53  17.32  −14.0     3.32    −6.5     20.09 (1.16L) 13.59
+ *   0.46  1.58  18.35  +13.0     5.35   −10.5     21.29 (1.16L) 10.79
+ *   0.68  1.68  20.24  −11.5     8.74    +8.5     17.00 (0.84L)  8.50
+ *   0.86  1.20   8.33    0       8.33    −2.0      9.67 (1.16L)  7.67
+ *   1.00  1.24   9.68    0       9.68    −3.0     11.23 (1.16L)  8.23
  *
- * Tightest margin: 3.19 percentage points (x at the 0.15 clubs dive) — on
- * top of the conservative-vs-exact slack above (÷s ≈ another 25% of L).
+ * Tightest margin: 3.32 percentage points (x at the 0.24 clubs move) —
+ * marginally SAFER than E2's 3.19, on top of the conservative-vs-exact
+ * slack above (÷s ≈ another 30% of L at these scales).
  *
- * Task E2 fix round: the 0.63 intelligence keyframe originally panned
- * (−11, +5.5) at scale 1.46 — the same quadrant and near-identical
- * magnitude as the 0.15 clubs keyframe's (−9.5, +3.2) at scale 1.34, so the
- * two beats read as the same shot (same wide establishing crop: pool,
- * courts and stadium bowl all in frame together). Retuned to (−15, −6) at
- * scale 1.60 — the path's new peak: x pushed further into the same side
- * (past the courts, isolating the clubhouse's lit colonnade/walkway) while
- * y flips sign (into the one quadrant no other keyframe uses, −x/−y) and
- * the deeper zoom crops the practice pitch and open sky out of frame
- * entirely. Verified via scroll-position screenshots at progress 0.15 and
- * 0.63 (script + captures in the task report) — the two beats now read as
- * an establishing wide shot vs. a tight architectural detail, unmistakably
- * different places. y limit is 1.16L here (was 0.84L) because the pan
- * direction flipped from +y to −y — see the asymmetric-origin note above.
+ * Depth-scaled layers: `flyPath` multiplies every excursion by the layer's
+ * depth, so the mid and foreground plates travel further than the table
+ * above. The midground (DEPTH_MID 1.10) clears the conservative bound at
+ * every keyframe — tightest is 3.01 (x at 0.24: s 1.583, L 18.41, |x| 15.4).
+ * The foreground (DEPTH_NEAR 1.85) exceeds the CONSERVATIVE bound at 0.24
+ * (|x| 25.90 vs L 24.75) but clears the EXACT bound with 23.1 points to
+ * spare ((s−1)×50 = 49.03 at s 1.9805) — the same condition E2's path had
+ * at its own 0.63 peak, and harmless either way: the foreground is a
+ * transparent-centre bokeh overlay whose edges reveal nothing when they
+ * cross the frame.
+ *
+ * Peak upscale: the background plate is 1915×821, object-cover onto a
+ * 1920×1080 stage is ×1.315, and the camera's peak 1.68 takes the total to
+ * ×2.21 — a hair above E2's ×2.10 at its own peak, and still inside what
+ * the night grade plus the `.hero-grain` overlay mask (home.css §2).
  *
  * rotateX tilt: the stage carries `perspective: 1500px` (home.css) and each
  * keyframe tips the ground plane by `tilt` degrees (max 2.6°). At 2.6° on a
@@ -129,19 +159,18 @@ import { setHeroArmed } from "@/lib/hero-armed-store";
  * rotateX in degrees (applied un-scaled to rig+mid, ×TILT_NEAR to the
  * foreground — see the camera-math header for why).
  *
- * The seven keyframes are: intro hold, one per corner chapter (clubs →
- * clubhouse/stadium east, academies → training pitches, venues → pool dive,
- * intelligence → stadium bowl), the pull-back to the organization finale,
- * and a settle drift. Margins per keyframe are audited in the header table.
+ * The six keyframes are: intro hold, one per corner chapter (clubs →
+ * clubhouse colonnade, venues → pool + courts dive, intelligence → tight
+ * push onto the match pitch), the pull-back to the organization finale, and
+ * a settle drift. Margins per keyframe are audited in the header table.
  */
 const CAMERA_PATH = [
   { at: 0.0, scale: 1.14, x: 0, y: 0, tilt: 0 },
-  { at: 0.15, scale: 1.34, x: -9.5, y: 3.2, tilt: 1.6 },
-  { at: 0.31, scale: 1.42, x: 8.5, y: 4.5, tilt: 2.2 },
-  { at: 0.47, scale: 1.52, x: 11.5, y: -11, tilt: 2.6 },
-  { at: 0.63, scale: 1.6, x: -15, y: -6, tilt: 2.0 },
-  { at: 0.82, scale: 1.18, x: 0, y: -2.5, tilt: 0.5 },
-  { at: 1.0, scale: 1.22, x: 0, y: -3.2, tilt: 0.7 },
+  { at: 0.24, scale: 1.53, x: -14, y: -6.5, tilt: 2.0 },
+  { at: 0.46, scale: 1.58, x: 13, y: -10.5, tilt: 2.6 },
+  { at: 0.68, scale: 1.68, x: -11.5, y: 8.5, tilt: 2.2 },
+  { at: 0.86, scale: 1.2, x: 0, y: -2, tilt: 0.5 },
+  { at: 1.0, scale: 1.24, x: 0, y: -3, tilt: 0.7 },
 ] as const;
 
 /** Midground plate depth multiplier. Kept LOW on purpose: the midground is
@@ -161,16 +190,27 @@ const DEPTH_NEAR = 1.85;
 /** Foreground tilt exaggeration (rig+mid tilt is never scaled — header). */
 const TILT_NEAR = 1.3;
 
-/** Progress at which each corner beat's caption is fully on screen. */
-const BEAT_IN = [0.15, 0.31, 0.47, 0.63] as const;
+/** Progress at which each corner beat's caption is fully on screen — one
+ *  per CAMERA_PATH corner keyframe, in the same order. */
+const BEAT_IN = [0.24, 0.46, 0.68] as const;
 
 /** How long (in progress units) a caption takes to enter / to leave. */
-const BEAT_FADE = 0.05;
+const BEAT_FADE = 0.055;
+
+/** How long a caption holds at full opacity after arriving, before its exit
+ *  tween starts. BEAT_FADE + BEAT_HOLD + BEAT_FADE = 0.22 — just inside the
+ *  0.22 spacing between corner keyframes, so caption N's exit lands exactly
+ *  where caption N+1's entrance begins (a baton pass, never an overlap) and
+ *  no caption is ever mid-flight alone with a frame it does not describe.
+ *  On the 220svh track that is ~285px of scroll per caption. */
+const BEAT_HOLD = 0.11;
 
 /** Progress buckets mapping scroll position to the active rail tick:
  *  index i is active while progress < RAIL_BOUNDS[i]; the last tick is
- *  active beyond the final bound. */
-const RAIL_BOUNDS = [0.12, 0.27, 0.43, 0.59, 0.76] as const;
+ *  active beyond the final bound. Five ticks now (intro + four chapters),
+ *  each bound set slightly AHEAD of its caption's entrance so the rail
+ *  leads the beat rather than trailing it. */
+const RAIL_BOUNDS = [0.17, 0.4, 0.62, 0.8] as const;
 
 /**
  * Mounts the flight. Renders `null`; all work happens in the effect. See
@@ -188,7 +228,7 @@ export function HeroDirector() {
       const root = document.querySelector<HTMLElement>("[data-hero-root]");
       if (!root) return;
 
-      // Late-arming guard: arming grows the hero into a ~5.6-viewport scroll
+      // Late-arming guard: arming grows the hero into a ~2.2-viewport scroll
       // track. If the user has already scrolled past the static frame (slow
       // network, restored scroll position), inserting that much scroll would
       // yank the page out from under them — the static hero is the designed
@@ -268,15 +308,32 @@ export function HeroDirector() {
         // Intro departs: statement/tagline + CTAs + hint clear the frame.
         // Informative layers (h1, CTA row) fade with plain `opacity` so they
         // never leave the accessibility tree — see the file header. The
-        // aria-hidden hint may use autoAlpha freely.
-        tl.to("[data-hero-intro]", { opacity: 0, y: -34, duration: 0.06, ease: "power2.in" }, 0.08);
-        tl.to("[data-hero-ctas]", { opacity: 0, y: -24, duration: 0.05, ease: "power2.in" }, 0.09);
+        // aria-hidden hint may use autoAlpha freely. On the 220svh track the
+        // statement holds for the first 0.09 of progress (~117px of scroll)
+        // and is clear of the frame by 0.17, well before the first caption
+        // starts entering at 0.185.
+        tl.to("[data-hero-intro]", { opacity: 0, y: -34, duration: 0.08, ease: "power2.in" }, 0.09);
+        tl.to("[data-hero-ctas]", { opacity: 0, y: -24, duration: 0.07, ease: "power2.in" }, 0.1);
         // Transparent controls must not catch stray clicks mid-flight; a
         // reversed scrub past a set() restores the previous value, so this
         // stays correct scrolling both ways. Keyboard focus is unaffected by
         // pointer-events (the :focus-within rule in home.css reveals the row).
-        tl.set("[data-hero-ctas]", { pointerEvents: "none" }, 0.14);
-        tl.to("[data-hero-hint]", { autoAlpha: 0, duration: 0.04 }, 0.05);
+        tl.set("[data-hero-ctas]", { pointerEvents: "none" }, 0.18);
+        tl.to("[data-hero-hint]", { autoAlpha: 0, duration: 0.05 }, 0.04);
+
+        // Authoritative "all captions hidden" at the head of the timeline.
+        // Without it, a backwards scroll-seek could stack two to four
+        // captions on top of each other: the per-beat exit `to()` tweens
+        // record their start value LAZILY on first render, so a seek that
+        // lands before a never-yet-rendered exit tween makes GSAP capture
+        // whatever is on the element right then (often a fully visible
+        // caption) and re-apply it at ratio 0. Pinning every beat to
+        // autoAlpha 0 at position 0 means that lazy capture can only ever
+        // read the hidden state, so at most the one caption whose own
+        // fromTo covers the playhead is visible. The `set` sits first in the
+        // child order, so each beat's own tweens still override it for their
+        // own window.
+        tl.set(beats, { autoAlpha: 0 }, 0);
 
         // Corner beats: caption in as the camera arrives, out as it leaves.
         // Every fromTo below sets `immediateRender: false` — with the GSAP
@@ -290,9 +347,9 @@ export function HeroDirector() {
             beat,
             { autoAlpha: 0, y: 34 },
             { autoAlpha: 1, y: 0, duration: BEAT_FADE, ease: "power2.out", immediateRender: false },
-            arrive - BEAT_FADE / 2,
+            arrive - BEAT_FADE,
           );
-          tl.to(beat, { autoAlpha: 0, y: -26, duration: BEAT_FADE, ease: "power2.in" }, arrive + 0.09);
+          tl.to(beat, { autoAlpha: 0, y: -26, duration: BEAT_FADE, ease: "power2.in" }, arrive + BEAT_HOLD);
         });
 
         // Finale plate: crossfades in as the destination beat's background —
@@ -304,23 +361,25 @@ export function HeroDirector() {
           "[data-hero-plate-finale]",
           { autoAlpha: 0 },
           { autoAlpha: 1, duration: 0.1, ease: "power1.inOut", immediateRender: false },
-          0.76,
+          0.8,
         );
 
         // Finale: destination chapter + the CTAs return, centered. Both are
-        // informative — plain `opacity`, never autoAlpha (file header).
+        // informative — plain `opacity`, never autoAlpha (file header). The
+        // last caption's exit finishes at 0.845, so the destination block
+        // lands on an empty frame rather than under a leaving lower-third.
         tl.fromTo(
           "[data-hero-finale]",
           { opacity: 0, y: 32 },
-          { opacity: 1, y: 0, duration: 0.07, ease: "power2.out", immediateRender: false },
-          0.8,
+          { opacity: 1, y: 0, duration: 0.08, ease: "power2.out", immediateRender: false },
+          0.86,
         );
-        tl.set("[data-hero-ctas]", { pointerEvents: "auto" }, 0.84);
+        tl.set("[data-hero-ctas]", { pointerEvents: "auto" }, 0.89);
         tl.fromTo(
           "[data-hero-ctas]",
           { opacity: 0, y: 26 },
-          { opacity: 1, y: 0, duration: 0.06, ease: "power2.out", immediateRender: false },
-          0.84,
+          { opacity: 1, y: 0, duration: 0.07, ease: "power2.out", immediateRender: false },
+          0.89,
         );
 
         // Signal scanline: one full sweep, strictly scroll-bound.

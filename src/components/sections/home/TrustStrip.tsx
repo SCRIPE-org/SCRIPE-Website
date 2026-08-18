@@ -1,6 +1,6 @@
 /**
  * TrustStrip (`#trusted`) — honest positioning strip, and the first beat of
- * the ground sequence (slate `06 / Trusted` — see `Slate.tsx`).
+ * the ground sequence (slate `05 / Trusted` — see `Slate.tsx`).
  *
  * The quietest section on the page by design: a centered slate + heading +
  * sentence and the five organization categories SCRIPE is built for, as
@@ -36,7 +36,7 @@ export function TrustStrip({ content }: TrustStripProps) {
       className="gs gs-trusted scroll-mt-24 !py-[clamp(var(--space-9),6vh,var(--space-10))]"
     >
       <Reveal className="mx-auto max-w-[680px] text-center">
-        <Slate no="06" label={content.stamp} center />
+        <Slate no="05" label={content.stamp} center />
         <h2 className="gs-title gs-title-sm">{content.title}</h2>
         <p className="text-text-secondary mx-auto mt-3 max-w-[56ch] text-[length:var(--fs-body)] text-pretty">
           {content.subtitle}

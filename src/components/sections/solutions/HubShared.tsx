@@ -30,7 +30,11 @@ export function HubShared({ content }: HubSharedProps) {
     <Section className="border-border-subtle border-t">
       <div className="flex flex-wrap items-center gap-10 lg:gap-14">
         <Reveal className="min-w-0 flex-1 basis-[420px]">
-          <h2 className="atmo-title font-display text-text-primary max-w-[520px] text-[length:var(--fs-display)] text-balance">
+          {/* `--fs-h1`, not `--fs-display`: this heading shares its row with
+              the shared-capability list on a 420px basis, and the display
+              tier (5.5rem at wide viewports since Task G2) needs a
+              full-width measure it does not have here. */}
+          <h2 className="atmo-title font-display text-text-primary max-w-[520px] text-[length:var(--fs-h1)] text-balance">
             {content.title}
           </h2>
           <div className="mt-6">

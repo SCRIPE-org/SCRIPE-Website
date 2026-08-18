@@ -109,7 +109,7 @@ function ValueCell({
 export function ComparisonTable({ content, plans }: ComparisonTableProps) {
   return (
     <Section id="compare" className="atmo pricing-compare-atmo bg-surface-overlay/40 scroll-mt-24">
-      <Reveal className="max-w-[760px]">
+      <Reveal className="max-w-[1040px]">
         <p className="text-accent-text flex items-center gap-3 font-mono text-[length:var(--fs-meta)] font-medium tracking-[0.22em] uppercase [&:lang(ar)]:tracking-[0.06em]">
           <span className="bg-accent inline-block h-px w-6" aria-hidden="true" />
           {content.label}

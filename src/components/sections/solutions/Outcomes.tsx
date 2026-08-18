@@ -35,7 +35,7 @@ export interface OutcomesProps {
 export function Outcomes({ content, accent }: OutcomesProps) {
   return (
     <Section>
-      <Reveal className="mx-auto max-w-[680px] text-center">
+      <Reveal className="mx-auto max-w-[900px] text-center">
         <h2 className="atmo-title font-display text-text-primary text-[length:var(--fs-display)] text-balance">
           {content.title}
         </h2>

@@ -213,7 +213,7 @@ function PlanCard({ plan, billing }: { plan: PricingPlan; billing: PricingConten
             aria-hidden="true"
             className={`inline-block size-2.5 shrink-0 rounded-[2px] ${ACCENT_DOT_CLASS[plan.accent]}`}
           />
-          <h3 className="font-display text-text-primary text-[length:var(--fs-h3)] font-semibold">{plan.name}</h3>
+          <h3 className="font-display text-text-primary text-[length:var(--fs-lead)] font-semibold">{plan.name}</h3>
           {plan.badge && (
             <span className="border-accent/40 bg-accent/10 text-accent-text ms-auto rounded-xs border px-2 py-0.5 text-[length:var(--fs-meta)] font-medium whitespace-nowrap">
               {plan.badge}

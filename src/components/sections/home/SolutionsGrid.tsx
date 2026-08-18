@@ -1,6 +1,6 @@
 /**
  * SolutionsGrid (`#solutions`) — the four organization shapes SCRIPE
- * configures for (ground slate `09 / Solutions` — see `Slate.tsx`).
+ * configures for (ground slate `08 / Solutions` — see `Slate.tsx`).
  *
  * A genuine four-way choice, so cards are the honest affordance here (the
  * one card grid on the page): each `Card` keeps its product-world accent
@@ -89,8 +89,8 @@ export interface SolutionsGridProps {
 export function SolutionsGrid({ content }: SolutionsGridProps) {
   return (
     <Section id="solutions" className="gs gs-solutions scroll-mt-24">
-      <Reveal className="mx-auto max-w-[820px] text-center">
-        <Slate no="09" label={content.stamp} center />
+      <Reveal className="mx-auto max-w-[1000px] text-center">
+        <Slate no="08" label={content.stamp} center />
         <h2 className="gs-title">{content.title}</h2>
         <p className="text-text-secondary mx-auto mt-4 max-w-[58ch] text-[length:var(--fs-lead)] text-pretty">
           {content.subtitle}
@@ -111,7 +111,7 @@ export function SolutionsGrid({ content }: SolutionsGridProps) {
             >
               <SolutionGlyph accent={item.accent} />
               <div className="flex-1">
-                <h3 className="font-display text-text-primary text-[length:var(--fs-h3)] font-semibold">
+                <h3 className="font-display text-text-primary text-[length:var(--fs-lead)] font-semibold">
                   {item.title}
                 </h3>
                 <p className="text-text-secondary mt-2 text-[length:var(--fs-small)] leading-relaxed text-pretty">

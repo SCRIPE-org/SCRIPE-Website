@@ -1,7 +1,7 @@
 /**
  * PlatformOverview (`#platform`) — the core narrative section: what the
  * operating system is, proven by a live-looking operations board (ground
- * slate `08 / Platform` — see `Slate.tsx`; the slate reuses this section's
+ * slate `07 / Platform` — see `Slate.tsx`; the slate reuses this section's
  * existing `label` content key).
  *
  * Split composition: a start column carrying the slate, headline, supporting
@@ -56,8 +56,13 @@ export function PlatformOverview({ content }: PlatformOverviewProps) {
     <Section id="platform" className="gs gs-platform scroll-mt-24">
       <div className="grid items-center gap-10 lg:grid-cols-12">
         <Reveal className="lg:col-span-5">
-          <Slate no="08" label={content.label} />
-          <h2 className="gs-title">{content.title}</h2>
+          <Slate no="07" label={content.label} />
+          {/* Interlude scale, not the full display tier: this heading lives
+              in a 5-of-12 column beside the operations board, and `--fs-display`
+              (now 5.5rem at wide viewports — Task G2) would run it to six or
+              seven lines in that measure. The ramp's second rung is the
+              correct tier for a column-constrained heading. */}
+          <h2 className="gs-title gs-title-sm">{content.title}</h2>
           <p className="text-text-secondary mt-4 max-w-[58ch] text-[length:var(--fs-lead)] text-pretty">
             {content.subtitle}
           </p>

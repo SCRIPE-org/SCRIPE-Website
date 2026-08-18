@@ -60,7 +60,7 @@ export function ProductReading({ content }: ProductReadingProps) {
                 <span className={`shrink-0 ${ACCENT_TEXT_CLASS[item.accent]}`}>
                   <ModuleIcon id={item.id} />
                 </span>
-                <h3 className="text-text-primary min-w-0 flex-1 truncate text-[length:var(--fs-h3)] font-semibold">
+                <h3 className="text-text-primary min-w-0 flex-1 truncate text-[length:var(--fs-lead)] font-semibold">
                   {item.name}
                 </h3>
                 <span

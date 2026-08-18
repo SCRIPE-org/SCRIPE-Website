@@ -61,11 +61,11 @@ export function OperatingPrinciples({ content }: OperatingPrinciplesProps) {
               >
                 <PrincipleIcon id={item.id} />
               </span>
-              <span className="font-display text-text-tertiary text-[length:var(--fs-h3)] tabular-nums" aria-hidden="true">
+              <span className="font-display text-text-tertiary text-[length:var(--fs-lead)] tabular-nums" aria-hidden="true">
                 {String(index + 1).padStart(2, "0")}
               </span>
             </div>
-            <h3 className="font-display text-text-primary mt-4 text-[length:var(--fs-h3)] font-semibold text-balance">
+            <h3 className="font-display text-text-primary mt-4 text-[length:var(--fs-lead)] font-semibold text-balance">
               {item.title}
             </h3>
             <p className="text-text-secondary mt-3 text-[length:var(--fs-small)] leading-relaxed text-pretty">

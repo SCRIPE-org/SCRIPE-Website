@@ -55,7 +55,7 @@ export function Capabilities({ content, accent }: CapabilitiesProps) {
           <Reveal key={item.title} y={14}>
             <div className="flex items-center gap-3">
               <CapabilityIcon icon={item.icon} className={ACCENT_TEXT_CLASS[accent]} />
-              <h3 className="font-display text-text-primary min-w-0 text-[length:var(--fs-h3)] font-semibold">
+              <h3 className="font-display text-text-primary min-w-0 text-[length:var(--fs-lead)] font-semibold">
                 {item.title}
               </h3>
             </div>

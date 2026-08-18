@@ -164,8 +164,13 @@ export interface HomeContent {
     plateAlt: string;
     /** Progress-rail label for the intro beat. */
     railIntro: string;
-    /** The five camera chapters, in flight order. The last chapter is the
-     *  destination beat that carries the CTAs in armed (cinematic) mode. */
+    /** The four camera chapters, in flight order: three product-distinct
+     *  corner beats (Clubs → Venues → Intelligence) followed by the
+     *  destination beat that carries the CTAs in armed (cinematic) mode.
+     *  Task G2 cut the former five-chapter list — the Academies chapter
+     *  repeated the Clubs framing on the same crop of the plate and its copy
+     *  is already carried below the fold by `trusted.categories`,
+     *  `productFamily.products` and `solutions.items`. */
     chapters: HeroChapter[];
     /** Label of the primary call-to-action button. */
     primaryCta: string;

@@ -55,7 +55,7 @@ export function ArticlesGrid({ content }: ArticlesGridProps) {
                 <span className="border-border-subtle text-accent-text grid size-9 shrink-0 place-items-center rounded-md border">
                   <ArticleIcon />
                 </span>
-                <h3 className="font-display text-text-primary min-w-0 flex-1 text-[length:var(--fs-h3)] font-semibold text-pretty">
+                <h3 className="font-display text-text-primary min-w-0 flex-1 text-[length:var(--fs-lead)] font-semibold text-pretty">
                   {item.title}
                 </h3>
               </div>

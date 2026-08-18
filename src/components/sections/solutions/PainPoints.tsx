@@ -49,7 +49,7 @@ export function PainPoints({ content, accent }: PainPointsProps) {
         {content.items.map((item) => (
           <Reveal key={item.title} y={16} className="sol-pain-item">
             <span className={`sol-pain-rule ${ACCENT_DOT_CLASS[accent]}`} aria-hidden="true" />
-            <h3 className="font-display text-text-primary mt-4 text-[length:var(--fs-h3)] font-semibold text-balance">
+            <h3 className="font-display text-text-primary mt-4 text-[length:var(--fs-lead)] font-semibold text-balance">
               {item.title}
             </h3>
             <p className="text-text-secondary mt-3 text-[length:var(--fs-small)] leading-relaxed text-pretty">

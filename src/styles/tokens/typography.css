@@ -20,12 +20,47 @@
 
   /* fluid scale: clamp(min, viewport-driven midpoint, max). Display tiers
      swing widely across viewport; body tiers stay narrow so running text
-     never jumps size disruptively while scrolling/resizing. */
+     never jumps size disruptively while scrolling/resizing.
+
+     THE RAMP (Task G2). Maxima at 1920, and the step between each rung:
+
+       --fs-cinema  116px   ─┐ 1.32×   hero statement only
+       --fs-display  88px   ─┘ 1.83×   section headings (`.gs-title`, page h1s)
+       --fs-h1       48px   ──┘ 1.71×  sub-headings, product names, stat figures
+       --fs-h2       28px   ──┘ 1.47×  minor headings
+       --fs-lead     19px   ──┘ 1.19×  lead paragraphs AND card/list headings
+       --fs-body     16px   ──┘ 1.14×  running text
+       --fs-small    14px   ──┘ 1.17×  supporting text
+       --fs-meta     12px   ──┘        stamps, labels, rail numbers
+
+     Two things were wrong before G2 and both made every page below the
+     hero read as a template.
+
+     1. A 2× cliff at the top. The hero statement set at 116px and then
+        EVERY other headline on the site was capped at 57.6px — no section
+        heading could ever carry the weight the hero had just established,
+        so sections read as filler between the hero and the footer. Display
+        now reaches 5.5rem/88px; h1 was pulled up with it (2.25rem → 3rem)
+        because leaving it at 36px would only have moved the cliff down a
+        rung instead of removing it.
+
+     2. A dead rung at the bottom. `--fs-h3` (18→20px) and `--fs-lead`
+        (17→19px) were one pixel apart at every viewport — two tokens
+        occupying one optical step, which is a step the ramp does not have.
+        `--fs-h3` is gone and its consumers moved to `--fs-lead`: a card
+        heading and a lead paragraph genuinely sit on the same rung here,
+        and they are told apart by family (`font-display`), weight
+        (`font-semibold`) and colour (`text-primary` vs `text-secondary`),
+        which is legible — a 1px size difference is not.
+
+     Minima moved far less than maxima on purpose (display 36.8 → 38.4px,
+     h1 28 → 29.6px): the cliff is a wide-viewport problem, and holding the
+     small end steady keeps long headings — Arabic especially — from
+     overflowing on phones. */
   --fs-cinema: clamp(3.4rem, 1rem + 7.6vw, 7.25rem);
-  --fs-display: clamp(2.3rem, 1.4rem + 2.9vw, 3.6rem);
-  --fs-h1: clamp(1.75rem, 1.4rem + 1.2vw, 2.25rem);
+  --fs-display: clamp(2.4rem, 0.95rem + 4.6vw, 5.5rem);
+  --fs-h1: clamp(1.85rem, 1.3rem + 1.8vw, 3rem);
   --fs-h2: clamp(1.45rem, 1.25rem + 0.7vw, 1.75rem);
-  --fs-h3: clamp(1.125rem, 1.05rem + 0.35vw, 1.25rem);
   --fs-lead: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
   --fs-body: clamp(0.9375rem, 0.9rem + 0.2vw, 1rem);
   --fs-small: clamp(0.8125rem, 0.78rem + 0.15vw, 0.875rem);

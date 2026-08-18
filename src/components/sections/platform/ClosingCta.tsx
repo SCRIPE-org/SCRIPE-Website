@@ -37,7 +37,7 @@ export function ClosingCta({ content }: ClosingCtaProps) {
           <span className="atmo-cta-bloom" aria-hidden="true" />
           <span className="atmo-cta-grain" aria-hidden="true" />
 
-          <div className="relative mx-auto flex max-w-[720px] flex-col items-center gap-6">
+          <div className="relative mx-auto flex max-w-[960px] flex-col items-center gap-6">
             <BrandMark size={40} decorative />
             <h2 className="atmo-title font-display text-[length:var(--fs-display)] text-balance text-white">
               {content.title}

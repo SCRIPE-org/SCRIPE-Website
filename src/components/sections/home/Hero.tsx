@@ -6,7 +6,7 @@
  * `src/styles/home.css` for the two-mode contract):
  *
  * - Static frame (default): full-viewport background plate under a night
- *   grade, the statement `<h1>` + tagline + both CTAs centered, and the five
+ *   grade, the statement `<h1>` + tagline + both CTAs centered, and the four
  *   chapters as a flowing "flight plan" strip below the stage. This is the
  *   no-JS, reduced-motion and pre-hydration experience — a single flattened
  *   image layer, full content, no motion/parallax dependencies.
@@ -45,7 +45,7 @@
  *   layer) like a lens element in the rig.
  * - `plate-finale` (`.hero-plate-finale`, armed-only) — the nadir
  *   "operational picture" shot, crossfades in via opacity across scrub
- *   0.76→0.86 as the destination beat's background; static (no
+ *   0.80→0.90 as the destination beat's background; static (no
  *   `CAMERA_PATH` tween) so it reads as a deliberate cut, not a
  *   continuation of the pan.
  *
@@ -57,7 +57,16 @@
  * mid < finale < night-grade/signal accents < type (intro/finale text +
  * CTAs) < corner beats < foreground bokeh (topmost).
  *
- * BEAT DESIGN LANGUAGE (Task E2): chapters 1–4 render as cinematic
+ * CHAPTER SET (Task G2): the flight carries THREE corner chapters — 01
+ * CLUBS, 02 VENUES, 03 INTELLIGENCE — plus the destination beat, down from
+ * five corners. The cut chapter (Academies) framed the same crop of the
+ * plate as Clubs, so it cost a fifth of the track for a shot the viewer had
+ * already seen; its copy is carried below the fold by the trust strip, the
+ * Academy product row and the solutions grid, all of which link out to
+ * `/solutions/sports-academies`. Nothing was removed from the page, only
+ * from the photograph.
+ *
+ * BEAT DESIGN LANGUAGE (Task E2): chapters 1–3 render as cinematic
  * lower-thirds — an outlined oversized chapter number (lime text-stroke), a
  * 1px lime rule, a mono-spaced meta stamp (`01 / CLUBS`), then the chapter
  * title + subtitle. The rail is a designed object: a hairline track with
@@ -72,7 +81,7 @@
  *   buttons stay in the tab order for the entire scroll track. A
  *   `:focus-within` rule in home.css force-reveals the CTA row for keyboard
  *   users who reach it while transparent.
- * - The corner beat captions (chapters 1–4) are decorative narration — the
+ * - The corner beat captions (chapters 1–3) are decorative narration — the
  *   same information exists in the flight-plan strip (static mode) and in
  *   the sections below (`#product`, `#solutions`), so the beat containers
  *   are `aria-hidden` and keep the `autoAlpha` visual choreography.
@@ -195,7 +204,7 @@ export function Hero({ content }: HeroProps) {
           </div>
         </div>
 
-        {/* Corner beats: chapters 1–4 as cinematic lower-thirds (armed mode
+        {/* Corner beats: chapters 1–3 as cinematic lower-thirds (armed mode
             only) — outlined chapter number, lime rule, mono meta stamp,
             title, subtitle. aria-hidden: decorative narration — the same
             chapters are exposed to AT via the flight-plan strip (static) and
