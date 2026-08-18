@@ -1343,3 +1343,46 @@ export interface ContactContent {
     items: ContactChannel[];
   };
 }
+
+/**
+ * One link entry in the 404 page's link row — home + 2–3 top pages to guide
+ * users back into the site.
+ */
+export interface NotFoundLink {
+  /** Button label (e.g. "Back to home"). */
+  label: string;
+  /** Locale-less internal route the button links to. */
+  href: string;
+}
+
+/**
+ * Content for the 404 page (`/[...rest]`) — the catch-all that triggers when
+ * a route does not exist within the matched locale. Ported from
+ * `backup/scripe-static/404.html` + `js/lang-ar.js`: a large typographic
+ * "404" treatment with lime accent, title/message copy, and a button row
+ * (home + the platform and 2–3 top-level solution pages) that guide users
+ * back into the site. Metadata sets `robots: { index: false }` to prevent
+ * indexing of error pages.
+ */
+export interface NotFoundContent {
+  /** Page-level metadata strings. */
+  meta: {
+    /** Page title (the layout's `"%s · SCRIPE"` template wraps it). */
+    title: string;
+    /** Meta/OG description. */
+    description: string;
+  };
+  /** 404 hero section copy. */
+  hero: {
+    /** Status eyebrow (e.g. "404"). */
+    code: string;
+    /** Status label (e.g. "Not found"). */
+    label: string;
+    /** Page heading — the main error message. */
+    title: string;
+    /** Supporting sentence explaining what happened. */
+    subtitle: string;
+  };
+  /** Link row buttons (home + top pages). */
+  links: NotFoundLink[];
+}

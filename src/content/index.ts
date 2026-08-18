@@ -18,6 +18,7 @@ import { pricingContent as pricingEn } from "./en/pricing";
 import { resourcesContent as resourcesEn } from "./en/resources";
 import { companyContent as companyEn } from "./en/company";
 import { contactContent as contactEn } from "./en/contact";
+import { notFoundContent as notFoundEn } from "./en/notFound";
 import { homeContent as homeAr } from "./ar/home";
 import { platformContent as platformAr } from "./ar/platform";
 import { solutionsContent as solutionsAr } from "./ar/solutions";
@@ -29,6 +30,7 @@ import { pricingContent as pricingAr } from "./ar/pricing";
 import { resourcesContent as resourcesAr } from "./ar/resources";
 import { companyContent as companyAr } from "./ar/company";
 import { contactContent as contactAr } from "./ar/contact";
+import { notFoundContent as notFoundAr } from "./ar/notFound";
 
 /**
  * Maps each registered page to its content for every locale.
@@ -49,6 +51,7 @@ export const CONTENT_REGISTRY: Partial<Record<PageId, Record<Locale, unknown>>> 
   resources: { en: resourcesEn, ar: resourcesAr },
   company: { en: companyEn, ar: companyAr },
   contact: { en: contactEn, ar: contactAr },
+  notFound: { en: notFoundEn, ar: notFoundAr },
 };
 
 /**

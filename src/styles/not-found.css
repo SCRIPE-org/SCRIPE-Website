@@ -1,0 +1,55 @@
+/* ============================================================================
+   SCRIPE — 404 not-found page styles
+
+   Scope: imported by `src/app/[locale]/not-found.tsx` only — everything
+   in here is 404-page-specific. The layout's base rhythm and typography
+   scales live in `src/styles/` and `src/app/globals.css`; this file owns
+   only the 404-specific hero treatment (obsidian ground, lime accent,
+   large typographic "404").
+   ============================================================================ */
+
+/* ---------------------------------------------------------------------------
+   1. 404 Hero — obsidian ground, lime accent top edge, large "404" display
+   with supporting title/message and link row below.
+   --------------------------------------------------------------------------- */
+
+.nf-hero-panel {
+  position: relative;
+  overflow: hidden;
+  background: var(--obsidian);
+  border: 1px solid #26282c;
+  border-radius: var(--radius-xl-base);
+}
+
+.nf-hero-horizon {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: 1px;
+  background: linear-gradient(90deg, transparent 8%, rgba(192, 255, 0, 0.8) 50%, transparent 92%);
+  pointer-events: none;
+}
+
+.nf-hero-bloom {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: 55%;
+  background: radial-gradient(52% 90% at 50% 0%, rgba(192, 255, 0, 0.14), transparent 72%);
+  pointer-events: none;
+}
+
+.nf-404-display {
+  /* Large 404 treatment: 5.4rem to 7.2rem depending on viewport */
+  font-size: clamp(5.4rem, 4rem + 4vw, 7.2rem);
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--accent);
+  font-variation-settings: 'wdth' 114;
+}
+
+[dir="rtl"] .nf-404-display {
+  font-variation-settings: normal;
+}
