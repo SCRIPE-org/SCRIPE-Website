@@ -1,38 +1,98 @@
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Reveal } from "@/components/motion/Reveal";
-import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
-import { Eyebrow } from "@/components/ui/Eyebrow";
-import { Field } from "@/components/ui/Field";
-import { Section } from "@/components/ui/Section";
+/**
+ * Home page — the full eight-section Fusion composition:
+ * Camera-Hero → trusted → product family → platform → solutions →
+ * automation → branches → closing CTA.
+ *
+ * A Server Component: content comes from the typed content pipeline
+ * (`getContent("home", locale)` — parity between locales is enforced by
+ * `src/content/parity.test.ts`), sections are server components under
+ * `src/components/sections/home/`, and the only client leaves on the page
+ * are the shared `Reveal` primitive and the hero's `HeroDirector` (which
+ * lazy-loads GSAP after mount — never in the initial chunk). Page-specific
+ * styles live in `src/styles/home.css`, imported here so they ship with
+ * this route only.
+ */
+import "@/styles/home.css";
+import type { Metadata } from "next";
+import { hasLocale } from "next-intl";
+import { setRequestLocale } from "next-intl/server";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { AutomationStory } from "@/components/sections/home/AutomationStory";
+import { BranchesStory } from "@/components/sections/home/BranchesStory";
+import { ClosingCta } from "@/components/sections/home/ClosingCta";
+import { Hero } from "@/components/sections/home/Hero";
+import { PlatformOverview } from "@/components/sections/home/PlatformOverview";
+import { ProductFamily } from "@/components/sections/home/ProductFamily";
+import { SolutionsGrid } from "@/components/sections/home/SolutionsGrid";
+import { TrustStrip } from "@/components/sections/home/TrustStrip";
+import { getContent } from "@/content";
+import type { HomeContent } from "@/content/types";
+import { routing, type Locale } from "@/i18n/routing";
+import { buildBreadcrumb, buildSoftwareApplication } from "@/lib/seo/jsonld";
+import { pageMetadata, siteUrl } from "@/lib/seo/metadata";
 
-export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
+/** Resolves the route param to a valid locale (defaulting like the layout). */
+async function resolveLocale(params: Promise<{ locale: string }>): Promise<Locale> {
   const { locale } = await params;
+  return hasLocale(routing.locales, locale) ? locale : routing.defaultLocale;
+}
+
+/**
+ * Home page metadata: canonical/hreflang/OG via {@link pageMetadata}, with
+ * the title made absolute — the home page carries the full brand title and
+ * must not receive the layout's `"%s · SCRIPE"` template suffix.
+ *
+ * @param props.params - Resolves to the matched `[locale]` segment.
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const locale = await resolveLocale(params);
+  const content = getContent<HomeContent>("home", locale);
+
+  return {
+    ...pageMetadata({
+      locale,
+      path: "/",
+      title: content.meta.title,
+      description: content.meta.description,
+    }),
+    title: { absolute: content.meta.title },
+  };
+}
+
+/**
+ * Renders the home page: structured data (breadcrumb + software
+ * application) followed by the eight sections in narrative order.
+ *
+ * @param props.params - Resolves to the matched `[locale]` segment.
+ */
+export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
+  const locale = await resolveLocale(params);
   setRequestLocale(locale);
 
-  const t = await getTranslations("nav");
+  const content = getContent<HomeContent>("home", locale);
+  const origin = siteUrl();
 
   return (
     <>
-      {/* Task 8 smoke test: exercises the UI primitives together. Replaced
-          by real page composition in later tasks. */}
-      <Section width="default">
-        <Eyebrow>SCRIPE</Eyebrow>
-        <h1 className="text-accent bg-surface-page rounded-xs font-display">{t("bookDemo")}</h1>
-        <div className="flex gap-3">
-          <Button href="/">{t("bookDemo")}</Button>
-          <Button variant="outline">{t("bookDemo")}</Button>
-        </div>
-        {/* Task 10 smoke test: exercises the Reveal motion primitive.
-            Replaced by real page composition in later tasks. */}
-        <Reveal>
-          <Card accent="academy">
-            <Field label={t("bookDemo")} hint="Smoke test hint">
-              <input type="text" />
-            </Field>
-          </Card>
-        </Reveal>
-      </Section>
+      <JsonLd
+        data={buildBreadcrumb([
+          { name: content.meta.breadcrumbHome, url: `${origin}/${locale}` },
+        ])}
+      />
+      <JsonLd data={buildSoftwareApplication(origin, locale)} />
+
+      <Hero content={content.hero} />
+      <TrustStrip content={content.trusted} />
+      <ProductFamily content={content.productFamily} />
+      <PlatformOverview content={content.platform} />
+      <SolutionsGrid content={content.solutions} />
+      <AutomationStory content={content.automation} />
+      <BranchesStory content={content.branches} />
+      <ClosingCta content={content.closing} />
     </>
   );
 }
