@@ -128,6 +128,7 @@ export const homeContent: HomeContent = {
     board: {
       title: "Today · Tuesday",
       badge: "Product evidence",
+      illustrativeTag: "Illustrative",
       rows: [
         {
           time: "16:30",

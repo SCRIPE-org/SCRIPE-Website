@@ -216,6 +216,9 @@ export interface HomeContent {
       title: string;
       /** Honesty badge shown at the panel header end. */
       badge: string;
+      /** Quiet mono disclosure beside the badge: the rows' names and times
+       *  are a staged example, not live customer data. */
+      illustrativeTag: string;
       /** The board's schedule rows. */
       rows: BoardRow[];
     };

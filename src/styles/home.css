@@ -888,7 +888,22 @@
 }
 
 @media (hover: hover) {
-  .pf-row:hover {
+  /* `.pf-card.pf-row:hover` (not `.pf-row:hover`): §13's
+     `[data-theme="dark"] .pf-card` sets the `background` shorthand, which
+     resets the `background-color` longhand to transparent for that rule.
+     Both selectors were equal specificity (0,0,2,0) and the dark override
+     comes later in the file, so a same-specificity `.pf-row:hover` lost the
+     cascade tie outright. Every `.pf-row` in markup already carries
+     `.pf-card` (ProductFamily.tsx), so stacking the class here is free and
+     puts the hover longhand ahead of the dark override for good, regardless
+     of source order. This is enough on its own in LIGHT theme, where
+     `.pf-card`'s background is a flat color. It is NOT enough in dark
+     theme: `[data-theme="dark"] .pf-card`'s gradient is a `background-image`
+     layer, which paints in front of `background-color` and is fully
+     opaque, so even a winning `background-color` would still be invisible
+     underneath it — see the dedicated dark-mode hover rule next to that
+     gradient in §13, which layers the wash into the image stack instead. */
+  .pf-card.pf-row:hover {
     background-color: color-mix(in srgb, var(--pf-accent) 5%, transparent);
   }
 
@@ -1075,9 +1090,13 @@
 }
 
 /* Per-section atmosphere (dark theme only — the light theme stays on flat
-   token surfaces until Task E5 decides it). Brand rule: at most ONE lime
-   moment per viewport — glows here stay cool/neutral because each section
-   already spends its lime on a designed element (stamp, rail, horizon). */
+   token surfaces until Task E5 decides it). Brand rule: the mono slate
+   stamp (`.slate-stamp`, lime) runs on every section as wayfinding chrome
+   — the film timecode — and doesn't count against the budget below.
+   Separately, each section spends at most ONE lime moment on its actual
+   CONTENT (a glow, wash, rail or chip that dramatizes what the section is
+   about — see the per-section notes below). These atmosphere glows stay
+   cool/neutral so they never compete with that one content moment. */
 [data-theme="dark"] .gs {
   --gs-grain: 0.05;
 }
@@ -1219,7 +1238,9 @@
 /* ---- Product family: ledger cards + vignettes ---------------------------- */
 
 /* The ledger row elevated to a card surface (replaces the old naked
-   hairline rows). Keeps §10's .pf-row accent hover wash on top. */
+   hairline rows). §10's hover wash targets `.pf-card.pf-row:hover`
+   specifically so it outranks this rule's dark override below on
+   `background-color`, in both themes and regardless of source order. */
 .pf-card {
   border-radius: var(--radius-lg-base);
   border: 1px solid var(--border-subtle);
@@ -1234,6 +1255,26 @@
 [data-theme="dark"] .pf-card {
   background: linear-gradient(180deg, #191c1f 0%, #141619 100%);
   border-color: rgba(255, 255, 255, 0.07);
+}
+
+/* §10's hover wash sets `background-color`, but this gradient is a
+   `background-image` layer that paints in FRONT of `background-color` and
+   is fully opaque — so a winning `background-color` still renders
+   invisible underneath it (confirmed via getComputedStyle vs. actual
+   sampled pixel color: the two diverged). Re-declare `background` on hover
+   as two image layers instead: a flat translucent wash in front of the
+   same base gradient. Because the front layer's alpha is 5%, it visibly
+   tints the gradient beneath it via ordinary alpha compositing, rather
+   than being hidden behind it. */
+@media (hover: hover) {
+  [data-theme="dark"] .pf-card.pf-row:hover {
+    background:
+      linear-gradient(
+        color-mix(in srgb, var(--pf-accent) 5%, transparent),
+        color-mix(in srgb, var(--pf-accent) 5%, transparent)
+      ),
+      linear-gradient(180deg, #191c1f 0%, #141619 100%);
+  }
 }
 
 @media (hover: hover) {
