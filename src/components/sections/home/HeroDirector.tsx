@@ -50,12 +50,27 @@
  *   0.15  1.34  12.69   −9.5     3.19    +3.2     10.66 (0.84L)  7.46
  *   0.31  1.42  14.79   +8.5     6.29    +4.5     12.42 (0.84L)  7.92
  *   0.47  1.52  17.11  +11.5     5.61   −11.0     19.85 (1.16L)  8.85
- *   0.63  1.46  15.75  −11.0     4.75    +5.5     13.23 (0.84L)  7.73
+ *   0.63  1.60  18.75  −15.0     3.75    −6.0     21.75 (1.16L) 15.75
  *   0.82  1.18   7.63    0       7.63    −2.5      8.85 (1.16L)  6.35
  *   1.00  1.22   9.02    0       9.02    −3.2     10.46 (1.16L)  7.26
  *
  * Tightest margin: 3.19 percentage points (x at the 0.15 clubs dive) — on
  * top of the conservative-vs-exact slack above (÷s ≈ another 25% of L).
+ *
+ * Task E2 fix round: the 0.63 intelligence keyframe originally panned
+ * (−11, +5.5) at scale 1.46 — the same quadrant and near-identical
+ * magnitude as the 0.15 clubs keyframe's (−9.5, +3.2) at scale 1.34, so the
+ * two beats read as the same shot (same wide establishing crop: pool,
+ * courts and stadium bowl all in frame together). Retuned to (−15, −6) at
+ * scale 1.60 — the path's new peak: x pushed further into the same side
+ * (past the courts, isolating the clubhouse's lit colonnade/walkway) while
+ * y flips sign (into the one quadrant no other keyframe uses, −x/−y) and
+ * the deeper zoom crops the practice pitch and open sky out of frame
+ * entirely. Verified via scroll-position screenshots at progress 0.15 and
+ * 0.63 (script + captures in the task report) — the two beats now read as
+ * an establishing wide shot vs. a tight architectural detail, unmistakably
+ * different places. y limit is 1.16L here (was 0.84L) because the pan
+ * direction flipped from +y to −y — see the asymmetric-origin note above.
  *
  * rotateX tilt: the stage carries `perspective: 1500px` (home.css) and each
  * keyframe tips the ground plane by `tilt` degrees (max 2.6°). At 2.6° on a
@@ -119,7 +134,7 @@ const CAMERA_PATH = [
   { at: 0.15, scale: 1.34, x: -9.5, y: 3.2, tilt: 1.6 },
   { at: 0.31, scale: 1.42, x: 8.5, y: 4.5, tilt: 2.2 },
   { at: 0.47, scale: 1.52, x: 11.5, y: -11, tilt: 2.6 },
-  { at: 0.63, scale: 1.46, x: -11, y: 5.5, tilt: 2.0 },
+  { at: 0.63, scale: 1.6, x: -15, y: -6, tilt: 2.0 },
   { at: 0.82, scale: 1.18, x: 0, y: -2.5, tilt: 0.5 },
   { at: 1.0, scale: 1.22, x: 0, y: -3.2, tilt: 0.7 },
 ] as const;

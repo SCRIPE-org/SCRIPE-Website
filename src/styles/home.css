@@ -651,6 +651,15 @@
   letter-spacing: 0.08em;
   color: var(--clean-white);
   opacity: 0.45;
+  /* Local backdrop wash: the plate can run bright/warm behind the rail
+     (stadium lighting, the lime walkway) — at full opacity on the active
+     tick a plain white label fights those pixels. A tight dark halo lifts
+     it off the plate without a hard panel; decorative layer only
+     (aria-hidden), so no contrast-mode implications. */
+  text-shadow:
+    0 0 8px rgba(4, 9, 17, 0.9),
+    0 0 2px rgba(4, 9, 17, 0.9),
+    0 1px 3px rgba(4, 9, 17, 0.7);
   transition: opacity var(--motion-standard) var(--ease-standard);
   white-space: nowrap;
 }
