@@ -35,13 +35,20 @@
    anchored to each hero (hub and every solution page share this same class,
    since both open on the identical `Section` shape). Dark: cool glows ≤7%
    alpha per the brand doctrine `home.css` §13 sets. Light: the same
-   geometry as daylight shading pools on the bare class. ORDER MATTERS for
-   the RTL pair: `[dir="rtl"] .sol-hero-atmo` (0,2,0) ties the dark LTR rule
-   on specificity, so the light rules must precede every dark rule for the
-   dark ones to win their tie in dark+RTL (the dedicated dark RTL rule at
-   (0,3,0) then beats both). Combined with the shared `.atmo` root
-   (`src/styles/tokens/atmosphere.css`); the hero also takes `.atmo-grain`
-   (dark only).
+   geometry as daylight shading pools on the bare class. `dir` and
+   `data-theme` are both attributes of the SAME `<html>` element (`dir` set
+   server-side in `[locale]/layout.tsx`, `data-theme` set client-side by
+   `THEME_SCRIPT`) — never one nested inside the other — so the dark+RTL
+   override below is a compound selector (`[dir="rtl"][data-theme="dark"]`,
+   no descendant combinator) matching that one element, not a descendant
+   selector across two. ORDER MATTERS for the RTL pair: `[dir="rtl"]
+   .sol-hero-atmo` (0,2,0) ties the dark LTR rule on specificity, so the
+   light rules must precede every dark rule for the dark ones to win their
+   tie in dark+RTL (the dedicated dark+RTL compound rule at (0,3,0) then
+   beats both — same specificity weight as a descendant selector would have
+   had, only the combinator changes which elements it can ever match).
+   Combined with the shared `.atmo` root (`src/styles/tokens/atmosphere.css`);
+   the hero also takes `.atmo-grain` (dark only).
    --------------------------------------------------------------------------- */
 
 .sol-hero-atmo {
@@ -60,7 +67,7 @@
   --atmo-glow: radial-gradient(46% 65% at 82% -6%, rgba(168, 190, 224, 0.05), transparent 72%);
 }
 
-[dir="rtl"] [data-theme="dark"] .sol-hero-atmo {
+[dir="rtl"][data-theme="dark"] .sol-hero-atmo {
   --atmo-glow: radial-gradient(46% 65% at 18% -6%, rgba(168, 190, 224, 0.05), transparent 72%);
 }
 

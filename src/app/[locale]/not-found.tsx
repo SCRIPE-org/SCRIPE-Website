@@ -27,15 +27,48 @@
  * documents and applies the correct fix for this exact panel ("because the
  * panel is always dark, its foregrounds are fixed light values rather than
  * theme tokens"); this page now follows the same rule.
+ *
+ * Task E5 fix-round: `[locale]/layout.tsx`'s pre-paint THEME_SCRIPT never
+ * executes on this route. Root cause (confirmed via raw HTML inspection):
+ * when `notFound()` resolves through the `[...rest]` catch-all, Next.js's
+ * initial response is its own internal minimal document shell
+ * (`<html id="__next_error__">`) — the real `<head>` this layout renders
+ * (including THEME_SCRIPT) is only ever serialized into the streamed RSC
+ * payload as data, never applied as live `<head>` children, on this
+ * specific boundary. This page's own real content (this panel) then
+ * replaces that shell via a client-side patch, not the initial parse — so
+ * any script tag needs to survive being inserted post-hydration, which
+ * ruled out two more options besides the layout's own inert copy: a plain
+ * `<script>` here in the body (confirmed live: DOM node present, JS still
+ * never runs — inline scripts inserted by React outside the initial parse
+ * don't self-execute) and next/script's `beforeInteractive` strategy in the
+ * layout's `<head>` (meaningless here anyway — that strategy only affects
+ * the pre-hydration parse this boundary skips). What DOES work, confirmed
+ * live: next/script's `afterInteractive` strategy, which is Next's own
+ * managed post-hydration script loader (`document.createElement` + insert,
+ * not innerHTML) — reliable specifically because it's designed to attach
+ * scripts to a document that's already interactive, exactly this page's
+ * situation. So this page carries its own `afterInteractive` copy of the
+ * exact same THEME_SCRIPT, so the one route where the layout's copy is
+ * inert still lands on the correct stored theme within ~100ms of paint. It
+ * reads the same `localStorage` key and sets the same `data-theme`/
+ * `color-scheme`/theme-color as the layout's script — CSS custom properties
+ * re-cascade the instant the attribute is set, so NavBar/Footer/page-ground
+ * (all theme tokens, not JS-computed) repaint correctly too, not just this
+ * panel. The brief pre-script flash (default light palette, same as every
+ * other route's pre-paint window) is an accepted tradeoff for a rare error
+ * path, not a design goal.
  */
 import "@/styles/not-found.css";
 import { getLocale } from "next-intl/server";
+import Script from "next/script";
 import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
 import { getContent } from "@/content";
 import type { NotFoundContent } from "@/content/types";
 import { routing, type Locale } from "@/i18n/routing";
+import { THEME_SCRIPT } from "@/theme/theme-script";
 
 /**
  * Renders the 404 not-found page: obsidian hero panel with large "404"
@@ -57,6 +90,11 @@ export default async function NotFound() {
 
   return (
     <Section>
+      {/* Fallback theme application for this route only — see the file
+          header for why the layout's own copy is inert here, and why
+          `afterInteractive` specifically (not a plain <script>, not
+          `beforeInteractive`) is the one strategy that actually runs. */}
+      <Script id="notfound-theme-init" strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       <div className="atmo-cta-panel night-zone">
         <span className="atmo-cta-horizon" aria-hidden="true" />
         <span className="atmo-cta-bloom" aria-hidden="true" />

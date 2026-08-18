@@ -4,7 +4,6 @@ import { fontClassesFor } from "@/fonts";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
-import Script from "next/script";
 import { Footer } from "@/components/chrome/Footer";
 import { NavBar } from "@/components/chrome/NavBar";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -77,14 +76,20 @@ export default async function LocaleLayout({
       suppressHydrationWarning
     >
       <head>
-        {/* next/script beforeInteractive, not a raw <script> tag: this layout
-            is also the render boundary for notFound(), and a plain inline
-            script here was empirically inert on that path (present in the
-            served HTML but never executed) while working on every normal
-            route — beforeInteractive is Next's own guaranteed-execution
-            mechanism and closes that gap. */}
-        <Script id="theme-init" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
-        <Script id="no-js-init" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: NO_JS_SCRIPT }} />
+        {/* Plain pre-paint inline scripts — correct and sufficient for every
+            normal route. NOT sufficient for the [...rest] catch-all's
+            notFound() render path: Next.js's initial response there is its
+            own internal minimal shell (`<html id="__next_error__">`), and
+            this real <head> only ever reaches the client serialized inside
+            the streamed RSC payload, never applied as live <head> children,
+            on that one boundary — next/script's `beforeInteractive` strategy
+            was tried here too and made no difference (confirmed live; that
+            strategy only targets the pre-hydration parse this boundary
+            skips). See `not-found.tsx`'s file header for the fix that does
+            work on that route (its own `afterInteractive` copy of
+            THEME_SCRIPT) and the two other approaches ruled out first. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: NO_JS_SCRIPT }} />
         <meta name="theme-color" content="#0B0B0E" />
       </head>
       <body>

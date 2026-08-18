@@ -33,6 +33,21 @@
  * `NavBar.tsx`'s skip-to-content link already uses, so it adds no visible
  * duplicate of the header's X for sighted users, but is reachable by
  * keyboard Tab and by touch screen-reader swipe navigation either way).
+ *
+ * The sheet renders via `createPortal(..., document.body)` (Task E5 fix-
+ * round), not in place as a normal child. `NavBar.tsx`'s `<header>` carries
+ * `backdrop-blur-md`, and any element with a CSS filter/backdrop-filter
+ * becomes a containing block for its `position: fixed` descendants — the
+ * sheet's `fixed inset-block: 72px 0` was resolving against that header's
+ * own (much shorter) box instead of the viewport, collapsing it to zero
+ * height in both themes. Portaling to `document.body` moves the sheet out
+ * from under that containing block entirely so `fixed` resolves against the
+ * viewport again, without touching the header's frosted-glass treatment in
+ * either theme. `sheetRef`/the focus trap/the `open &&` mount guard are all
+ * unaffected — React refs and the component's own state work identically
+ * across a portal boundary; only the DOM parent changes, not the React
+ * tree, so `onClick` bubbling for `onSheetClick` and this same file's other
+ * closures still work exactly as written.
  */
 import {
   useEffect,
