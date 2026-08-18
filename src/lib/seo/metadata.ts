@@ -112,6 +112,16 @@ export interface PageMetadataOptions {
 }
 
 /**
+ * Pixel dimensions and alt text of `src/app/[locale]/opengraph-image.tsx`'s
+ * generated image. Duplicated here (rather than imported) because that file
+ * is a Next.js special route file — importing it would pull `next/og` and
+ * `node:fs` into every page's metadata resolution. Keep these two literals
+ * in sync with that file's own `size`/`alt` exports if either ever changes.
+ */
+const OG_IMAGE_SIZE = { width: 1200, height: 630 };
+const OG_IMAGE_ALT = "SCRIPE — Sports Operations OS";
+
+/**
  * Builds a page's `Metadata` object: canonical URL, hreflang alternates
  * (`en`, `ar`, and `x-default` pointing at the `en` URL), and matching
  * OpenGraph/Twitter tags.
@@ -129,6 +139,14 @@ export function pageMetadata({ locale, path, title, description }: PageMetadataO
   const urlFor = (loc: Locale) => `${origin}/${loc}${suffix}`;
   const canonical = urlFor(locale);
   const enUrl = urlFor("en");
+  // The locale-scoped OG image route (`src/app/[locale]/opengraph-image.tsx`)
+  // only auto-attaches itself to the page.tsx living in that exact segment
+  // folder (the home page) — every other page defines its own `openGraph`
+  // object via this function, which replaces rather than merges with that
+  // auto-attached image, so every non-home page silently shipped without an
+  // `og:image`/`twitter:image` tag. Setting `images` explicitly here fixes
+  // every page (including home) with one consistent, locale-correct URL.
+  const ogImageUrl = `${origin}/${locale}/opengraph-image`;
 
   return {
     metadataBase: new URL(origin),
@@ -152,11 +170,13 @@ export function pageMetadata({ locale, path, title, description }: PageMetadataO
       // region SCRIPE doesn't otherwise track.
       locale,
       type: "website",
+      images: [{ url: ogImageUrl, ...OG_IMAGE_SIZE, alt: OG_IMAGE_ALT }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      images: [ogImageUrl],
     },
   };
 }
