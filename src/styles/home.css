@@ -236,14 +236,30 @@
 }
 
 /* Finale beat (armed-only): the destination chapter, centered like the
-   intro it echoes. */
+   intro it echoes. Hidden by OPACITY only (never `visibility`): the finale
+   carries the closing headline — informative content that must stay in the
+   accessibility tree for the whole flight. GSAP drives plain `opacity` on
+   it for the same reason (see HeroDirector.tsx). */
 .hero-finale {
   display: none;
-  visibility: hidden;
+  opacity: 0;
+  /* Text-only block layered over the intro h1 in the swap cell — never let
+     it intercept pointer interaction meant for whichever layer is visible. */
+  pointer-events: none;
 }
 
 .hero[data-armed] .hero-finale {
   display: block;
+}
+
+/* Keyboard safety net: GSAP fades the CTA row with plain `opacity` (never
+   `visibility`), so the row stays in the tab order throughout the armed
+   flight. A keyboard user tabbing into it while transparent must see and
+   use it — `!important` is required here because GSAP's values are inline
+   styles, which only an important declaration can override. */
+.hero [data-hero-ctas]:focus-within {
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
 
 /* Static entrance: keyframe-driven (runs without JS), travel gated by

@@ -24,6 +24,17 @@
  * (scrub), i.e. under direct user control — no self-running motion, so no
  * WCAG 2.2.2 pause control is required.
  *
+ * Accessibility contract (controller ruling): informative layers — the
+ * `<h1>` intro, the finale block and the CTA row — are faded with plain
+ * `opacity`, NEVER `autoAlpha` (whose `visibility: hidden` would remove
+ * them from the accessibility tree and tab order for most of the flight).
+ * The CTA row therefore stays tabbable while transparent; a
+ * `:focus-within` rule in home.css force-reveals it for keyboard users,
+ * and `pointerEvents` set-tweens (below) stop mouse users from clicking
+ * an invisible control mid-flight without touching keyboard focusability.
+ * Only the `aria-hidden` corner beats (decorative narration, see Hero.tsx)
+ * keep `autoAlpha`.
+ *
  * RTL note: camera x-moves are physical on purpose — the photographic plate
  * never mirrors, so a fly-over reads identically in both directions. Text
  * beats are positioned by logical CSS properties and need no JS handling.
@@ -138,8 +149,16 @@ export function HeroDirector() {
         }
 
         // Intro departs: wordmark/tagline + CTAs + hint clear the frame.
-        tl.to("[data-hero-intro]", { autoAlpha: 0, y: -28, duration: 0.06, ease: "power2.in" }, 0.09);
-        tl.to("[data-hero-ctas]", { autoAlpha: 0, y: -22, duration: 0.05, ease: "power2.in" }, 0.1);
+        // Informative layers (h1, CTA row) fade with plain `opacity` so they
+        // never leave the accessibility tree — see the file header. The
+        // aria-hidden hint may use autoAlpha freely.
+        tl.to("[data-hero-intro]", { opacity: 0, y: -28, duration: 0.06, ease: "power2.in" }, 0.09);
+        tl.to("[data-hero-ctas]", { opacity: 0, y: -22, duration: 0.05, ease: "power2.in" }, 0.1);
+        // Transparent controls must not catch stray clicks mid-flight; a
+        // reversed scrub past a set() restores the previous value, so this
+        // stays correct scrolling both ways. Keyboard focus is unaffected by
+        // pointer-events (the :focus-within rule in home.css reveals the row).
+        tl.set("[data-hero-ctas]", { pointerEvents: "none" }, 0.15);
         tl.to("[data-hero-hint]", { autoAlpha: 0, duration: 0.04 }, 0.05);
 
         // Corner beats: caption in as the camera arrives, out as it leaves.
@@ -159,17 +178,19 @@ export function HeroDirector() {
           tl.to(beat, { autoAlpha: 0, y: -24, duration: BEAT_FADE, ease: "power2.in" }, arrive + 0.09);
         });
 
-        // Finale: destination chapter + the CTAs return, centered.
+        // Finale: destination chapter + the CTAs return, centered. Both are
+        // informative — plain `opacity`, never autoAlpha (file header).
         tl.fromTo(
           "[data-hero-finale]",
-          { autoAlpha: 0, y: 32 },
-          { autoAlpha: 1, y: 0, duration: 0.07, ease: "power2.out", immediateRender: false },
+          { opacity: 0, y: 32 },
+          { opacity: 1, y: 0, duration: 0.07, ease: "power2.out", immediateRender: false },
           0.8,
         );
+        tl.set("[data-hero-ctas]", { pointerEvents: "auto" }, 0.84);
         tl.fromTo(
           "[data-hero-ctas]",
-          { autoAlpha: 0, y: 26 },
-          { autoAlpha: 1, y: 0, duration: 0.06, ease: "power2.out", immediateRender: false },
+          { opacity: 0, y: 26 },
+          { opacity: 1, y: 0, duration: 0.06, ease: "power2.out", immediateRender: false },
           0.84,
         );
 

@@ -21,6 +21,18 @@
  * `.hero-rig` and extending `CAMERA_PATH` in `HeroDirector.tsx` — a
  * content/asset change, not a rewrite. Camera coordinates are physical and
  * the plate never mirrors in RTL.
+ *
+ * Accessibility contract for the armed flight (controller ruling):
+ * - The `<h1>`, the finale block and the CTA row are informative — they are
+ *   NEVER `aria-hidden` and GSAP fades them with plain `opacity` (never
+ *   `visibility`), so they stay in the accessibility tree and the CTA
+ *   buttons stay in the tab order for the entire scroll track. A
+ *   `:focus-within` rule in home.css force-reveals the CTA row for keyboard
+ *   users who reach it while transparent.
+ * - The corner beat captions (chapters 1–4) are decorative narration — the
+ *   same information exists in the flight-plan strip (static mode) and in
+ *   the sections below (`#product`, `#solutions`), so the beat containers
+ *   are `aria-hidden` and keep the `autoAlpha` visual choreography.
  */
 import Image from "next/image";
 import type { HomeContent } from "@/content/types";
@@ -103,9 +115,12 @@ export function Hero({ content }: HeroProps) {
           </div>
         </div>
 
-        {/* Corner beats: chapters 1–4 of the flight (armed mode only). */}
+        {/* Corner beats: chapters 1–4 of the flight (armed mode only).
+            aria-hidden: decorative narration — the same chapters are exposed
+            to AT via the flight-plan strip (static) and the sections below
+            (armed); see the file header's accessibility contract. */}
         {corners.map((chapter, index) => (
-          <div className="hero-beat" data-hero-beat key={chapter.rail}>
+          <div className="hero-beat" data-hero-beat aria-hidden="true" key={chapter.rail}>
             <p className="hero-stamp">
               {stamp(index)} · {chapter.rail}
             </p>
