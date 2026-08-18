@@ -13,11 +13,14 @@
  * ("فروع متعددة.<br/>رياضات متعددة.<br/>صورة تشغيلية واحدة.") as one plain
  * sentence, matching `src/content/en/solution-multi-sport.ts`'s own
  * treatment of the English headline. The "Group revenue" outcome figure
- * uses the dictionary's own Eastern-Arabic-numeral rendering
- * (`sar-214k`: "٢١٤ ألف ريال") rather than the Latin "SAR 214K" the other
- * three KPI figures keep — the legacy markup itself only attached a
- * translation key to that one figure, not to Branches/Sports/Total members,
- * so this preserves that authored distinction rather than flattening it.
+ * (`sar-214k`) has a dictionary entry with Eastern-Arabic-numeral rendering
+ * ("٢١٤ ألف ريال"), but is kept as "SAR 214K" here instead, matching
+ * `src/content/ar/platform.ts`'s own resolution of this exact same figure
+ * (see that file's header, "Numeral convention") for internal consistency
+ * with the three sibling KPI values in this same structured stats row
+ * ("4", "7", "12,400"), all Western digits — a stats row is a structured
+ * data slot, not free-form prose, so it follows the site's "Western
+ * numerals held constant" rule rather than the dictionary's literal digits.
  * `meta.description` and the entire `painPoints` section have no dictionary
  * entry (new structure — see `SolutionContent`'s doc comment in
  * `src/content/types.ts`) and are authored here in the same register.
@@ -109,7 +112,7 @@ export const solutionMultiSportContent: SolutionContent = {
       { value: "4", label: "الفروع" },
       { value: "7", label: "الرياضات" },
       { value: "12,400", label: "إجمالي الأعضاء" },
-      { value: "٢١٤ ألف ريال", label: "إيرادات المجموعة" },
+      { value: "SAR 214K", label: "إيرادات المجموعة" },
     ],
     note: "بيانات تجريبية — تمثّل منظمة متوسطة الحجم.",
   },

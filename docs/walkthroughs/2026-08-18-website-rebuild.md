@@ -122,8 +122,12 @@ passes described below) found every route already passing with margin.
 
 The build was executed as 27 discrete, sequenced work packages (numbered 1 through 25.5, including
 two packages added mid-project by explicit direction: a deprecated-API sweep and the hero-plate
-integration once the images arrived). Every package went through an independent review before being
-considered done — not a self-check, a separate pass against the actual diff.
+integration once the images arrived). Every package that produced a code diff went through an
+independent review before being considered done — not a self-check, a separate pass against the
+actual diff. A handful of packages were audits rather than code changes (the bundle/performance
+audit below is one — it made zero source edits) and produced no diff to review against; those were
+instead verified by their own recorded evidence (measured numbers, gate results) rather than a
+second reviewer's pass, and are called out as such in the ledger.
 
 - **9 of the 27 packages** needed at least one round of fixes after review before they closed clean;
   **1 of those** needed a second round. Every fix round is recorded with what was found and what
@@ -171,9 +175,11 @@ cosmetic or deferred by design.
 
 ## 6. OG (social-share) image QA
 
-Every page generates its own 1200×630 preview image for link previews on social platforms,
-messaging apps, and Slack/Discord-style unfurls. Both locale variants were extracted from the
-production build and inspected directly.
+One 1200×630 preview image is generated per locale (English, Arabic) — not per page. It's a
+site-wide image (`src/app/[locale]/opengraph-image.tsx`, prerendered at build time for both
+locales), and every page under that locale shares the same generated file for link previews on
+social platforms, messaging apps, and Slack/Discord-style unfurls. Both locale variants were
+extracted from the production build and inspected directly.
 
 **English — correct, as designed:**
 
@@ -256,7 +262,8 @@ For whoever sets up the Vercel project:
   | Variable | Required | Purpose |
   |---|---|---|
   | `SITE_URL` | Yes | `https://www.scripe.org` — used for canonical URLs, sitemap, and Open Graph tags. No trailing slash. |
-  | `NEXT_PUBLIC_API_BASE_URL` | Yes | The SCRIPE backend's public API base (e.g. `https://api.scripe.org/api`) — used for the live pricing lookup. Public by design (ships to the browser). |
+  | `NEXT_PUBLIC_API_BASE_URL` | Yes | The SCRIPE backend's public API base (e.g. `https://api.scripe.org/api`) — used for the live pricing lookup. Public by design (ships to the browser). Also determines the `connect-src` origin in the CSP header (`next.config.ts`), so it must be set before the pricing feature can reach the backend in production. |
+  | `NEXT_PUBLIC_APP_URL` | No (defaults to `https://app.scripe.org`) | The SCRIPE app's sign-in destination — read by `src/components/chrome/ia.ts` for the header/mobile-nav "Sign In" CTA link. Public by design (ships to the browser). |
   | `LEADS_ENDPOINT` | No (until backend ready) | Where contact-form submissions are POSTed. Server-only — never exposed to the browser. Leave unset and the contact form runs in its honest "not connected" mode described in §5/§7. |
 
 - **Domain:** attach `www.scripe.org` as the production domain, and configure an apex
@@ -277,9 +284,21 @@ They're recorded so they aren't lost, not because they need immediate attention.
   same in both light and dark theme (a deliberate "always obsidian" panel design) — closing this
   properly needs one new token added to the token file, which is currently owned by a parallel
   work session.
-- Two Arabic copy lines use the legacy dictionary's original digit style (Eastern-Arabic numerals)
-  in places the site's own "Western numerals throughout" rule postdates; one was already caught
-  and fixed, one remains.
+- Arabic content carries roughly 55 Eastern Arabic-Indic digit occurrences across
+  `src/content/ar/{platform,home,solution-multi-sport}.ts`, concentrated in `platform.ts` (~40)
+  and `home.ts` (~12). These are not stray mistakes — each file's own header documents a
+  deliberate, disclosed rule: genuine dictionary-authored Arabic prose (e.g. "٩٧٪ مُسجَّل",
+  "+٣٤٪ مقارنة بالموسم الماضي") keeps its original digits, while structured data slots (stat-strip
+  values, KPI rows, board times) stay Western per the site's "Western numerals held constant"
+  rule — this is a real, undisclosed-until-now tension between two rules that both exist in the
+  codebase, not an oversight. `src/content/ar/company.ts`'s single flagged instance was already
+  fixed by a separate session. `src/content/ar/contact.ts` and `src/content/ar/notFound.ts` each
+  contain one Eastern-digit-looking match, but it's inside a doc comment citing the *opposite*
+  rule as an example, not live content. The one confirmed structured-data violation found at
+  final review — `solution-multi-sport.ts`'s "Group revenue" KPI rendering the same figure
+  `platform.ts` already renders as "SAR 214K" — has been fixed to match. No further digit-policy
+  cleanup is planned for this launch; the dictionary-prose exception is an accepted, documented
+  convention, not open debt.
 
 **Accessibility polish**
 - The mega-menu (Solutions dropdown) has a minor keyboard-navigation gap (Shift+Tab from the

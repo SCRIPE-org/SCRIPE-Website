@@ -88,6 +88,7 @@ import type { PricingContent, PricingPlan } from "@/content/types";
 import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
+import { formatSar } from "@/lib/pricing/convert";
 import { ACCENT_DOT_CLASS } from "./accents";
 import { BillingToggle } from "./BillingToggle";
 import { CurrencyNote } from "./CurrencyNote";
@@ -100,14 +101,6 @@ export interface PlanCardsProps {
   plans: PricingPlan[];
   /** Small honesty note rendered under the grid. */
   plansFootnote: string;
-}
-
-/** Formats a SAR amount as `"SAR 9,900"` — thousands-grouped, no decimals,
- *  Western digits regardless of active locale (per this task's price-digit
- *  rule). `Intl.NumberFormat` is pinned to `"en-US"` rather than reading the
- *  active locale for exactly that reason. */
-function formatSar(amount: number): string {
-  return `SAR ${new Intl.NumberFormat("en-US").format(amount)}`;
 }
 
 /** Shared checklist glyph — the exact stroke path the legacy static page's

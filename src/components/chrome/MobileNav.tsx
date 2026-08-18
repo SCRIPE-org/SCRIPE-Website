@@ -16,12 +16,23 @@
  * Behavior contract: Escape closes and returns focus to the toggle button;
  * Tab/Shift+Tab cycle only through the sheet's own focusable elements
  * (Tab from the last item wraps to the first, Shift+Tab from the first
- * wraps to the last) — the toggle button is a DOM sibling of the sheet, not
- * inside it, so it is excluded from that cycle exactly as the legacy
- * `backup/scripe-static/js/navbar.js` implementation excluded it; body
- * scroll is locked (`overflow`/`touchAction: "none"`) while open and
- * restored on close; clicking any link inside the sheet closes it so route
- * changes never leave the sheet stuck open underneath the new page.
+ * wraps to the last) — the header hamburger/X toggle button is a DOM
+ * sibling of the sheet, not inside it, so it is excluded from that cycle
+ * exactly as the legacy `backup/scripe-static/js/navbar.js` implementation
+ * excluded it; body scroll is locked (`overflow`/`touchAction: "none"`)
+ * while open and restored on close; clicking any link inside the sheet
+ * closes it so route changes never leave the sheet stuck open underneath
+ * the new page.
+ *
+ * The sheet also carries `role="dialog" aria-modal="true"`, which instructs
+ * assistive technology to treat everything outside it as inert — so the
+ * header toggle button, despite being visually reachable, is not a valid
+ * close control for a screen-reader user while the dialog is open. The
+ * sheet therefore renders its OWN close button as the first focusable child
+ * (visually hidden via the same `sr-only`/`focus:not-sr-only` treatment
+ * `NavBar.tsx`'s skip-to-content link already uses, so it adds no visible
+ * duplicate of the header's X for sighted users, but is reachable by
+ * keyboard Tab and by touch screen-reader swipe navigation either way).
  */
 import {
   useEffect,
@@ -156,8 +167,25 @@ export function MobileNav({ localeSwitch, themeToggle }: MobileNavProps) {
           aria-modal="true"
           aria-label={t("nav.siteNav")}
           onClick={onSheetClick}
-          className="bg-surface-page fixed inset-inline-0 top-[72px] bottom-0 z-[var(--z-overlay)] overflow-y-auto"
+          className="bg-surface-page fixed start-0 end-0 top-[72px] bottom-0 z-[var(--z-overlay)] overflow-y-auto"
         >
+          {/* Close control INSIDE the dialog boundary — see the file header
+              for why the header's own hamburger/X toggle doesn't satisfy
+              this for assistive technology. Visually hidden until focused,
+              same convention as NavBar.tsx's skip-to-content link, so
+              sighted users see no duplicate of the header's X. */}
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            aria-label={t("nav.closeMenu")}
+            className="bg-surface-raised text-text-primary sr-only rounded-full border border-border-subtle focus:not-sr-only focus:absolute focus:start-4 focus:top-4 focus:z-[var(--z-toast)] focus:inline-flex focus:size-11 focus:items-center focus:justify-center"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
+            </svg>
+          </button>
+
           <nav aria-label={t("nav.primary")} className="flex flex-col px-6 py-2">
             {PRIMARY_NAV.map((item) =>
               item.hasMenu ? (

@@ -60,13 +60,30 @@
  * FAILURE PATH — the page stays byte-identical
  * ============================================================================
  * `status !== "ready"` (still loading, or `"unavailable"` after a failed
- * fetch) and `activeCurrency === "SAR"` both short-circuit the effect before
- * it touches the DOM at all. A visitor on a slow connection, behind a
- * blocked/failing pricing-context endpoint, or simply not geo-recommended a
- * different currency sees exactly the same server-rendered SAR figures
- * `PlanCards.tsx` always rendered — this component never puts the page into
- * a visibly different state than "do nothing" until it has a fully validated
- * conversion to apply.
+ * fetch) short-circuits the effect before it touches the DOM at all. A
+ * visitor on a slow connection, behind a blocked/failing pricing-context
+ * endpoint, or simply not geo-recommended a different currency sees exactly
+ * the same server-rendered SAR figures `PlanCards.tsx` always rendered —
+ * this component never puts the page into a visibly different state than
+ * "do nothing" until it has a fully validated conversion to apply.
+ *
+ * ============================================================================
+ * WHY SELECTING "SAR" STILL TOUCHES THE DOM (IT'S A RESET, NOT A NO-OP)
+ * ============================================================================
+ * `activeCurrency === "SAR"` does NOT short-circuit before writing, because
+ * the baked SAR figures are only "already sitting in the DOM" on a page that
+ * has never shown another currency. Once a prior pass has rewritten a slot
+ * to e.g. `"$264"`, nothing else on this page ever restores `"SAR 990"` —
+ * `PlanCards.tsx` is a Server Component and never re-renders client-side.
+ * Selecting "SAR" from `CurrencySelect` (which always offers it as a manual
+ * reset back to the baked truth — see that file's own header) has to
+ * actively rewrite every slot back via {@link formatSar}, the exact same
+ * formatter `PlanCards.tsx` used to produce the original server-rendered
+ * string, so the reset reproduces it byte-for-byte. This is still zero-CLS
+ * and idempotent by the same reasoning as the conversion branch below: a
+ * slot that was never touched gets written the identical string it already
+ * had, and a slot that was converted gets its baked figure back — either
+ * way a no-op-looking write, never a visible flicker to a different value.
  *
  * ============================================================================
  * PER-SLOT FORMATTING GUARD — defense in depth, layer 2 of 2
@@ -90,7 +107,7 @@
  */
 import { useEffect } from "react";
 import { useLocale } from "next-intl";
-import { convertFromSar, safeFormatPrice } from "@/lib/pricing/convert";
+import { convertFromSar, formatSar, safeFormatPrice } from "@/lib/pricing/convert";
 import { usePricingCurrency } from "./PricingCurrencyProvider";
 
 /** One convertible price slot: the exact `data-price-slot` attribute value
@@ -128,13 +145,29 @@ export function LivePrices({ slots }: LivePricesProps) {
 
   useEffect(() => {
     if (status !== "ready" || !context) return;
-    // The baked SAR figures already sitting in the DOM ARE the SAR truth —
-    // nothing to convert or write. (`reportConversionResult` is deliberately
-    // NOT called here: `CurrencyNote`'s own render condition already
-    // requires `activeCurrency !== "SAR"` before it would show anything, so
-    // a stale `conversionFailed` value from a previous currency can't
-    // matter while SAR is active.)
-    if (activeCurrency === "SAR") return;
+
+    if (activeCurrency === "SAR") {
+      // Reset, not a no-op: a PRIOR pass (while some other currency was
+      // active) may already have overwritten these slots' `textContent` via
+      // the `el.textContent = formatted` write further down this effect.
+      // `PlanCards.tsx` is a Server Component that never re-renders on the
+      // client, so nothing else restores the baked SAR figure once that's
+      // happened — this branch is the only code path that can put it back.
+      // `baseSar` is the exact number `PlanCards.tsx` formatted through
+      // `formatSar` for this slot's server-rendered figure, so reformatting
+      // it through that same shared helper here reproduces that original
+      // string byte-for-byte, whether or not a prior pass ever touched this
+      // slot (idempotent either way). (`reportConversionResult` is
+      // deliberately NOT called here: `CurrencyNote`'s own render condition
+      // already requires `activeCurrency !== "SAR"` before it would show
+      // anything, so a stale `conversionFailed` value from a previous
+      // currency can't matter while SAR is active.)
+      for (const { slot, baseSar } of slots) {
+        const el = document.querySelector<HTMLElement>(`[data-price-slot="${slot}"]`);
+        if (el) el.textContent = formatSar(baseSar);
+      }
+      return;
+    }
 
     const sarRate = context.supportedCurrencies.find((currency) => currency.code === "SAR")?.rateFromUsd;
     const targetRate = context.supportedCurrencies.find((currency) => currency.code === activeCurrency)?.rateFromUsd;

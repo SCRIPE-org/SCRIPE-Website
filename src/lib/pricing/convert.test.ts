@@ -23,7 +23,7 @@
  */
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { convertFromSar, formatPrice, safeFormatPrice } from "./convert";
+import { convertFromSar, formatPrice, formatSar, safeFormatPrice } from "./convert";
 
 test("convertFromSar: SAR to SAR is an exact identity (Starter monthly, 990)", () => {
   assert.equal(convertFromSar(990, 3.75, 3.75), 990);
@@ -110,4 +110,18 @@ test("safeFormatPrice: also guards an empty-string currency code", () => {
 
 test("safeFormatPrice: returns formatPrice's exact output for a well-formed code (the guard is transparent on the happy path)", () => {
   assert.equal(safeFormatPrice(990, "USD", "en"), formatPrice(990, "USD", "en"));
+});
+
+test("formatSar: thousands-grouped, no decimals, 'SAR ' prefix (Starter monthly, 990)", () => {
+  assert.equal(formatSar(990), "SAR 990");
+});
+
+test("formatSar: thousands-grouped for a larger figure (Growth yearly, 24900)", () => {
+  assert.equal(formatSar(24900), "SAR 24,900");
+});
+
+test("formatSar: always Western digits, regardless of what locale is active elsewhere on the page ('en-US' is pinned, not read from context)", () => {
+  const formatted = formatSar(9900);
+  assert.equal(formatted, "SAR 9,900");
+  assert.equal(/[٠-٩]/.test(formatted), false);
 });

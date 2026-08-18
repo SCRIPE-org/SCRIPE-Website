@@ -65,9 +65,12 @@ export interface BreadcrumbJsonLd {
  * @param siteUrl - The site's canonical origin (e.g. `https://www.scripe.org`),
  *   no trailing slash. Env-driven so this works across environments.
  * @returns A plain `Organization` object. `logo` points at `/brand/logo.png`
- *   under `siteUrl` — that asset lands in a later task, but the path is part
- *   of this contract. `sameAs` is intentionally empty: no fabricated social
- *   profile links.
+ *   under `siteUrl` — a real 500x500 PNG shipped at `public/brand/logo.png`
+ *   (copied from `backup/scripe-static/assets/images/scripe-logo.png`, the
+ *   same source mark as `public/brand/scripe-logo-{dark,light}.svg`, just a
+ *   raster export — Google's structured-data logo guidance recommends a
+ *   raster format over SVG). `sameAs` is intentionally empty: no fabricated
+ *   social profile links.
  */
 export function buildOrganization(siteUrl: string): OrganizationJsonLd {
   return {

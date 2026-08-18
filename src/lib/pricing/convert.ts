@@ -91,8 +91,8 @@ export function convertFromSar(baseSar: number, rateSarPerUsd: number, rateTarge
  *
  * 1. **Western digits, always** — `Intl.NumberFormat("ar", ...)` defaults to
  *    Arabic-Indic digits (٠-٩) for the `"ar"` locale. SCRIPE's brand rule
- *    (see `PlanCards.tsx`'s own `formatSar` helper, which pins `"en-US"` for
- *    the same reason) keeps every price figure in Western digits regardless
+ *    (see this file's own {@link formatSar}, which pins `"en-US"` for the
+ *    same reason) keeps every price figure in Western digits regardless
  *    of active locale. Rather than pinning the whole locale to `"en"` for
  *    Arabic pages (which would also flip currency-name/symbol placement and
  *    RTL-aware formatting away from Arabic), the `-u-nu-latn` Unicode
@@ -155,4 +155,26 @@ export function safeFormatPrice(amount: number, currency: string, locale: string
   } catch {
     return null;
   }
+}
+
+/**
+ * Formats a SAR amount as `"SAR 9,900"` — thousands-grouped, no decimals,
+ * Western digits regardless of active locale (per this task's price-digit
+ * rule). `Intl.NumberFormat` is pinned to `"en-US"` rather than reading the
+ * active locale for exactly that reason.
+ *
+ * Shared by `PlanCards.tsx` (the baked, server-rendered figure every price
+ * slot starts with) and `LivePrices.tsx` (which reformats that exact same
+ * `baseSar` number through this same function to reset a slot back to its
+ * baked truth when the visitor selects "SAR" after a prior live conversion
+ * had overwritten it). Both call sites must produce byte-identical output
+ * for a given `amount` — this is the single source of that format rather
+ * than two independent copies that could drift apart.
+ *
+ * @param amount - The baked SAR figure (`PricingPlan["baseMonthly"]` or
+ *   `["baseYearly"]`).
+ * @returns The formatted SAR string.
+ */
+export function formatSar(amount: number): string {
+  return `SAR ${new Intl.NumberFormat("en-US").format(amount)}`;
 }
