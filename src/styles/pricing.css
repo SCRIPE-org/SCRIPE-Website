@@ -1,0 +1,83 @@
+/* ============================================================================
+   SCRIPE — Pricing page styles (plan cards + comparison table + FAQ +
+   closing CTA)
+
+   Scope: imported by `src/app/[locale]/pricing/page.tsx` only — everything
+   in here is pricing-page-specific. Shared choreography (the `.rv` reveal
+   system) stays in `src/styles/motion-utilities.css`; tokens stay in
+   `src/styles/tokens/`. Class names here are prefixed `.pricing-`/`.faq-`
+   so nothing here can collide with `platform.css`/`solutions.css`/
+   `home.css` during a client-side navigation between areas, mirroring the
+   `.cap-*`/`.sol-*` per-page prefixing those files already establish.
+   ============================================================================ */
+
+/* ---------------------------------------------------------------------------
+   1. Price-slot width reservation — the single source of truth for how wide
+   every price figure's wrapper reserves itself (see `PlanCards.tsx`'s file
+   header for the full zero-CLS reasoning). Sized for the widest realistic
+   currency string this page will ever render, not just today's SAR figures:
+   "EGP 149,000" (11 characters) is the documented reference case from this
+   task's brief for a later task's live currency swap; 12ch leaves a little
+   headroom beyond that without wasting layout width on the common case.
+   --------------------------------------------------------------------------- */
+
+#plans {
+  --price-slot-min: 12ch;
+}
+
+/* ---------------------------------------------------------------------------
+   2. FAQ disclosure — the `<summary>` marker triangle every browser draws by
+   default is suppressed (`list-style: none` on the summary handles most
+   browsers; `::-webkit-details-marker` covers the WebKit/Blink-specific
+   pseudo-element) so the hand-drawn chevron in `PricingFaq.tsx` is the only
+   affordance shown, and that chevron rotates on `[open]` — a small,
+   non-vestibular icon rotation, not gated behind `--motion-travel` the way
+   this page's `Reveal`-driven entrances are (see `src/styles/tokens
+   /motion.css`'s doctrine: that gate is for scroll/entrance travel, not
+   every transform on the page).
+   --------------------------------------------------------------------------- */
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-chevron {
+  transition: transform var(--motion-quick) var(--ease-standard);
+}
+
+.faq-item[open] .faq-chevron {
+  transform: rotate(180deg);
+}
+
+/* ---------------------------------------------------------------------------
+   3. Closing CTA — obsidian panel with the lime "horizon" edge-light, the
+   same brand moment `platform.css` §4 and `solutions.css` §1 give their own
+   closing bands. Deliberately a single-look brand moment: obsidian in both
+   themes.
+   --------------------------------------------------------------------------- */
+
+.pricing-cta-panel {
+  position: relative;
+  overflow: hidden;
+  background: var(--obsidian);
+  border: 1px solid #26282c;
+  border-radius: var(--radius-xl-base);
+}
+
+.pricing-cta-horizon {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: 1px;
+  background: linear-gradient(90deg, transparent 8%, rgba(192, 255, 0, 0.8) 50%, transparent 92%);
+  pointer-events: none;
+}
+
+.pricing-cta-bloom {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: 55%;
+  background: radial-gradient(52% 90% at 50% 0%, rgba(192, 255, 0, 0.14), transparent 72%);
+  pointer-events: none;
+}

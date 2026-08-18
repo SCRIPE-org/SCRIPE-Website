@@ -698,3 +698,224 @@ export interface SolutionsHubContent {
     note: string;
   };
 }
+
+/** Discriminated identifier for one of SCRIPE's three public pricing tiers. */
+export type PlanId = "starter" | "growth" | "enterprise";
+
+/**
+ * One row's per-plan verdict in the pricing comparison table. `"included"`/
+ * `"excluded"` render as a themed glyph (plus a screen-reader-only label
+ * sourced from `PricingContent["comparison"]`); `"text"` renders arbitrary
+ * copy (e.g. "Unlimited", "Priority onboarding") for a row that isn't a
+ * simple yes/no.
+ */
+export type PricingComparisonValue =
+  | { kind: "included" }
+  | { kind: "excluded" }
+  | { kind: "text"; text: string };
+
+/**
+ * One row of the comparison table — a capability/attribute, and one
+ * {@link PricingComparisonValue} per plan, in the same order as
+ * `PricingContent["plans"]` (Starter, Growth, Enterprise).
+ */
+export interface PricingComparisonRow {
+  /** Row label (e.g. "Reservations and pricing rules"). */
+  label: string;
+  /** One verdict per plan, in `PricingContent["plans"]` order. */
+  values: PricingComparisonValue[];
+}
+
+/**
+ * One grouping of comparison rows under a shared subheading (e.g.
+ * "Operations", "Commercial", "Organization").
+ */
+export interface PricingComparisonGroup {
+  /** Group subheading, rendered as a full-width row inside the table body. */
+  title: string;
+  /** The group's rows, in display order. */
+  rows: PricingComparisonRow[];
+}
+
+/** One call-to-action button on a pricing plan card. */
+export interface PricingPlanCta {
+  /** Button label. */
+  label: string;
+  /** Locale-less internal route the button links to. */
+  href: string;
+}
+
+/**
+ * One of the three public pricing tiers ({@link PlanId}). Starter and Growth
+ * carry a real indicative SAR figure (`baseMonthly`/`baseYearly`); Enterprise
+ * is always quoted, so those two fields are `null` and `customLabel`/
+ * `customCaption` supply its "Custom" figure and caption instead.
+ *
+ * `baseUsd` is `null` for every plan at launch: cross-checked against
+ * SCRIPE-Frontend's `usePlanPicker.ts` (the signup product's own plan-picker
+ * viewmodel) and its neighboring `presentation/helpers`/`data/helpers` —
+ * that plan catalog is entirely server/API-driven
+ * (`getEditions()`/`getPricingContext()`), with no static USD base-price
+ * constant for any plan name anywhere in the signup module. See
+ * `src/content/en/pricing.ts`'s file header for the full cross-check trail.
+ * A later task fills this in if/when a USD base is ever established
+ * server-side; until then it stays `null` rather than a guessed number.
+ */
+export interface PricingPlan {
+  /** Stable identifier, also used to key the `data-price-slot` DOM contract
+   *  documented in `src/components/sections/pricing/PlanCards.tsx`'s file
+   *  header. */
+  id: PlanId;
+  /** Plan display name (e.g. "Growth"). */
+  name: string;
+  /** One-sentence audience line (e.g. "For growing clubs and venues."). */
+  tagline: string;
+  /** Marker-dot accent identity — mirrors the legacy static page's own
+   *  per-tier dot colors (Starter/Growth/Enterprise), not a claim about
+   *  which SCRIPE product world the plan belongs to. */
+  accent: AccentId;
+  /** Indicative monthly price in `baseCurrency`, or `null` for a
+   *  custom-quoted plan (Enterprise). */
+  baseMonthly: number | null;
+  /** Indicative yearly price in `baseCurrency` — the discounted annual
+   *  total, not `baseMonthly * 12` — or `null` for a custom-quoted plan. */
+  baseYearly: number | null;
+  /** Currency `baseMonthly`/`baseYearly` are denominated in. Always `"SAR"`
+   *  at launch; a later task layers live geo-currency conversion on top via
+   *  the `data-price-slot` contract without editing these baked-in figures. */
+  baseCurrency: "SAR";
+  /** USD equivalents, or `null` — see this interface's own doc comment. */
+  baseUsd: { monthly: number; yearly: number } | null;
+  /** Figure shown instead of a price when `baseMonthly` is `null` (e.g.
+   *  "Custom"). Set exactly when `baseMonthly` is `null`. */
+  customLabel?: string;
+  /** Caption shown under `customLabel` (e.g. "Quoted on branches, sports
+   *  and volume"). Set exactly when `baseMonthly` is `null` — amount plans
+   *  get their per-cycle caption from `PricingContent["billing"]` instead
+   *  (it swaps with the billing toggle; this doesn't). */
+  customCaption?: string;
+  /** Feature bullets, in display order. */
+  features: string[];
+  /** True for the one plan visually promoted (Growth) — a heavier border,
+   *  the brand accent, and `badge` shown next to its name. */
+  highlight?: boolean;
+  /** Small badge shown next to the plan name (e.g. "Most chosen"). Only the
+   *  highlighted plan carries one. */
+  badge?: string;
+  /** The plan card's own call-to-action. */
+  cta: PricingPlanCta;
+  /** Small note under the CTA (e.g. "Includes onboarding with your
+   *  operations team."). Omit for a plan with no such note. */
+  footnote?: string;
+}
+
+/**
+ * One question/answer pair in the pricing FAQ. Plain content only — no
+ * FAQPage schema is emitted for it (ruled out sitewide per the design
+ * spec's SEO section: rich-result FAQ markup is deprecated as of 2026).
+ */
+export interface PricingFaqItem {
+  /** The question, rendered as a `<summary>`. */
+  question: string;
+  /** The answer, rendered inside the disclosure's panel. */
+  answer: string;
+}
+
+/**
+ * Content for the pricing page (`/pricing`) — hero → billing-toggle plan
+ * cards → a full comparison table → an FAQ → closing CTA. Ported from
+ * `backup/scripe-static/pricing.html` + `js/lang-ar.js` (prices, feature
+ * lists, the comparison table and the closing CTA are the legacy page's own
+ * copy, verbatim); the FAQ reframes the legacy page's "how pricing works"
+ * three info cards as genuine question/answer pairs, plus a couple of
+ * additional questions whose answers are derived arithmetically from the
+ * ported prices themselves (e.g. the yearly-billing saving) — see
+ * `src/content/en/pricing.ts`'s file header for exactly which legacy
+ * sentences map to which question. Never an invented figure or claim.
+ */
+export interface PricingContent {
+  /** Page-level metadata strings. */
+  meta: {
+    /** Page title (the layout's `"%s · SCRIPE"` template wraps it). */
+    title: string;
+    /** Meta/OG description. */
+    description: string;
+    /** Breadcrumb label for the home crumb in structured data. */
+    breadcrumbHome: string;
+    /** Breadcrumb label for this page's own crumb in structured data. */
+    breadcrumbCurrent: string;
+  };
+  /** Typography-led hero/intro — same shape as `PlatformContent["hero"]`. */
+  hero: {
+    /** Small section marker label. */
+    label: string;
+    /** Page heading. */
+    title: string;
+    /** Supporting sentence. */
+    subtitle: string;
+    /** Primary CTA label (book a demo). */
+    primaryCta: string;
+    /** Secondary CTA label (start a free trial). */
+    secondaryCta: string;
+  };
+  /** Billing-cycle toggle copy, shared by every amount-priced plan card. */
+  billing: {
+    /** Accessible label for the toggle's `role="group"` landmark. */
+    ariaLabel: string;
+    /** "Monthly" tab label. */
+    monthlyLabel: string;
+    /** "Yearly" tab label. */
+    yearlyLabel: string;
+    /** Savings badge shown on the yearly tab (e.g. "−2 months"). */
+    yearlySavingsBadge: string;
+    /** Price caption for the monthly cycle (e.g. "per month · per branch"). */
+    perMonthSuffix: string;
+    /** Price caption for the yearly cycle (e.g. "per year · per branch"). */
+    perYearSuffix: string;
+  };
+  /** The three pricing tiers, in display order (Starter, Growth, Enterprise). */
+  plans: PricingPlan[];
+  /** Small honesty note under the plan grid. */
+  plansFootnote: string;
+  /** The full plan comparison table. */
+  comparison: {
+    /** Small section marker label. */
+    label: string;
+    /** Section heading. */
+    title: string;
+    /** Supporting sentence. */
+    subtitle: string;
+    /** Header label for the row-label column (e.g. "Compare plans"). */
+    columnHeader: string;
+    /** Table caption, rendered below the table. */
+    caption: string;
+    /** Screen-reader-only label for an `"included"` cell. */
+    includedLabel: string;
+    /** Screen-reader-only label for an `"excluded"` cell. */
+    notIncludedLabel: string;
+    /** The table's row groups, in display order. */
+    groups: PricingComparisonGroup[];
+  };
+  /** The FAQ disclosure list. */
+  faq: {
+    /** Small section marker label. */
+    label: string;
+    /** Section heading. */
+    title: string;
+    /** The question/answer pairs, in display order. */
+    items: PricingFaqItem[];
+  };
+  /** Closing conversion band. */
+  cta: {
+    /** Section heading. */
+    title: string;
+    /** Supporting sentence. */
+    subtitle: string;
+    /** Primary CTA label (book a demo). */
+    primaryCta: string;
+    /** Secondary CTA label (start a free trial). */
+    secondaryCta: string;
+    /** Small honesty note under the CTAs. */
+    note: string;
+  };
+}
