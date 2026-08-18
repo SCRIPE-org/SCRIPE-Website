@@ -28,12 +28,12 @@ export function CapabilityGroup({ group }: CapabilityGroupProps) {
   return (
     <div id={group.id} className="cap-anchor">
       <Reveal className="border-border-subtle border-t pt-10">
-        <p className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2.5">
           <span className={`inline-block size-2.5 rounded-full ${ACCENT_DOT_CLASS[group.accent]}`} aria-hidden="true" />
-          <bdi className="font-display text-text-primary text-[length:var(--fs-h2)] font-semibold [font-variation-settings:'wdth'_114]">
-            {group.name}
-          </bdi>
-        </p>
+          <h2 className="font-display text-text-primary text-[length:var(--fs-h2)] font-semibold [font-variation-settings:'wdth'_114]">
+            <bdi>{group.name}</bdi>
+          </h2>
+        </div>
         <p className="text-text-secondary mt-3 max-w-[62ch] text-[length:var(--fs-body)] text-pretty">
           {group.blurb}
         </p>
