@@ -154,6 +154,11 @@ const CONTROL_CLASS =
 
 /**
  * Validates one field's value against its required/length/email rules.
+ * Length is checked against the TRIMMED value, not the raw one — matching
+ * `src/lib/leads/validate.ts`'s server-side `validateTextField` exactly
+ * (that file's header, "Trim before length checks", is the binding
+ * statement of this rule) so padding whitespace never makes this client
+ * check disagree with the server's authoritative one for the same input.
  *
  * @param field - Which field is being checked (selects the limit/required
  *   rule to apply).
@@ -166,7 +171,7 @@ function validateField(field: ValidatedField, value: string, t: (key: string) =>
   const trimmed = value.trim();
   if (REQUIRED_FIELDS.has(field) && !trimmed) return t("forms.required");
   if (field === "email" && trimmed && !EMAIL_RE.test(trimmed)) return t("forms.emailInvalid");
-  if (value.length > FIELD_LIMITS[field]) return t("forms.tooLong");
+  if (trimmed.length > FIELD_LIMITS[field]) return t("forms.tooLong");
   return undefined;
 }
 

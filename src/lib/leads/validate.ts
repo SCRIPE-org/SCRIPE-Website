@@ -23,19 +23,39 @@
  * `ContactForm.tsx` fills the `startedAt` hidden field with `Date.now()` in a
  * `useEffect` that always runs for a real, JS-enabled visitor (see that
  * file's header — the mount effect is unconditional, not feature-gated). A
- * value that's missing, non-numeric, or non-finite by the time it reaches
- * `submit-lead.ts`'s `FormData` parse therefore isn't an honest "we can't
- * tell" case that deserves benefit of the doubt — it's exactly the shape a
- * request forged without ever loading the real page would have (a bot
- * POSTing straight to the server action with a hand-built body, or a no-JS
- * client that never ran the effect that stamps the field). This validator
- * treats that case as spam (fail-safe, not fail-open): the one cost is that a
- * true no-JS human visitor's submission is silently discarded rather than
- * delivered — but `ContactForm.tsx` shows the identical `"sent"` confirmation
- * either way (see `submit-lead.ts`'s header for why spam maps to `"sent"`,
- * never a distinct status), so that visitor sees the same "we got it" outcome
- * a delivered submission would show. Nothing about this failure mode is
- * user-visible; only actual backend delivery differs.
+ * value that's missing, WHITESPACE-ONLY, non-numeric, or non-finite by the
+ * time it reaches `submit-lead.ts`'s `FormData` parse therefore isn't an
+ * honest "we can't tell" case that deserves benefit of the doubt — it's
+ * exactly the shape a request forged without ever loading the real page
+ * would have (a bot POSTing straight to the server action with a hand-built
+ * body, or a no-JS client that never ran the effect that stamps the field).
+ * (Whitespace-only is called out explicitly because `Number("   ")` is `0`,
+ * not `NaN` — a naive parse would resolve a `"   "` payload to epoch 0,
+ * which reads as billions of milliseconds ago and would silently PASS the
+ * time-trap instead of tripping it; `submit-lead.ts`'s `readStartedAt`
+ * trims before checking for emptiness for exactly this reason.) This
+ * validator treats every one of those cases as spam (fail-safe, not
+ * fail-open): the one cost is that a true no-JS human visitor's submission
+ * is silently discarded rather than delivered — but `ContactForm.tsx` shows
+ * the identical `"sent"` confirmation either way (see `submit-lead.ts`'s
+ * header for why spam maps to `"sent"`, never a distinct status), so that
+ * visitor sees the same "we got it" outcome a delivered submission would
+ * show. Nothing about this failure mode is user-visible; only actual
+ * backend delivery differs.
+ *
+ * ============================================================================
+ * TRIM BEFORE LENGTH CHECKS (binding — required/`tooLong` both use `trimmed`)
+ * ============================================================================
+ * {@link validateTextField} checks BOTH the `required` rule and the
+ * `tooLong` length limit against the TRIMMED value, never the raw one. A
+ * value's length is measured after trimming so that padding whitespace (a
+ * pasted name with trailing spaces, an email copy-pasted with a leading
+ * space) never turns an otherwise-in-limit value into a false `tooLong` —
+ * and, symmetrically, a whitespace-only value with no real content still
+ * correctly reports `required` regardless of how many spaces it contains.
+ * `ContactForm.tsx`'s own client-side `validateField` mirrors this exact
+ * trim-first order so a client-caught and a server-caught result for the
+ * same input never disagree.
  *
  * ============================================================================
  * EMAIL PATTERN — chosen tradeoff
@@ -166,7 +186,13 @@ function normalizeType(value: string | undefined): string {
 }
 
 /**
- * Validates one required/length/email-shape field.
+ * Validates one required/length/email-shape field. Length is checked against
+ * the TRIMMED value (binding — see this file's header: trim before length
+ * checks), matching `ContactForm.tsx`'s client-side `validateField`, which
+ * this task update brought into the same trim-first semantics so the two
+ * layers never disagree about a value that's only over-limit because of
+ * leading/trailing whitespace a visitor didn't mean to submit (e.g. a name
+ * pasted with trailing spaces).
  *
  * @param field - Which field is being checked.
  * @param rawValue - The field's raw (untrimmed) value, or `undefined`.
@@ -179,11 +205,7 @@ function validateTextField(field: keyof typeof FIELD_LIMITS, rawValue: string | 
   const isRequired = (REQUIRED_FIELDS as readonly string[]).includes(field);
 
   if (isRequired && !trimmed) return "required";
-  // Length is checked against the RAW (untrimmed) value, mirroring
-  // ContactForm.tsx's own client-side `validateField` — a value that's only
-  // over-limit because of padding whitespace still reports `tooLong`, not a
-  // silently-truncated pass.
-  if (raw.length > FIELD_LIMITS[field]) return "tooLong";
+  if (trimmed.length > FIELD_LIMITS[field]) return "tooLong";
   if (field === "email" && trimmed && !EMAIL_RE.test(trimmed)) return "emailInvalid";
   return undefined;
 }

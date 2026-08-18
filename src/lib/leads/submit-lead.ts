@@ -60,6 +60,28 @@
  * `AbortSignal.timeout` itself throws synchronously, anything) degrades to
  * the same honest `{ status: "not-connected" }` a dead backend already
  * produces, rather than crashing the page.
+ *
+ * ============================================================================
+ * WHY THE ENV VAR IS READ INSIDE `submitLead`, NOT AT MODULE LOAD
+ * ============================================================================
+ * `process.env.LEADS_ENDPOINT` is read at the top of `submitLead`'s own
+ * `try` block — CALL time — rather than once into a module-level `const`
+ * when this file first loads. Two independent reasons, matching
+ * `pricing-context.ts`'s own documented pattern for its base-URL env var:
+ * 1. **Deployment timing.** On Vercel (and similar platforms), a server
+ *    module can be evaluated once and reused across many invocations/regions
+ *    within a deployment's lifetime; reading `process.env` at module-eval
+ *    time risks capturing a value from before an env var change has
+ *    propagated everywhere, or before it's set at all during cold start
+ *    ordering. Reading it fresh on every call sidesteps that class of bug
+ *    entirely — there is no cached value that can go stale.
+ * 2. **Testability.** A module-level `const` is fixed the instant this file
+ *    is first imported, before any test gets a chance to set
+ *    `process.env.LEADS_ENDPOINT` for that specific test run — making the
+ *    unset/set behavior effectively untestable without reaching for
+ *    module-reset tricks. Reading it inside the function means a future test
+ *    can set `process.env.LEADS_ENDPOINT` immediately before calling
+ *    `submitLead` and see that exact value honored.
  */
 import { validateLead, type LeadInput } from "./validate";
 
@@ -78,16 +100,6 @@ export interface LeadActionResult {
    *  `message`). See `validate.ts`'s `LeadValidation` doc comment. */
   fieldErrors?: Record<string, string>;
 }
-
-/** The server-only backend endpoint this action POSTs a validated lead to.
- *  Deliberately NOT `NEXT_PUBLIC_*` — a public env var is bundled into
- *  client JavaScript and would expose an internal lead-intake URL to every
- *  visitor's browser (and to anyone reading the bundle), which is exactly
- *  the kind of endpoint worth keeping server-only even though it isn't a
- *  secret in the credential sense. Unset (the default until a backend
- *  exists) resolves every valid submission to the honest `"not-connected"`
- *  state — see `.env.example` for the setup comment. */
-const LEADS_ENDPOINT = process.env.LEADS_ENDPOINT;
 
 /** Request timeout for the backend POST. The visitor is already staring at
  *  a "Sending…" button (`ContactForm.tsx`'s `isPending`) — 8s bounds how
@@ -113,18 +125,27 @@ function readFormString(formData: FormData, key: string): string {
 
 /**
  * Reads and parses the `startedAt` time-trap field. A missing entry, a
- * `File`-typed entry, an empty string, or a non-numeric/non-finite value all
- * resolve to `undefined` — `validateLead` treats an `undefined` `startedAt`
- * as spam (fail-safe; see `validate.ts`'s header), so any of those cases end
- * up with the exact same conservative outcome without this function having
- * to duplicate that decision.
+ * `File`-typed entry, an empty OR WHITESPACE-ONLY string, or a
+ * non-numeric/non-finite value all resolve to `undefined` — `validateLead`
+ * treats an `undefined` `startedAt` as spam (fail-safe; see `validate.ts`'s
+ * header), so any of those cases end up with the exact same conservative
+ * outcome without this function having to duplicate that decision.
+ *
+ * The whitespace-only case is checked explicitly (`raw.trim() === ""`, not
+ * `raw === ""`) rather than left to `Number()` to reject: `Number("   ")` is
+ * `0`, NOT `NaN` — a bare `raw === ""` check would let a `"   "` payload
+ * fall through to `Number(raw)`, resolve to epoch 0 (Jan 1 1970), and then
+ * pass the time-trap comparison outright (`now - 0` is always far larger
+ * than the 3000ms floor). That would hand a trivial bypass to anything
+ * submitting a blank/whitespace `startedAt` instead of omitting it. Trimming
+ * first closes that gap the same way `validateLead`'s own field checks do.
  *
  * @param formData - The submitted form's data.
  * @returns The parsed epoch-ms timestamp, or `undefined`.
  */
 function readStartedAt(formData: FormData): number | undefined {
   const raw = readFormString(formData, "startedAt");
-  if (raw === "") return undefined;
+  if (raw.trim() === "") return undefined;
   const parsed = Number(raw);
   return Number.isFinite(parsed) ? parsed : undefined;
 }
@@ -152,11 +173,11 @@ function parseLeadInput(formData: FormData): LeadInput {
 }
 
 /**
- * Builds the JSON payload POSTed to {@link LEADS_ENDPOINT} from a validated
- * lead. Deliberately excludes `companyWebsite`/`startedAt` — both are
- * bot-defense mechanics with no meaning to a lead-intake backend, the same
- * way the legacy static site's own `contact.js` only ever POSTed its five
- * visible fields (never its honeypot). Field order matches
+ * Builds the JSON payload POSTed to the lead-intake endpoint from a
+ * validated lead. Deliberately excludes `companyWebsite`/`startedAt` — both
+ * are bot-defense mechanics with no meaning to a lead-intake backend, the
+ * same way the legacy static site's own `contact.js` only ever POSTed its
+ * five visible fields (never its honeypot). Field order matches
  * `ContactForm.tsx`'s own field order.
  *
  * @param lead - A validated lead (`LeadValidation["lead"]` from an `ok: true`
@@ -198,13 +219,16 @@ export async function submitLead(_prev: unknown, formData: FormData): Promise<Le
       return { status: "invalid", fieldErrors: validation.fieldErrors };
     }
 
-    if (!LEADS_ENDPOINT) {
+    // Read at CALL time, not module load time — see this file's header,
+    // "why the env var is read inside submitLead", for why.
+    const leadsEndpoint = process.env.LEADS_ENDPOINT;
+    if (!leadsEndpoint) {
       // No backend wired yet — the honest degraded state, not a fabricated
       // success. The visitor's input was still fully validated.
       return { status: "not-connected" };
     }
 
-    const response = await fetch(LEADS_ENDPOINT, {
+    const response = await fetch(leadsEndpoint, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(toLeadPayload(validation.lead)),

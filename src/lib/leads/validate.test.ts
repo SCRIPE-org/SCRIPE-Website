@@ -181,10 +181,12 @@ test("validateLead: message over 4000 chars -> fieldErrors.message === 'tooLong'
   if (!result.ok && "fieldErrors" in result) assert.equal(result.fieldErrors.message, "tooLong");
 });
 
-test("validateLead: a name over its limit ONLY BECAUSE of untrimmed whitespace still fails (raw length, not trimmed, decides tooLong)", () => {
-  const result = validateLead(baseInput({ name: `  ${"a".repeat(119)}  ` })); // 119 + 4 spaces = 123 raw
-  assert.equal(result.ok, false);
-  if (!result.ok && "fieldErrors" in result) assert.equal(result.fieldErrors.name, "tooLong");
+test("validateLead: a name whose RAW length exceeds 120 only because of padding whitespace now PASSES — length is checked against the TRIMMED value (binding; see file header, 'Trim before length checks')", () => {
+  const name = `  ${"a".repeat(118)}   `; // 118 real chars + 5 spaces of padding = 123 raw, 118 trimmed
+  assert.equal(name.length, 123);
+  const result = validateLead(baseInput({ name }));
+  assert.equal(result.ok, true);
+  if (result.ok) assert.equal(result.lead.name, "a".repeat(118));
 });
 
 test("validateLead: multiple over-limit fields each get their own fieldErrors entry", () => {
@@ -228,6 +230,13 @@ test("validateLead: phone at exactly 40 chars passes", () => {
 test("validateLead: message at exactly 4000 chars passes", () => {
   const result = validateLead(baseInput({ message: "a".repeat(4000) }));
   assert.equal(result.ok, true);
+});
+
+test("validateLead: name at exactly 120 TRIMMED chars still passes even wrapped in padding whitespace (boundary re-checked against the trimmed value, not the raw one)", () => {
+  const name = `  ${"a".repeat(120)}  `; // 120 trimmed, 124 raw
+  const result = validateLead(baseInput({ name }));
+  assert.equal(result.ok, true);
+  if (result.ok) assert.equal(result.lead.name, "a".repeat(120));
 });
 
 // ---------------------------------------------------------------------------
