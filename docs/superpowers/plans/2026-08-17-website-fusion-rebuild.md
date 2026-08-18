@@ -546,3 +546,31 @@ git commit -m "chore: update website submodule to fusion rebuild"
 ```
 
 - [ ] **Step 3: Final full gate: `npm run typecheck && npm run lint && npm test && npm run build` — all green. Report exact results; state what is verified and what remains unverified (field CWV, CORS, DNS).**
+
+---
+
+## Phase 7 — Cinematic Elevation Wave (added 2026-08-18, user verdict 20/100 on visual feel; live playwright verification now authorized)
+
+Diagnosis from live screenshots (scratchpad design-review/): (1) OS-light preference hijacks the obsidian brand — night hero drowns in light-theme fog, muddy olive CTA; (2) hero flight imperceptible (dampened camera + weak beat presence) and h1 is a bare wordmark; (3) sections are typographic skeletons — no depth, no atmosphere, dead whitespace oceans, hairline dividers; (4) zero 3D feel anywhere.
+
+### Task E1: Dark-first brand identity
+- Theme script: default resolves DARK always unless the user explicitly chose light via the toggle (OS preference no longer selects light on first visit; `prefers-color-scheme` demoted to tiebreak only after explicit opt-in — i.e. stored value wins, absent value = dark, period). Update ThemeToggle + docs. Meta theme-color stays correct.
+- Gate + playwright screenshot proof (fresh profile lands DARK).
+
+### Task E2: Hero cinematic elevation (design-critical, top model)
+- H1 becomes a real statement headline (value proposition, huge Archivo with wdth axis drama, lime keyword accent) — wordmark stays in nav only.
+- Camera drama restored: stronger scale/pan travel within coverage-guard math; foreground bokeh weight up; mid-layer separation FELT; beats redesigned as cinematic lower-thirds with number stamps; scene rail styled (numbered, thin line, lime active); "SCROLL TO FLY OVER" replaced with minimal cue.
+- CSS 3D: perspective on the rig, translateZ layering where it reads.
+- Playwright scroll-through self-verification (8 checkpoints) — implementer LOOKS at every frame before reporting.
+
+### Task E3: Home sections atmosphere + depth
+- Every section (trusted, product, platform, solutions, automation, branches, closing): atmospheric dark grounds (CSS radial glows/gradient mesh/grain), real card surfaces with borders+glow, CSS 3D tilt/hover presence, mini visual vignettes (CSS/SVG abstract product UI) replacing empty space, vertical rhythm compressed ~40%, scroll-driven entrances that are felt.
+- Playwright section-by-section screenshot self-verification, both locales.
+
+### Task E4: Sub-page surface alignment
+- Platform/solutions/pricing/resources/company/contact inherit the elevated surface language (atmosphere, cards, rhythm). Screenshot-verified per page.
+
+### Task E5: Light theme decision
+- Current light theme is undesigned inversion. Either (a) design it properly against the same bar, or (b) ship dark-only v1 (hide toggle, keep tokens) — decision to user with side-by-side captures after E2/E3 land.
+
+Every task: full SDD loop (implementer + reviewer + fix rounds), design skills loaded, gates green, screenshot evidence mandatory.
