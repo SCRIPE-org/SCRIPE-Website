@@ -16,6 +16,7 @@ import { solutionVenuesContent as solutionVenuesEn } from "./en/solution-venues"
 import { solutionMultiSportContent as solutionMultiSportEn } from "./en/solution-multi-sport";
 import { pricingContent as pricingEn } from "./en/pricing";
 import { resourcesContent as resourcesEn } from "./en/resources";
+import { companyContent as companyEn } from "./en/company";
 import { homeContent as homeAr } from "./ar/home";
 import { platformContent as platformAr } from "./ar/platform";
 import { solutionsContent as solutionsAr } from "./ar/solutions";
@@ -25,6 +26,7 @@ import { solutionVenuesContent as solutionVenuesAr } from "./ar/solution-venues"
 import { solutionMultiSportContent as solutionMultiSportAr } from "./ar/solution-multi-sport";
 import { pricingContent as pricingAr } from "./ar/pricing";
 import { resourcesContent as resourcesAr } from "./ar/resources";
+import { companyContent as companyAr } from "./ar/company";
 
 /**
  * Maps each registered page to its content for every locale.
@@ -43,6 +45,7 @@ export const CONTENT_REGISTRY: Partial<Record<PageId, Record<Locale, unknown>>> 
   solutionMultiSport: { en: solutionMultiSportEn, ar: solutionMultiSportAr },
   pricing: { en: pricingEn, ar: pricingAr },
   resources: { en: resourcesEn, ar: resourcesAr },
+  company: { en: companyEn, ar: companyAr },
 };
 
 /**

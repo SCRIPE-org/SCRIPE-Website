@@ -1112,3 +1112,122 @@ export interface ResourcesContent {
     note: string;
   };
 }
+
+/**
+ * One card in the company page's operating-principles grid — "the
+ * constraints the product is actually designed against," per that section's
+ * own subtitle, not a marketing feature list.
+ */
+export interface CompanyPrinciple {
+  /** Stable id, matched to its own glyph in
+   *  `src/components/sections/company/icons.tsx` (e.g. `"operations"`). */
+  id: string;
+  /** Card heading. */
+  title: string;
+  /** Supporting sentence. */
+  description: string;
+  /** Product-world accent for the icon tile. Omitted for the one principle
+   *  ("One connected record") the legacy page itself rendered with a plain,
+   *  unaccented tile — see `src/content/en/company.ts`'s header for why the
+   *  other three each carry a specific {@link AccentId}. */
+  accent?: AccentId;
+}
+
+/**
+ * Content for the company page (`/company`) — the smallest page in the
+ * fusion rebuild and the one page that speaks in the brand's own voice
+ * rather than a product's. Ported from `backup/scripe-static/company.html`:
+ * hero → mission (`#mission`) paired with the product vision checklist →
+ * operating principles → legal/working-with-us (`#legal`) → closing CTA.
+ * Nothing here is invented — no team bios, no office address, no history —
+ * the legacy page never carried any of that, and this port doesn't add it.
+ */
+export interface CompanyContent {
+  /** Page-level metadata strings. */
+  meta: {
+    /** Page title (the layout's `"%s · SCRIPE"` template wraps it). */
+    title: string;
+    /** Meta/OG description. */
+    description: string;
+    /** Breadcrumb label for the home crumb in structured data. */
+    breadcrumbHome: string;
+    /** Breadcrumb label for this page's own crumb in structured data. */
+    breadcrumbCurrent: string;
+  };
+  /** Typography-led hero — this page's one statement-piece marker, same
+   *  shape as `ResourcesContent["hero"]`/`PlatformContent["hero"]` but set
+   *  larger; see `CompanyHero.tsx`'s own header for why. */
+  hero: {
+    /** Small section marker label. */
+    label: string;
+    /** Page heading — the legacy page's own opening statement. */
+    title: string;
+    /** Supporting sentence. */
+    subtitle: string;
+    /** Primary CTA label (book a demo). */
+    primaryCta: string;
+    /** Secondary CTA label (explore the platform). */
+    secondaryCta: string;
+  };
+  /** Mission section (`#mission`) — why SCRIPE exists and who it is built
+   *  for, paired in the rendered layout with `vision` below. */
+  mission: {
+    /** Small section marker label. */
+    label: string;
+    /** Section heading — the mission statement itself. */
+    title: string;
+    /** The "Tuesday, 4:52pm..." scenario paragraph that grounds the mission
+     *  in a concrete operational moment. */
+    scenario: string;
+    /** Who SCRIPE is built for, and the module-inclusion rule. */
+    audience: string;
+  };
+  /** Product vision checklist, rendered as the paired panel beside
+   *  `mission` (the legacy page's own two-column composition). */
+  vision: {
+    /** Panel label ("Product vision"). */
+    label: string;
+    /** The four vision statements, in display order. */
+    items: string[];
+  };
+  /** Operating principles section — "the constraints the product is
+   *  actually designed against," not a manifesto. */
+  principles: {
+    /** Small section marker label. */
+    label: string;
+    /** Section heading. */
+    title: string;
+    /** Supporting sentence. */
+    subtitle: string;
+    /** The four principle cards, in display order. */
+    items: CompanyPrinciple[];
+  };
+  /** Legal/working-with-us section (`#legal`) — preserved anchor id for
+   *  inbound links (the footer's Privacy/Terms links point at
+   *  `/company#legal` today, per `src/components/chrome/ia.ts`, since no
+   *  standalone legal documentation is published yet). */
+  legal: {
+    /** Small section marker label. */
+    label: string;
+    /** Section heading. */
+    title: string;
+    /** Body paragraph explaining the sales-assisted, no-self-service model. */
+    body: string;
+    /** Honesty note: privacy/terms/data-processing docs are issued during
+     *  onboarding, not published on the site. */
+    note: string;
+  };
+  /** Closing conversion band. */
+  cta: {
+    /** Section heading. */
+    title: string;
+    /** Supporting sentence. */
+    subtitle: string;
+    /** Primary CTA label (book a demo). */
+    primaryCta: string;
+    /** Secondary CTA label (see pricing). */
+    secondaryCta: string;
+    /** Small honesty note under the CTAs. */
+    note: string;
+  };
+}
