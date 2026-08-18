@@ -63,7 +63,7 @@ export function BranchesStory({ content }: BranchesStoryProps) {
             </div>
             <span className="conv-rail" aria-hidden="true" />
             <span className="conv-node chip-lit text-text-primary text-[length:var(--fs-small)] font-medium">
-              <BrandMark size={22} />
+              <BrandMark size={22} decorative />
               {content.orgLabel}
             </span>
             <span className="conv-rail" aria-hidden="true" />

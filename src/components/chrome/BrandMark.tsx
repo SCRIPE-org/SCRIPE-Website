@@ -45,6 +45,23 @@
  * other call site (`Footer`, the closing-CTA panels) leaves it at the
  * default `false`: those genuinely are off-screen until the user scrolls,
  * so lazy-loading them is the correct, not just harmless, choice.
+ *
+ * Accessibility (fixed post-review): the retired inline SVG was always
+ * `aria-hidden="true"` — it carried zero semantic weight; whatever
+ * accessible name each call site needed came from elsewhere (a wrapping
+ * `aria-label`d `<Link>` for `NavBar`/`Footer`, or nothing at all for the
+ * purely decorative closing-CTA/chip placements). Swapping it for a real
+ * `next/image` changed that silently: a rendered image element with a
+ * non-empty `alt` always participates in the accessibility tree, so the
+ * 8 non-`NavBar`/
+ * `Footer` call sites (5 `ClosingCta`s, `HubCta`, `SolutionCta`,
+ * `BranchesStory`'s chip) started announcing "image, SCRIPE" on top of
+ * copy that already says everything the mark shows — a real regression,
+ * not a hypothetical one. {@link BrandMarkProps.decorative} restores the
+ * old inline-SVG behavior (`alt=""` and `aria-hidden="true"`, so it's
+ * invisible to assistive tech) for exactly those 8 sites; `NavBar`/`Footer`
+ * keep their real, localized `alt` since they carry meaning a link's own
+ * label doesn't fully cover in every context (see {@link BrandMarkProps.alt}).
  */
 import Image from "next/image";
 import { cx } from "@/components/ui/cx";
@@ -57,15 +74,23 @@ export interface BrandMarkProps {
   /** Rendered width in CSS pixels; height follows the mark's fixed
    *  ~1.264:1 aspect ratio automatically. Defaults to `26`. */
   size?: number;
-  /** Alt text for the mark image. Callers that already wrap `BrandMark` in
-   *  a link carrying its own accessible name (e.g. an `aria-label`d
-   *  `<Link>`, as both `NavBar` and `Footer` do) should still pass a
-   *  real, localized value here rather than `""` — the link's label takes
-   *  precedence for the accessible name either way, and a real alt keeps
-   *  the mark meaningful in contexts a wrapping label doesn't cover (e.g.
-   *  the image failing to load, or a future call site with no such
-   *  wrapper). Defaults to `"SCRIPE"`. */
+  /** Alt text for the mark image. Ignored when {@link decorative} is `true`.
+   *  Callers that already wrap `BrandMark` in a link carrying its own
+   *  accessible name (e.g. an `aria-label`d `<Link>`, as both `NavBar` and
+   *  `Footer` do) should still pass a real, localized value here rather
+   *  than `""` — the link's label takes precedence for the accessible name
+   *  either way, and a real alt keeps the mark meaningful in contexts a
+   *  wrapping label doesn't cover (e.g. the image failing to load).
+   *  Defaults to `"SCRIPE"`. */
   alt?: string;
+  /** Marks the mark as purely decorative: renders `alt=""` and
+   *  `aria-hidden="true"` (and ignores whatever {@link alt} was passed),
+   *  matching the retired inline SVG's always-`aria-hidden` behavior. Set
+   *  this on every call site where the mark isn't inside its own
+   *  `aria-label`d link and the surrounding copy already conveys everything
+   *  the mark shows (the closing-CTA panels, `BranchesStory`'s chip) — see
+   *  the file header's Accessibility note. Defaults to `false`. */
+  decorative?: boolean;
   /** Skips `next/image`'s default lazy-load gate for a mark that is always
    *  in the initial viewport (the nav lockup). See the file header — leave
    *  this `false` (the default) for every below-the-fold call site. */
@@ -81,13 +106,20 @@ export interface BrandMarkProps {
  *
  * @param props - See {@link BrandMarkProps}.
  */
-export function BrandMark({ size = 26, alt = "SCRIPE", priority = false, className }: BrandMarkProps) {
+export function BrandMark({
+  size = 26,
+  alt = "SCRIPE",
+  decorative = false,
+  priority = false,
+  className,
+}: BrandMarkProps) {
   const height = Math.round(size / MARK_ASPECT_RATIO);
 
   return (
     <Image
       src="/brand/mark/scripe-mark-128.png"
-      alt={alt}
+      alt={decorative ? "" : alt}
+      aria-hidden={decorative ? true : undefined}
       width={size}
       height={height}
       priority={priority}
