@@ -1,6 +1,15 @@
+/**
+ * Pre-paint theme resolution. SCRIPE's brand is dark-first: the obsidian
+ * night-cinematic identity is the product, not a "mode". A stored explicit
+ * choice always wins (`"light"` -> light, `"dark"` -> dark); with no stored
+ * value the site renders DARK, full stop. OS `prefers-color-scheme` is
+ * intentionally NOT consulted on first visit — a visitor whose system prefers
+ * light must still land on the dark brand, then opt into light via the
+ * toggle. Light is an explicit user choice only, never an inferred default.
+ */
 export const THEME_SCRIPT = `(function(){try{
 var t=localStorage.getItem("scripe-theme");
-var dark=t==="light"?false:t==="dark"?true:!matchMedia("(prefers-color-scheme: light)").matches;
+var dark=t!=="light";
 var e=document.documentElement;
 e.setAttribute("data-theme",dark?"dark":"light");
 e.style.colorScheme=dark?"dark":"light";

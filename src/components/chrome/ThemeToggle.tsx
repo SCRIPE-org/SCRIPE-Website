@@ -3,6 +3,14 @@
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
+/**
+ * SCRIPE is dark-first: the pre-paint script in `theme-script.ts` renders
+ * DARK by default whenever no explicit choice is stored, regardless of OS
+ * `prefers-color-scheme`. This toggle is the ONLY way a visitor reaches
+ * light mode — it always writes an explicit `"dark"` / `"light"` value to
+ * storage, so once used the choice sticks and OS preference never overrides
+ * it (in either direction).
+ */
 const STORAGE_KEY = "scripe-theme";
 
 type Theme = "dark" | "light";
