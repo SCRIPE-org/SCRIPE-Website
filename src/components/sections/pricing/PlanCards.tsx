@@ -30,18 +30,41 @@
  * ## Zero-CLS width reservation
  *
  * Each price wrapper sets `min-inline-size` (via the `--price-slot-min`
- * custom property declared in `src/styles/pricing.css`) wide enough for the
- * longest realistic currency string this page will ever show — not just
- * these SAR figures, but the wider currency codes/values a later task's
- * live currency swap can land (e.g. `"EGP 149,000"` at 11 characters, wider
- * than any SAR figure here). Reserving that width on the CONTAINER (not the
- * individual monthly/yearly spans) means toggling which cycle is visible,
- * or a later currency swap rewriting a span's text, can never shift layout:
- * the box is already as wide as it will ever need to be, so a shorter
- * string just sits inside it with a little unused space instead of the box
- * shrinking. `tabular-nums` keeps digit glyphs a fixed width too, so the
- * two SAR figures line up on their decimal-free ones place regardless of
- * digit count.
+ * custom property declared in `src/styles/pricing.css`, currently `14ch` —
+ * see that file's own comment for the character-budget reasoning) wide
+ * enough for the longest realistic currency string this page will ever
+ * show — not just these SAR figures, but the wider currency codes/values a
+ * later task's live currency swap can land (e.g. `"EGP 149,000"` at 11
+ * characters, wider than any SAR figure here). Reserving that width on the
+ * CONTAINER (not the individual monthly/yearly spans) means toggling which
+ * cycle is visible, or a later currency swap rewriting a span's text, can
+ * never shift layout: the box is already as wide as it will ever need to
+ * be, so a shorter string just sits inside it with a little unused space
+ * instead of the box shrinking. `tabular-nums` keeps digit glyphs a fixed
+ * width too, so the two SAR figures line up on their decimal-free ones
+ * place regardless of digit count.
+ *
+ * `ch` is a font-relative unit: it resolves against the advance width of
+ * the "0" glyph *at the element it is applied to*, using THAT element's own
+ * computed font-size — not its children's. The price figures render at
+ * `2rem`, so `text-[2rem]` is set ONCE, on the reserving wrapper `<div>`
+ * itself (not on the price `<span>`s, which inherit it) — that is the only
+ * way to guarantee `14ch` is ever computed against the same font context
+ * the price text actually renders at. At the page's ambient body size
+ * (`--fs-body`, ~15–16px), `14ch` would resolve to a noticeably narrower
+ * box than 2rem price text needs, which is exactly the bug an earlier
+ * version of this file had: `text-[2rem]` lived only on the `<span>`s, the
+ * reservation lived on an unsized wrapper, `ch` resolved against the
+ * ambient body size instead of 2rem, and the reservation "worked" only by
+ * accident — propped up by the surrounding flex/grid stretch rather than
+ * by the reservation itself. The `<span>`s cannot carry `min-inline-size`
+ * themselves either way — `width`/`inline-size` has no effect on a
+ * non-replaced inline element — and giving them a `display` utility to fix
+ * that would silently break `BillingToggle.tsx`'s `hidden`-attribute
+ * toggle (an author-stylesheet `display` class always beats the
+ * user-agent `[hidden]{display:none}` rule in the cascade, regardless of
+ * specificity), so the reservation has to live on the block-level wrapper,
+ * and the wrapper is the one place that also has to carry the font-size.
  *
  * A Server Component; `BillingToggle` is the one client leaf.
  */
@@ -101,11 +124,15 @@ function PriceBlock({ plan, billing }: { plan: PricingPlan; billing: PricingCont
       <div className="grid gap-1">
         {/* `width`/`inline-size` has no effect on an inline `<span>`, so the
             reservation lives on this wrapping block `<div>` — the same
-            container-not-leaf placement the amount branch below uses. */}
-        <div className="[min-inline-size:var(--price-slot-min)]">
+            container-not-leaf placement the amount branch below uses. This
+            wrapper ALSO carries `text-[2rem]` (matching the price span's own
+            size) purely so the `ch`-based `--price-slot-min` reservation is
+            computed against the same font context the price text renders
+            at — see this file's header for why that binding matters. */}
+        <div className="text-[2rem] [min-inline-size:var(--price-slot-min)]">
           <span
             data-price-slot={`${plan.id}-custom`}
-            className="font-display text-text-primary text-[2rem] leading-none font-semibold tracking-[-0.015em] tabular-nums"
+            className="font-display text-text-primary leading-none font-semibold tracking-[-0.015em] tabular-nums"
           >
             {plan.customLabel}
           </span>
@@ -117,17 +144,19 @@ function PriceBlock({ plan, billing }: { plan: PricingPlan; billing: PricingCont
 
   return (
     <div className="grid gap-1">
-      <div className="[min-inline-size:var(--price-slot-min)]">
+      {/* See the file header + the branch above: `text-[2rem]` here binds
+          `--price-slot-min`'s `ch` unit to the price text's own font-size. */}
+      <div className="text-[2rem] [min-inline-size:var(--price-slot-min)]">
         <span
           data-price-slot={`${plan.id}-monthly`}
-          className="font-display text-text-primary text-[2rem] leading-none font-semibold tracking-[-0.015em] tabular-nums"
+          className="font-display text-text-primary leading-none font-semibold tracking-[-0.015em] tabular-nums"
         >
           {formatSar(plan.baseMonthly)}
         </span>
         <span
           data-price-slot={`${plan.id}-yearly`}
           hidden
-          className="font-display text-text-primary text-[2rem] leading-none font-semibold tracking-[-0.015em] tabular-nums"
+          className="font-display text-text-primary leading-none font-semibold tracking-[-0.015em] tabular-nums"
         >
           {formatSar(plan.baseYearly)}
         </span>

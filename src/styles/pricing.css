@@ -14,15 +14,29 @@
 /* ---------------------------------------------------------------------------
    1. Price-slot width reservation — the single source of truth for how wide
    every price figure's wrapper reserves itself (see `PlanCards.tsx`'s file
-   header for the full zero-CLS reasoning). Sized for the widest realistic
-   currency string this page will ever render, not just today's SAR figures:
-   "EGP 149,000" (11 characters) is the documented reference case from this
-   task's brief for a later task's live currency swap; 12ch leaves a little
-   headroom beyond that without wasting layout width on the common case.
+   header for the full zero-CLS reasoning, including why `ch` only binds
+   correctly when the reserving element's own font-size matches the price
+   text's `2rem`). Sized for the widest realistic currency string this page
+   will ever render, not just today's SAR figures: "EGP 149,000" (11
+   characters — 3 letters, a space, 3 digits, a comma, 3 digits) is the
+   documented reference case from this task's brief for a later task's live
+   currency swap.
+
+   `ch` is defined as the advance width of the font's own "0" glyph at the
+   element's font-size — with `tabular-nums` every digit shares that exact
+   width, so the string's 6 digits cost precisely 6ch. Its 5 non-digit
+   characters (E, G, P, a space, a comma) aren't guaranteed to match 1ch —
+   uppercase letters in a grotesque display face like Archivo commonly run
+   somewhat wider than a tabular "0" — so they're budgeted generously at
+   ~0.87ch average (≈4.35ch total) rather than assumed to be free. That puts
+   the string itself at roughly 10.3ch; 14ch reserves close to 4ch (about
+   35%) of headroom on top of that estimate without exact Archivo metrics to
+   verify against, and without being a wastefully wide price column for the
+   common SAR case.
    --------------------------------------------------------------------------- */
 
 #plans {
-  --price-slot-min: 12ch;
+  --price-slot-min: 14ch;
 }
 
 /* ---------------------------------------------------------------------------

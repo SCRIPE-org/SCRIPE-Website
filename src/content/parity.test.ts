@@ -7,10 +7,20 @@
  * shape. This is the safety net later page tasks rely on — dropping a key
  * from one locale's content file (or leaving a page's translation half
  * finished) fails this test instead of shipping a silently mismatched page.
+ *
+ * The generic `deepKeys` walk above catches shape drift within one content
+ * tree, but it can't catch a *cross-field* structural invariant: the pricing
+ * page's `PricingComparisonRow["values"]` array is positionally zipped to
+ * `PricingContent["plans"]` (`values[i]` is plan `plans[i]`'s verdict) with
+ * nothing in the type system enforcing that the two arrays stay the same
+ * length — `deepKeys` would happily consider two rows with 2 and 3 values
+ * "the same shape" as long as both locales agreed on that (wrong) count. The
+ * dedicated pricing guard below closes that gap.
  */
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { CONTENT_REGISTRY } from "./index";
+import type { PricingContent } from "./types";
 
 /**
  * Collects a sorted list of key paths reachable from `value`.
@@ -78,5 +88,29 @@ test("content parity: every registered page has matching en/ar key shape", () =>
     const enKeys = deepKeys(entry?.en);
     const arKeys = deepKeys(entry?.ar);
     assert.deepEqual(arKeys, enKeys, `page "${String(page)}" key shape mismatch between en and ar`);
+  }
+});
+
+test("pricing content: every comparison row has exactly one value per plan, in both locales", () => {
+  const entry = CONTENT_REGISTRY.pricing;
+  assert.ok(entry, 'expected "pricing" to be registered in CONTENT_REGISTRY for this guard to run');
+
+  for (const locale of ["en", "ar"] as const) {
+    const content = entry?.[locale] as PricingContent;
+    const planCount = content.plans.length;
+    assert.ok(planCount > 0, `pricing (${locale}): expected at least one plan`);
+
+    for (const group of content.comparison.groups) {
+      for (const row of group.rows) {
+        assert.equal(
+          row.values.length,
+          planCount,
+          `pricing (${locale}): comparison row "${row.label}" in group "${group.title}" has ` +
+            `${row.values.length} value(s) but there are ${planCount} plans — ` +
+            `ComparisonTable.tsx zips row.values[i] to plans[i] positionally with no structural ` +
+            `enforcement, so a length mismatch here means a verdict silently lands on the wrong plan`,
+        );
+      }
+    }
   }
 });
