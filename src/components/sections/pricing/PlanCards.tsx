@@ -27,6 +27,22 @@
  *    node on the page by this one stable attribute, keyed by plan id and
  *    cycle, without this markup ever changing.
  *
+ * ## Live currency layer (Task 21)
+ *
+ * `LivePrices` (mounted from `page.tsx`, not from this file — see its own
+ * header) is the "later task" pass 1 above already anticipated: once a live
+ * geo pricing context resolves to a non-SAR currency, it rewrites the exact
+ * `data-price-slot` spans above via `textContent`, reusing the same
+ * reserved-width boxes and the same monthly/yearly pair `BillingToggle`
+ * already toggles — no markup here changed to support it. `CurrencySelect`
+ * (rendered next to `BillingToggle` below) and `CurrencyNote` (rendered
+ * under the plan grid) are this file's only two additions for that feature;
+ * both read shared state from `PricingCurrencyProvider`, which `page.tsx`
+ * wraps around this whole page so a Server Component (this file) and a
+ * page-level client leaf (`LivePrices`) can coordinate without prop
+ * drilling — see `PricingCurrencyProvider.tsx`'s header for the full
+ * reasoning.
+ *
  * ## Zero-CLS width reservation
  *
  * Each price wrapper sets `min-inline-size` (via the `--price-slot-min`
@@ -74,6 +90,8 @@ import { Button } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
 import { ACCENT_DOT_CLASS } from "./accents";
 import { BillingToggle } from "./BillingToggle";
+import { CurrencyNote } from "./CurrencyNote";
+import { CurrencySelect } from "./CurrencySelect";
 
 export interface PlanCardsProps {
   /** The billing-toggle labels shared by every amount-priced card. */
@@ -232,8 +250,12 @@ function PlanCard({ plan, billing }: { plan: PricingPlan; billing: PricingConten
 export function PlanCards({ billing, plans, plansFootnote }: PlanCardsProps) {
   return (
     <Section id="plans" className="scroll-mt-24">
-      <div className="flex justify-center">
+      <div className="flex flex-wrap items-center justify-center gap-3">
         <BillingToggle content={billing} />
+        {/* Client leaf — see this file's "Live currency layer" header note
+            and CurrencySelect.tsx's own header for why it renders nothing
+            until a live pricing context is ready. */}
+        <CurrencySelect />
       </div>
 
       <div
@@ -247,6 +269,10 @@ export function PlanCards({ billing, plans, plansFootnote }: PlanCardsProps) {
           </Reveal>
         ))}
       </div>
+
+      {/* Client leaf, space-reserved at all times — see CurrencyNote.tsx's
+          header for why this never causes a layout shift. */}
+      <CurrencyNote />
 
       <p className="text-text-muted mt-8 text-center text-[length:var(--fs-small)]">{plansFootnote}</p>
     </Section>

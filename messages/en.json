@@ -48,6 +48,10 @@
     "terms": "Terms",
     "rights": "© {year} SCRIPE. All rights reserved."
   },
+  "pricing": {
+    "currencyLabel": "Currency",
+    "currencyNote": "Converted from SAR · rates updated daily"
+  },
   "forms": {
     "required": "This field is required.",
     "emailInvalid": "That email address looks incomplete.",
