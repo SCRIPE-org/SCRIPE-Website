@@ -195,7 +195,7 @@ export function MobileNav({ localeSwitch, themeToggle }: MobileNavProps) {
               type="button"
               onClick={() => setOpen(false)}
               aria-label={t("nav.closeMenu")}
-              className="bg-surface-raised text-text-primary sr-only rounded-full border border-border-subtle focus:not-sr-only focus:absolute focus:start-4 focus:top-4 focus:z-[var(--z-toast)] focus:inline-flex focus:size-11 focus:items-center focus:justify-center"
+              className="bg-surface-raised text-text-primary sr-only rounded-full border border-border-subtle focus:not-sr-only focus:absolute focus:end-4 focus:top-4 focus:z-[var(--z-toast)] focus:inline-flex focus:size-11 focus:items-center focus:justify-center"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M18 6 6 18" />
