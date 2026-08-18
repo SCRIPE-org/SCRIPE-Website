@@ -32,10 +32,40 @@
  * same structure in Noto Kufi (no wdth axis — weight contrast only; see
  * `:lang(ar)` rules in home.css).
  *
- * Plate architecture (four plates, `public/media/hero/plate-*.png`):
+ * THEME-ADAPTIVE FILM (Task G3): the stage is no longer night in both
+ * themes. Dark theme flies the night film; light theme flies a golden-hour
+ * DAY film. Two mechanisms, split by what each has to survive:
+ *
+ * - The BASE plate swaps in pure CSS. `.hero-plate` is a `background-image`
+ *   driven by the `--hero-plate` custom property, which `home.css` §2
+ *   re-points under `[data-theme="light"]`. A theme is only ever known in
+ *   the browser (`data-theme` is written pre-paint from localStorage — see
+ *   `src/theme/theme-script.ts`), so a server-rendered `<img srcset>` could
+ *   not choose, and rendering both plates would download both (a
+ *   `display: none` `<img>` still fetches — the trap
+ *   `src/lib/hero-armed-store.ts` documents at length). A CSS background
+ *   fetches exactly the plate the active theme resolves to, needs no
+ *   JavaScript, and leaves static prerender completely untouched: BOTH
+ *   themes' static/no-JS/reduced-motion frames are correct. The cost is
+ *   losing `next/image`, so the AVIF/WebP encodes it would have negotiated
+ *   are built as real files by `scripts/build-media-assets.mjs` and selected
+ *   with `image-set()`. `role="img"` + `aria-label` keep the plate in the
+ *   accessibility tree exactly as `<Image alt>` did.
+ * - The PARALLAX plates gate on theme at MOUNT (`HeroArmedPlate`'s
+ *   `nightOnly`), because the day set is incomplete: the owner's round-2
+ *   drop still owes a day midground, foreground and finale (catalog §2).
+ *   Until they land, the day film runs base plate + the shared foreground
+ *   bokeh, and simply has no midground or finale layer — the flight still
+ *   completes (the destination beat lands on the pulled-back base plate
+ *   instead of cutting to a nadir shot). Armed mode is client-only, so a
+ *   mount-time theme read is safe there in a way it is not for the base
+ *   plate.
+ *
+ * Plate architecture (four plates, `public/media/hero/plate-*`):
  * - `plate-background` (`.hero-rig > .hero-plate`) — the base environment,
  *   always visible, driven by `CAMERA_PATH` at depth ×1.0. The only plate
- *   shown in static/no-JS/reduced-motion mode.
+ *   shown in static/no-JS/reduced-motion mode, and the only one that exists
+ *   in both a night and a day cut today.
  * - `plate-midground` (`.hero-plate-mid`, armed-only) — stadium+pool cutout
  *   (alpha PNG), its own depth ×DEPTH_MID tween.
  * - `plate-foreground` (`.hero-plate-fg`, armed-only) — bokeh floodlight
@@ -86,7 +116,6 @@
  *   the sections below (`#product`, `#solutions`), so the beat containers
  *   are `aria-hidden` and keep the `autoAlpha` visual choreography.
  */
-import Image from "next/image";
 import type { HomeContent } from "@/content/types";
 import { Button } from "@/components/ui/Button";
 import { HeroArmedPlate } from "./HeroArmedPlate";
@@ -114,26 +143,28 @@ export function Hero({ content }: HeroProps) {
 
   return (
     <section className="hero" data-hero-root>
-      {/* `night-zone` (Task E5): the stage is the night film in BOTH themes —
-          the token re-pin keeps the CTA lime-400-on-ink and every accent
-          full-brightness when the page around the film is in light mode.
-          Deliberately on the stage only, never on `.hero` itself: the
-          flight-plan strip below belongs to the lit room. */}
+      {/* `night-zone` (Task E5): the stage keeps the FILM's own token grade
+          in both themes — the re-pin keeps the CTA lime-400-on-ink and every
+          accent full-brightness when the page around the film is in light
+          mode. Task G3 makes the photograph theme-adaptive but not this: the
+          day cut is still a graded film (white type over a warm ND grad),
+          not a light-mode UI surface, so its controls stay on the film's
+          palette. Deliberately on the stage only, never on `.hero` itself:
+          the flight-plan strip below belongs to the lit room. */}
       <div className="hero-stage night-zone">
         {/* Camera rig: transform-driven base plate container. Always visible
             (static and armed) — the single flattened layer under no-JS/
             reduced-motion. */}
         <div className="hero-rig" data-hero-rig>
-          <div className="hero-plate">
-            <Image
-              src="/media/hero/plate-background.png"
-              alt={content.plateAlt}
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover"
-            />
-          </div>
+          {/* The theme-adaptive base plate. Its photograph is a CSS
+              `background-image` (`--hero-plate`, home.css §2), not an
+              `<img>` — see the file header for why that is the only shape
+              that stays correct in both themes with no JavaScript. `role`
+              + `aria-label` restore the semantics `<Image alt>` carried;
+              the label is written to describe the campus without naming a
+              time of day, since which film a reader is looking at is a
+              client-side fact this server-rendered attribute cannot know. */}
+          <div className="hero-plate" role="img" aria-label={content.plateAlt} />
         </div>
 
         {/* Parallax mid layer (armed-only): stadium + pool cutout, its own
@@ -142,17 +173,26 @@ export function Hero({ content }: HeroProps) {
             wrapper div (GSAP's tween target, `[data-hero-plate-mid]`) always
             renders; `HeroArmedPlate` only MOUNTS the `<Image>` itself once
             armed, so this plate never downloads under reduced-motion/no-JS —
-            see `HeroArmedPlate.tsx`'s header. */}
+            see `HeroArmedPlate.tsx`'s header. `nightOnly`: the day film has
+            no midground cutout yet — the delivered one has a tilt-shift
+            camera mismatch and a matting artifact and was rejected
+            (catalog §3), so light theme mounts no midground at all rather
+            than compositing a plate that would not sit on its own
+            background. */}
         <div className="hero-plate-mid" data-hero-plate-mid aria-hidden="true">
-          <HeroArmedPlate src="/media/hero/plate-midground.png" />
+          <HeroArmedPlate src="/media/hero/plate-midground.png" nightOnly />
         </div>
 
         {/* Finale plate (armed-only): the nadir "operational picture" shot,
             crossfades in via opacity 0.76→0.86 as the destination beat's
             background. Always below the type layer. Conditional-mount — see
-            the midground plate's comment above. */}
+            the midground plate's comment above. `nightOnly`: no day finale
+            exists (catalog §2 — nothing in the batch reads as a daylight
+            top-down "living map", and there is no stand-in). In light theme
+            the destination beat simply plays over the pulled-back day plate,
+            which is a complete frame, not a hole. */}
         <div className="hero-plate-finale" data-hero-plate-finale aria-hidden="true">
-          <HeroArmedPlate src="/media/hero/plate-finale.png" />
+          <HeroArmedPlate src="/media/hero/plate-finale.png" nightOnly />
         </div>
 
         {/* Night grade + brand atmosphere. Order: cooling tint < legibility
@@ -258,7 +298,15 @@ export function Hero({ content }: HeroProps) {
             tween. Topmost layer — sits in front of everything, including the
             type layer, like a lens element on the rig. Purely decorative and
             inert: aria-hidden, no pointer events, never blocks interaction.
-            Conditional-mount — see the midground plate's comment above. */}
+            Conditional-mount — see the midground plate's comment above.
+            SHARED by both films (no `nightOnly`): the plate is a heavily
+            defocused near-black canopy silhouette with warm rim light, and
+            silhouetted foliage against a bright sky is as much a daylight
+            look as a night one. Its floodlight mast is lit, which is one
+            beat wrong at sunrise — the day-mode grade in home.css §2 dims
+            this layer to hold that in check until the true day foreground
+            lands (catalog §2 calls the same substitution cosmetic debt, not
+            a blocker). */}
         <div className="hero-plate-fg" data-hero-plate-fg aria-hidden="true">
           <HeroArmedPlate src="/media/hero/plate-foreground.png" />
         </div>

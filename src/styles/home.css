@@ -49,7 +49,19 @@
    film grain (masks plate upscale at the camera's close passes) < crop
    corners. Text contrast stays AA via local scrims + text-shadows.
 
-   Plate layers (`public/media/hero/plate-*.png`, four total): background
+   THEME-ADAPTIVE FILM (Task G3): the stage is no longer night film in both
+   themes — dark theme flies the night film, light theme a golden-hour DAY
+   film, and §2b regrades all four layers for it. What did NOT change is
+   `.night-zone` on the stage: the day cut is still a graded film (white type
+   under a warm ND), so its buttons and accents stay on the film's own
+   palette rather than the lit room's. The base plate swaps via the
+   `--hero-plate` custom property in §2 (a CSS `background-image`, so the
+   static/no-JS/reduced-motion frame is correct in BOTH themes with no
+   JavaScript at all); the armed-only parallax plates swap by MOUNT in
+   `HeroArmedPlate.tsx`, because the day set is still missing its midground,
+   foreground and finale. Read `Hero.tsx`'s header for the full contract.
+
+   Plate layers (`public/media/hero/plate-*`, four total): background
    (`.hero-plate`, always visible) < midground (`.hero-plate-mid`) <
    finale (`.hero-plate-finale`) < night-grade/signal accents < type
    (`.hero-center`, intro/finale text + CTAs) < corner beats
@@ -69,9 +81,10 @@
    hero's film-grain tile in dark; grain-free daylight-studio shading pools
    and lifted white bands in light — Task E5), and every artifact sits on
    the elevation token ramp (`src/styles/tokens/elevation.css`). The hero
-   stage itself is theme-invariant night film (`.night-zone`, see
-   `atmosphere.css`): light mode transforms the world AROUND the film, never
-   the film. Depth doctrine:
+   stage keeps the film's own token grade in both themes (`.night-zone`, see
+   `atmosphere.css`) even though Task G3 made the PHOTOGRAPH theme-adaptive:
+   light mode changes which film is playing, never which palette the film's
+   own controls are drawn from. Depth doctrine:
    `box-shadow: var(--edge-highlight), var(--shadow-N)` — the inner top
    light always first. 3D presence (the operations board's rest tilt, card
    hover tilts) is authored in physical degrees flipped per direction via
@@ -107,7 +120,11 @@
   position: relative;
   min-height: 100svh;
   overflow: hidden;
-  background: var(--obsidian);
+  /* Theme-adaptive: `--hero-ground` is the film's own base (§2) — obsidian
+     under the night plate, the day plate's shaded-foliage green under the
+     golden-hour one. Only ever visible for the instant before the plate
+     paints and at the grade's bottom hand-off. */
+  background: var(--hero-ground);
   /* Keep centered content clear of the overlaid nav. */
   padding-block-start: 72px;
   display: grid;
@@ -149,9 +166,61 @@
   will-change: transform;
 }
 
+/* THE THEME-ADAPTIVE BASE PLATE (Task G3).
+
+   `--hero-plate` is re-pointed by the `[data-theme="light"]` rule below, so
+   the browser resolves exactly ONE `background-image` and fetches exactly
+   one photograph per load. This is deliberately NOT a `next/image`: a theme
+   is only known in the browser (`data-theme` is written pre-paint from
+   localStorage — `src/theme/theme-script.ts`), so a server-rendered
+   `<img srcset>` cannot choose between the films, and rendering both would
+   download both — `display: none` does not stop an `<img>` fetching, which
+   is the whole reason `src/lib/hero-armed-store.ts` exists. A CSS background
+   needs no JavaScript, so the static/no-JS/reduced-motion frame is correct
+   in BOTH themes, and static prerender is untouched.
+
+   The AVIF/WebP encodes `next/image` would otherwise have negotiated are
+   built as real files by `scripts/build-media-assets.mjs`; `image-set()`
+   picks the first type the browser supports. Both plates are emitted at
+   their native 1915px and no smaller: the plate is a 21:9 frame rendered
+   with `cover`, so on a portrait phone it is the HEIGHT that drives the
+   cover scale (390×844 needs 844/821 ≈ 1.03× of the source) — a "mobile"
+   variant would be upscaled ~2.7× there. See the script's §1 note. */
 .hero-plate {
   position: absolute;
   inset: 0;
+  background-image: var(--hero-plate);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* The two films. Declared on `.hero` (the section root) rather than on
+   `.hero-stage` so the theme switch is one property on one element that
+   every plate layer inherits, and so §1's `.hero-stage` block stays the
+   single place stage LAYOUT is authored. The day rule's
+   `:root:not([data-theme="dark"])` shape is explained in §2b — short
+   version: it also covers the no-JS state, where no `data-theme` exists at
+   all and the page chrome already renders light. */
+.hero {
+  --hero-plate: image-set(
+    url("/media/hero/plate-background.avif") type("image/avif"),
+    url("/media/hero/plate-background.webp") type("image/webp")
+  );
+  /* What the stage sits on before the plate paints, and what the grade's
+     bottom edge fades into. Night film: obsidian, identical to the page. */
+  --hero-ground: var(--obsidian);
+}
+
+:root:not([data-theme="dark"]) .hero {
+  --hero-plate: image-set(
+    url("/media/hero/plate-background-day.avif") type("image/avif"),
+    url("/media/hero/plate-background-day.webp") type("image/webp")
+  );
+  /* Day film: the deep green of the plate's own shaded foreground, so the
+     pre-paint moment and the bottom hand-off both read as the photograph
+     continuing rather than as a black bar under a golden frame. */
+  --hero-ground: #14180f;
 }
 
 /* Parallax mid layer (armed-only): stadium + pool cutout (alpha PNG),
@@ -238,7 +307,7 @@
       rgba(4, 9, 17, 0.18) 17%,
       rgba(4, 9, 17, 0.02) 42%,
       rgba(4, 9, 17, 0.4) 74%,
-      var(--obsidian) 100%
+      var(--hero-ground) 100%
     );
 }
 
@@ -264,6 +333,113 @@
   background-size: 160px 160px;
   mix-blend-mode: overlay;
   opacity: 0.07;
+}
+
+/* ---------------------------------------------------------------------------
+   2b. THE DAY GRADE (Task G3) — light theme's golden-hour cut.
+
+   SELECTOR SHAPE — every rule below is `:root:not([data-theme="dark"])`, not
+   `[data-theme="light"]`, and that is deliberate. It mirrors exactly how
+   `src/styles/tokens/colors.css` is authored: the LIGHT palette lives on
+   bare `:root` and `[data-theme="dark"]` overrides it, so "no attribute at
+   all" resolves to the light world. There IS such a state — a visitor with
+   JavaScript blocked never runs `theme-script.ts`, so `<html>` carries no
+   `data-theme` and the whole page chrome renders from `:root`, i.e. light.
+   Matching on `[data-theme="light"]` would have handed that reader the
+   light chrome with the NIGHT film inside it: the one pairing this task
+   exists to stop. Keying off the negation instead means the film always
+   agrees with the room around it, in all three states (dark attribute,
+   light attribute, no attribute), with no JavaScript involved in any of
+   them. The night values stay on the bare `.hero`/`.hero-*` rules above so
+   the file still reads night-first, which is what the brand is.
+
+   Same four grade layers, re-coloured for a different photograph. The one
+   real problem the day film has that the night film never did: its plate is
+   BRIGHT where the type sits. The `<h1>` is white (it stays white — this is
+   still a graded film, not a light-mode UI surface, which is why the stage
+   keeps `.night-zone`), so the grade has to guarantee AA against a
+   golden-hour sky instead of a night sky.
+
+   Solved with a title scrim, not by crushing the whole frame: a wide, deeply
+   feathered ellipse behind the centre column, while the corners and the
+   campus itself stay open and warm. Darkening the entire frame to the same
+   value would have hit contrast too and produced dusk, not golden hour.
+   Note the plate cannot be re-framed away from its sky instead: at every
+   viewport ratio the stage is taller than the plate's 21:9, so `cover`
+   always fits it vertically edge-to-edge and `background-position`'s
+   vertical component is inert.
+
+   Scrim strength is measured, not eyeballed. Pass 1 (0.50 peak over a
+   72%×46% ellipse) cleared AA with room to spare — worst single backdrop
+   pixel under the `<h1>` at 1920×1080 measured 6.14:1 against white — but
+   read as a visible dark oval in the middle of an otherwise bright frame.
+   Pass 2 spends that headroom on the picture: peak down to 0.42, ellipse
+   out to 84%×54%, feather to 82%. Same job, no discernible edge. Verified
+   after the change by hiding the type, screenshotting, and computing
+   relative luminance per pixel across each text block's bounding box (see
+   the task report's iteration log for the numbers).
+   --------------------------------------------------------------------------- */
+
+/* Layer 1 — warm the plate INTO the brand's amber rather than cooling it.
+   Same multiply mechanism as night, opposite hue. */
+:root:not([data-theme="dark"]) .hero-tint {
+  background: #2a1e0c;
+  opacity: 0.16;
+}
+
+/* Layer 2 — the graded ND + title scrim. Front to back: centre title scrim,
+   corner vignette, graduated ND (heavy on the sky band, nearly open through
+   the campus, deep again into the ground hand-off). */
+:root:not([data-theme="dark"]) .hero-grade {
+  background:
+    radial-gradient(84% 54% at 50% 47%, rgba(14, 10, 4, 0.42) 0%, rgba(14, 10, 4, 0.26) 52%, transparent 82%),
+    radial-gradient(120% 96% at 50% 34%, transparent 38%, rgba(14, 10, 4, 0.34) 74%, rgba(10, 8, 3, 0.7) 100%),
+    linear-gradient(
+      180deg,
+      rgba(16, 12, 5, 0.66) 0%,
+      rgba(16, 12, 5, 0.34) 20%,
+      rgba(16, 12, 5, 0.14) 44%,
+      rgba(16, 12, 5, 0.42) 76%,
+      var(--hero-ground) 100%
+    );
+}
+
+/* Layer 3 — the lime horizon survives the theme change untouched in hue and
+   only drops in strength: the bottom of the day plate is shaded foliage, the
+   one place in the frame where signal lime still reads as light rather than
+   as a tint. Losing it would cost the film its only brand-coloured
+   atmosphere. */
+:root:not([data-theme="dark"]) .hero-bloom {
+  background: radial-gradient(56% 34% at 50% 103%, rgba(192, 255, 0, 0.11), transparent 72%);
+}
+
+/* Layer 4 — grain eases off: `overlay` grain lands much harder on a bright
+   plate than on a night one, and the day frame does not need as much of it
+   (it has real mist doing the same job of hiding upscale). */
+:root:not([data-theme="dark"]) .hero-grain {
+  opacity: 0.05;
+}
+
+/* Crop marks pick up a shadow so the lime stays legible where the frame
+   corner lands on open sky. `drop-shadow` (not `box-shadow`) so the shadow
+   follows the L-shape, not its bounding box. */
+:root:not([data-theme="dark"]) .hero-corners::before,
+:root:not([data-theme="dark"]) .hero-corners::after {
+  opacity: 0.8;
+  filter: drop-shadow(0 1px 3px rgba(16, 12, 5, 0.7));
+}
+
+/* The shared foreground bokeh runs quieter in the day film. It is the night
+   plate standing in for a day foreground that has not been delivered yet
+   (`docs/asset-briefs/delivered-images-catalog-2026-08-19.md` §2), and its
+   one wrong note is a LIT floodlight mast at sunrise. Backing the whole
+   layer off keeps the canopy silhouette — which reads correctly in daylight
+   — while pushing the lit lamps toward the edge of noticing. A flat opacity,
+   never a `filter`: this layer is transform-animated every scroll frame and
+   a filter pass would cost a full-screen re-rasterise on each one. Replace
+   with `plate-foreground-day` and delete this rule when P16 lands. */
+:root:not([data-theme="dark"]) .hero-plate-fg {
+  opacity: 0.72;
 }
 
 /* ---------------------------------------------------------------------------

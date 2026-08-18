@@ -207,10 +207,35 @@ const BEAT_HOLD = 0.11;
 
 /** Progress buckets mapping scroll position to the active rail tick:
  *  index i is active while progress < RAIL_BOUNDS[i]; the last tick is
- *  active beyond the final bound. Five ticks now (intro + four chapters),
- *  each bound set slightly AHEAD of its caption's entrance so the rail
- *  leads the beat rather than trailing it. */
-const RAIL_BOUNDS = [0.17, 0.4, 0.62, 0.8] as const;
+ *  active beyond the final bound. Five ticks (intro + four chapters), each
+ *  bound set slightly AHEAD of its caption's entrance so the rail leads the
+ *  beat rather than trailing it.
+ *
+ *  Every bound is derived from the caption timeline, never chosen by feel.
+ *  Caption N runs `BEAT_IN[N] − BEAT_FADE` → `BEAT_IN[N] + BEAT_HOLD +
+ *  BEAT_FADE`, so a bound has two jobs at once: lead the INCOMING caption's
+ *  entrance by a hair, and sit late enough in the OUTGOING caption's exit
+ *  that the rail never names a chapter while a legible caption still says a
+ *  different one. Audited (outgoing opacity uses the exit tween's
+ *  `power2.in`, i.e. 1 − t²):
+ *
+ *    bound   value  incoming enters  lead    outgoing clears  still visible
+ *    [0]     0.17   0.185 (Clubs)    0.015   —                —
+ *    [1]     0.40   0.405 (Venues)   0.005   0.405            30%
+ *    [2]     0.62   0.625 (Intel.)   0.005   0.625            30%
+ *    [3]     0.84   0.86  (finale)   0.020   0.845            17%
+ *
+ *  Task G3 fix: bound [3] was 0.80. The Intelligence caption's exit runs
+ *  0.79 → 0.845, so at 0.80 the rail jumped to ORGANIZATION while the
+ *  INTELLIGENCE lower-third was still at ~99% opacity, and stayed
+ *  contradictory for 0.045 of the track (~58px of scroll) — measured live at
+ *  progress 0.82: rail "Organization", caption "Intelligence" @ 0.85. That is
+ *  an order of magnitude past the ~0.005 sliver bounds [1] and [2] carry by
+ *  design, and it is the only bound that was not derived from its neighbour
+ *  caption's exit. 0.84 puts it back on the same rule as its siblings (the
+ *  outgoing caption is a ghost at 17% when the rail moves) while still
+ *  leading the finale block's own 0.86 entrance. */
+const RAIL_BOUNDS = [0.17, 0.4, 0.62, 0.84] as const;
 
 /**
  * Mounts the flight. Renders `null`; all work happens in the effect. See

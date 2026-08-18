@@ -19,25 +19,45 @@
  * armed while still off-screen (a fast-scrolling keyboard user tabbing past
  * it), this plate never contends with in-viewport, higher-priority
  * requests.
+ *
+ * SECOND GATE (Task G3 — theme-adaptive hero): `nightOnly` adds the theme to
+ * the same mount contract. The hero now flies a night film in dark theme and
+ * a golden-hour day film in light, and the day set is incomplete — the
+ * owner's round-2 drop still owes a day midground, a day foreground and a
+ * day finale (`docs/asset-briefs/delivered-images-catalog-2026-08-19.md`
+ * §2). The two plates that have no day counterpart at all (midground,
+ * finale) therefore carry `nightOnly`, so in light theme they are not merely
+ * hidden but never mounted, and their bytes are never spent on a film that
+ * would not have used them. The foreground bokeh is shared by both films and
+ * carries no flag. When the day plates arrive, each gains a `daySrc` here
+ * (or its own entry) — a file swap plus one prop, not a rewrite.
  */
 import Image from "next/image";
 import { useSyncExternalStore } from "react";
 import { getHeroArmedServerSnapshot, getHeroArmedSnapshot, subscribeHeroArmed } from "@/lib/hero-armed-store";
+import { getThemeServerSnapshot, getThemeSnapshot, subscribeTheme } from "@/lib/theme-mode-store";
 
 export interface HeroArmedPlateProps {
   /** The plate photograph's path under `public/`. */
   src: string;
+  /** When true, the plate only mounts in dark theme — for layers the day
+   *  film has no counterpart for yet. Defaults to false (shared by both
+   *  films). See the file header. */
+  nightOnly?: boolean;
 }
 
 /**
- * Renders the plate's `next/image` once armed, `null` before that.
+ * Renders the plate's `next/image` once armed (and, for `nightOnly` plates,
+ * only in dark theme); `null` otherwise.
  *
  * @param props - See {@link HeroArmedPlateProps}.
  */
-export function HeroArmedPlate({ src }: HeroArmedPlateProps) {
+export function HeroArmedPlate({ src, nightOnly = false }: HeroArmedPlateProps) {
   const armed = useSyncExternalStore(subscribeHeroArmed, getHeroArmedSnapshot, getHeroArmedServerSnapshot);
+  const theme = useSyncExternalStore(subscribeTheme, getThemeSnapshot, getThemeServerSnapshot);
 
   if (!armed) return null;
+  if (nightOnly && theme !== "dark") return null;
 
   return (
     <Image src={src} alt="" fill sizes="100vw" className="object-cover" loading="lazy" fetchPriority="low" />

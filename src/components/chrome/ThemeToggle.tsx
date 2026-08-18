@@ -12,12 +12,21 @@ import { useEffect, useState } from "react";
  * it (in either direction).
  *
  * What the toggle actually switches (Task E5, "cinema screen in a lit
- * room"): the world AROUND the film. The home hero stage and every
- * closing-CTA end card are fixed night surfaces in both themes
- * (`.night-zone`, `src/styles/tokens/atmosphere.css`); flipping to light
- * turns the nav, sections and sub-pages into the daylight studio (tinted
- * paper, white cards, studio shadows, obsidian-chip CTAs — see
- * `colors.css`'s header) while the film itself never regrades.
+ * room"): the world AROUND the film. Flipping to light turns the nav,
+ * sections and sub-pages into the daylight studio (tinted paper, white
+ * cards, studio shadows, obsidian-chip CTAs — see `colors.css`'s header),
+ * while the film surfaces (the home hero stage, every closing-CTA end card)
+ * keep the film's own token grade in both themes via `.night-zone`
+ * (`src/styles/tokens/atmosphere.css`).
+ *
+ * The ONE thing the toggle also switches inside a film, since Task G3: which
+ * film the home hero is playing. Dark theme flies the night campus plate,
+ * light theme a golden-hour day plate — the site's only theme-adaptive
+ * imagery, and a deliberate exception (every other photograph on the site is
+ * framed print that reads correctly in both themes via its frame, never a
+ * duplicated asset). The swap is CSS on `data-theme`, so it also happens for
+ * the pre-paint/no-JS frame, not just after this component mounts; see
+ * `src/components/sections/home/Hero.tsx`'s header.
  */
 const STORAGE_KEY = "scripe-theme";
 

@@ -47,7 +47,7 @@ export const homeContent: HomeContent = {
     },
     tagline: "SCRIPE — The Operating System for Modern Sports Organizations",
     plateAlt:
-      "Aerial view of a sports campus at night — floodlit stadium, glowing pool and training pitches connected by a lit walkway",
+      "Aerial view of a sports campus — stadium, swimming pool, padel courts and training pitches linked by a single walkway",
     railIntro: "Intro",
     chapters: [
       {
