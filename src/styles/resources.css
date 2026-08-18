@@ -1,0 +1,84 @@
+/* ============================================================================
+   SCRIPE — Resources page styles (guides/articles grid + FAQ + product
+   reference links + closing CTA)
+
+   Scope: imported by `src/app/[locale]/resources/page.tsx` only — everything
+   in here is resources-page-specific. Shared choreography (the `.rv` reveal
+   system) stays in `src/styles/motion-utilities.css`; tokens stay in
+   `src/styles/tokens/`. Class names here are prefixed `.resources-`/`.faq-`
+   so nothing here can collide with `pricing.css`/`platform.css`/
+   `solutions.css`/`home.css` during a client-side navigation between areas,
+   mirroring the `.pricing-`/`.cap-`/`.sol-` per-page prefixing those files
+   already establish.
+   ============================================================================ */
+
+/* ---------------------------------------------------------------------------
+   1. FAQ disclosure — identical rule set to `src/styles/pricing.css` §2
+   (`ResourcesFaq.tsx` reuses the pricing FAQ's exact `.faq-item`/
+   `.faq-chevron` markup, per this task's brief). Defined again here, rather
+   than imported from `pricing.css`, because these are plain global
+   stylesheets loaded per-route (not CSS modules) — see `platform.css`'s own
+   header for why a page's styles never reach into another page's file. The
+   rule itself is intentionally identical, so no visual drift is possible
+   between the two pages' FAQs.
+   --------------------------------------------------------------------------- */
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-chevron {
+  transition: transform var(--motion-quick) var(--ease-standard);
+}
+
+.faq-item[open] .faq-chevron {
+  transform: rotate(180deg);
+}
+
+/* ---------------------------------------------------------------------------
+   2. Direction-semantic icon flip for the product-reference grid's trailing
+   arrows. `src/styles/home.css` §9 defines the sitewide `.rtl-flip` rule and
+   `src/styles/solutions.css` cross-references it rather than redefining it —
+   but `home.css` is imported only by the home route, so that cross-page
+   dependency is not guaranteed to be loaded on every navigation path into a
+   page that uses it. This file keeps its own copy instead: one property, one
+   selector, cheap to duplicate and safer than depending on another route's
+   CSS chunk being present.
+   --------------------------------------------------------------------------- */
+
+[dir="rtl"] .rtl-flip {
+  transform: scaleX(-1);
+}
+
+/* ---------------------------------------------------------------------------
+   3. Closing CTA — obsidian panel with the lime "horizon" edge-light, the
+   same brand moment `pricing.css` §3, `platform.css` §4 and `solutions.css`
+   §1 give their own closing bands. Deliberately a single-look brand moment:
+   obsidian in both themes.
+   --------------------------------------------------------------------------- */
+
+.resources-cta-panel {
+  position: relative;
+  overflow: hidden;
+  background: var(--obsidian);
+  border: 1px solid #26282c;
+  border-radius: var(--radius-xl-base);
+}
+
+.resources-cta-horizon {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: 1px;
+  background: linear-gradient(90deg, transparent 8%, rgba(192, 255, 0, 0.8) 50%, transparent 92%);
+  pointer-events: none;
+}
+
+.resources-cta-bloom {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: 55%;
+  background: radial-gradient(52% 90% at 50% 0%, rgba(192, 255, 0, 0.14), transparent 72%);
+  pointer-events: none;
+}

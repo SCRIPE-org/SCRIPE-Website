@@ -919,3 +919,196 @@ export interface PricingContent {
     note: string;
   };
 }
+
+/**
+ * Discriminant for a {@link ResourceItem}: which resources-page section it
+ * belongs to today, and — since this is also the exact field the future MDX
+ * pipeline switches on (see that interface's own doc comment) — which MDX
+ * collection it would become. `"faq"` is carried for completeness of the
+ * union but is not how the FAQ section itself is modeled; see
+ * {@link ResourceFaqItem}'s doc comment for why question/answer content gets
+ * its own shape instead.
+ */
+export type ResourceKind = "guide" | "faq" | "article";
+
+/**
+ * The central content unit for the resources page, and the shape the future
+ * MDX pipeline (`content-collections`, the tool the design spec §5.3 names
+ * as chosen — Contentlayer is dead, next-mdx-remote is archived) is meant to
+ * map onto without a restructure: `kind` becomes the collection a file lives
+ * in (`guides/*.mdx`, `articles/*.mdx`), `slug` becomes its route segment,
+ * `title`/`summary` become frontmatter fields, and `body` becomes the
+ * compiled MDX output once a page task actually renders one. Nothing on the
+ * site publishes a full reading page yet — every guide and article today is
+ * an honest "in preparation"/"coming soon" card, exactly like the legacy
+ * static site's own `resources.html` — so `body` stays reserved rather than
+ * populated.
+ *
+ * `guides` and `articles` on {@link ResourcesContent} both hold
+ * `ResourceItem[]` (kind `"guide"`/`"article"` respectively) rather than two
+ * bespoke shapes, so a later "all resources" index or MDX collection loader
+ * can iterate one uniform list instead of hand-merging two unrelated types.
+ */
+export interface ResourceItem {
+  /** Which resources-page section this item renders in — see this type's
+   *  own doc comment for the MDX-collection mapping. */
+  kind: ResourceKind;
+  /** Stable slug, unique within `kind` — the future MDX file/route segment. */
+  slug: string;
+  /** Item title (a guide's or article's headline). */
+  title: string;
+  /** One–two sentence summary shown on the card. */
+  summary: string;
+  /** Reserved for the future MDX-compiled body. Typed `never` on purpose: no
+   *  content file can populate it today, so there is nothing here for a
+   *  reading-page template to accidentally render early. The field name is
+   *  fixed now so wiring in a real value later is additive, not a rename. */
+  body?: never;
+  /** Optional short status/category word shown as a small badge (today,
+   *  every guide/article carries an honest build-status word — "In
+   *  preparation" or "Coming soon" — never a fabricated topic tag). Omit
+   *  once an item is actually published and needs no badge. */
+  tag?: string;
+}
+
+/**
+ * One question/answer pair in the resources FAQ. Kept as its own interface
+ * rather than reusing {@link ResourceItem} (`title` → question, `summary` →
+ * answer would technically fit): a question/answer pair is not blog-ready
+ * content bound for the future MDX pipeline — it has no `slug`, no future
+ * "reading page," and calling its two fields `title`/`summary` would read as
+ * a lie about what they are. Matches {@link PricingFaqItem}'s shape exactly
+ * (same accessible `<details>`/`<summary>` rendering contract — see
+ * `ResourcesFaq.tsx`'s file header) so both FAQs stay one recognizable
+ * pattern sitewide. No FAQPage JSON-LD is emitted for this content, per the
+ * design spec's SEO section (rich-result FAQ schema is deprecated as of
+ * 2026) — the same rule `PricingFaqItem` documents.
+ */
+export interface ResourceFaqItem {
+  /** The question, rendered as a `<summary>`. */
+  question: string;
+  /** The answer, rendered inside the disclosure's panel. */
+  answer: string;
+}
+
+/**
+ * One platform-capability deep link in the resources page's "product
+ * resources" section (`/resources#product`) — a live reference index into
+ * `/platform#<id>`, deliberately NOT a {@link ResourceItem}: there is no MDX
+ * file this will ever become, only a pointer at a module that already has
+ * its own full page. `id` doubles as the anchor slug and matches the
+ * corresponding `CapabilityModule["id"]` in `PlatformContent["groups"]`, and
+ * `accent` matches that module's own group accent — both copied rather than
+ * cross-imported, per this content layer's per-page independence (each
+ * page's content file is self-contained; nothing here reaches into
+ * `platform.ts` at runtime).
+ */
+export interface ProductReadingEntry {
+  /** Anchor slug into the platform page (`/platform#<id>`). */
+  id: string;
+  /** Module display name (e.g. "Members"). */
+  name: string;
+  /** One-sentence description of what the module does — ported verbatim
+   *  from the legacy static site's own product-resources tile captions. */
+  description: string;
+  /** Product-world accent identity, matching the module's platform-page group. */
+  accent: AccentId;
+}
+
+/**
+ * Content for the resources page (`/resources`) — hero → guides → FAQ →
+ * product reference → articles → closing CTA. Ported from
+ * `backup/scripe-static/resources.html` + `js/lang-ar.js`; anchors
+ * (`#guides #faq #product #articles`) are preserved from the legacy page for
+ * deep-linking continuity. This is also the future home of the blog: see
+ * {@link ResourceItem}'s doc comment for the structure-ready contract the
+ * design spec §5.3 calls for, and {@link ProductReadingEntry}'s doc comment
+ * for why the product-reference section is deliberately excluded from that
+ * same contract.
+ */
+export interface ResourcesContent {
+  /** Page-level metadata strings. */
+  meta: {
+    /** Page title (the layout's `"%s · SCRIPE"` template wraps it). */
+    title: string;
+    /** Meta/OG description. */
+    description: string;
+    /** Breadcrumb label for the home crumb in structured data. */
+    breadcrumbHome: string;
+    /** Breadcrumb label for this page's own crumb in structured data. */
+    breadcrumbCurrent: string;
+  };
+  /** Typography-led hero/intro — same shape as `PlatformContent["hero"]`,
+   *  minus a secondary CTA (the legacy page carries only one). */
+  hero: {
+    /** Small section marker label. */
+    label: string;
+    /** Page heading. */
+    title: string;
+    /** Supporting sentence. */
+    subtitle: string;
+    /** Primary CTA label (talk to sales). */
+    primaryCta: string;
+  };
+  /** Guides section (`#guides`) — how organizations set SCRIPE up. */
+  guides: {
+    /** Small section marker label. */
+    label: string;
+    /** Section heading. */
+    title: string;
+    /** Supporting sentence. */
+    subtitle: string;
+    /** The guide cards, in display order. Every item's `kind` is `"guide"`. */
+    items: ResourceItem[];
+    /** Honesty note under the grid (the legacy page's own "guides are in
+     *  preparation" caption). */
+    note: string;
+  };
+  /** FAQ section (`#faq`) — the questions operations leaders ask before
+   *  talking to sales. */
+  faq: {
+    /** Small section marker label. */
+    label: string;
+    /** Section heading. */
+    title: string;
+    /** The question/answer pairs, in display order. */
+    items: ResourceFaqItem[];
+  };
+  /** Product reference section (`#product`) — one deep link per platform
+   *  capability module. */
+  productReading: {
+    /** Small section marker label. */
+    label: string;
+    /** Section heading. */
+    title: string;
+    /** Supporting sentence. */
+    subtitle: string;
+    /** The module deep links, in display order (matches the legacy page's
+     *  own thirteen-tile order). */
+    items: ProductReadingEntry[];
+  };
+  /** Articles section (`#articles`) — published as they are written. */
+  articles: {
+    /** Small section marker label. */
+    label: string;
+    /** Section heading. */
+    title: string;
+    /** Supporting sentence. */
+    subtitle: string;
+    /** The article cards, in display order. Every item's `kind` is `"article"`. */
+    items: ResourceItem[];
+  };
+  /** Closing conversion band. */
+  cta: {
+    /** Section heading. */
+    title: string;
+    /** Supporting sentence. */
+    subtitle: string;
+    /** Primary CTA label (book a demo). */
+    primaryCta: string;
+    /** Secondary CTA label (talk to sales). */
+    secondaryCta: string;
+    /** Small honesty note under the CTAs. */
+    note: string;
+  };
+}
