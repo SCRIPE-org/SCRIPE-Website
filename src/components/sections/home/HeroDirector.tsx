@@ -3,13 +3,17 @@
 /**
  * HeroDirector — arms and drives the Camera-Hero's scroll-scrubbed flight.
  *
- * The hero's only client leaf. Renders nothing; on mount it calls
- * `loadGsap()` (the sanctioned lazy loader — GSAP + ScrollTrigger never
- * enter the initial route chunk) and, only if that resolves:
+ * The hero's motion client leaf (the other, `HeroArmedPlate.tsx`, only
+ * conditionally mounts an `<Image>` — see its own header). Renders nothing;
+ * on mount it calls `loadGsap()` (the sanctioned lazy loader — GSAP +
+ * ScrollTrigger never enter the initial route chunk) and, only if that
+ * resolves:
  *
  * 1. sets `data-armed` on the hero root, flipping the CSS into cinematic
  *    mode (tall scroll track, sticky stage, plate/beat/rail/scanline layers
- *    visible, flight-plan strip hidden — see `src/styles/home.css`);
+ *    visible, flight-plan strip hidden — see `src/styles/home.css`), and
+ *    flips `src/lib/hero-armed-store.ts`'s flag so the three armed-only
+ *    plate images (mounted by `HeroArmedPlate`) actually enter the DOM;
  * 2. builds one scrubbed timeline over the whole track that flies the
  *    background rig, midground and foreground plates each along their own
  *    depth-scaled copy of {@link CAMERA_PATH} (transform-only: scale +
@@ -116,6 +120,7 @@
  */
 import { useEffect } from "react";
 import { loadGsap } from "@/lib/gsap";
+import { setHeroArmed } from "@/lib/hero-armed-store";
 
 /**
  * One camera keyframe: `at` is timeline progress (0–1 over the whole scroll
@@ -193,6 +198,13 @@ export function HeroDirector() {
       const { gsap } = mods;
 
       root.setAttribute("data-armed", "");
+      // Mounts the midground/finale/foreground `<Image>`s inside their
+      // always-present wrapper divs (see `HeroArmedPlate.tsx` +
+      // `src/lib/hero-armed-store.ts`) — the wrapper's CSS `display: none`
+      // alone does not stop the browser from fetching an unmounted image's
+      // resource, so this store gate is what actually stops the download
+      // under reduced-motion/no-JS, not the CSS.
+      setHeroArmed(true);
 
       const ticks = Array.from(root.querySelectorAll<HTMLElement>("[data-hero-tick]"));
       let activeTick = -1;
@@ -325,6 +337,7 @@ export function HeroDirector() {
       cleanup = () => {
         ctx.revert();
         root.removeAttribute("data-armed");
+        setHeroArmed(false);
         ticks.forEach((tick) => tick.removeAttribute("data-active"));
       };
     })();

@@ -30,7 +30,6 @@ export const pricingContent: PricingContent = {
     subtitle:
       "ثلاث خطط، تُفوتر شهريًا أو سنويًا. كل خطة تُؤكَّد مع فريق التشغيل لديك قبل التوقيع — والأرقام أدناه استرشادية.",
     primaryCta: "احجز عرضًا توضيحيًا",
-    secondaryCta: "ابدأ نسخة تجريبية",
   },
   billing: {
     ariaLabel: "فترة الفوترة",
@@ -57,7 +56,7 @@ export const pricingContent: PricingContent = {
         "المدفوعات والفواتير",
         "تقارير قياسية",
       ],
-      cta: { label: "ابدأ نسخة تجريبية", href: "/contact" },
+      cta: { label: "احجز عرضًا توضيحيًا", href: "/contact" },
     },
     {
       id: "growth",
@@ -239,7 +238,6 @@ export const pricingContent: PricingContent = {
     title: "احصل على خطة مفصّلة على تشغيلك.",
     subtitle: "أحضر عدد فروعك ورياضاتك وحجم موسمك — وسنؤكد الخطة قبل توقيع أي شيء.",
     primaryCta: "احجز عرضًا توضيحيًا",
-    secondaryCta: "ابدأ نسخة تجريبية",
     note: "تهيئة بمرافقة فريق المبيعات · التشغيل عادةً خلال فترة توقف موسم واحدة.",
   },
 };

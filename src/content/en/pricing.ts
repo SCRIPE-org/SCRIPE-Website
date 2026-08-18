@@ -61,7 +61,6 @@ export const pricingContent: PricingContent = {
     subtitle:
       "Three plans, billed monthly or yearly. Every plan is confirmed with your operations team before signing — indicative figures below.",
     primaryCta: "Book a Demo",
-    secondaryCta: "Start Free Trial",
   },
   billing: {
     ariaLabel: "Billing period",
@@ -88,7 +87,7 @@ export const pricingContent: PricingContent = {
         "Payments and invoices",
         "Standard reports",
       ],
-      cta: { label: "Start Free Trial", href: "/contact" },
+      cta: { label: "Book a Demo", href: "/contact" },
     },
     {
       id: "growth",
@@ -272,7 +271,6 @@ export const pricingContent: PricingContent = {
     title: "Get a plan scoped to your operation.",
     subtitle: "Bring your branch count, sports and season volume — we will confirm the plan before anything is signed.",
     primaryCta: "Book a Demo",
-    secondaryCta: "Start Free Trial",
     note: "Sales-assisted onboarding · typically live within one season break.",
   },
 };

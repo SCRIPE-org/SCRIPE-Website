@@ -48,14 +48,19 @@ export function ClosingCta({ content }: ClosingCtaProps) {
               <Button href="/contact" size="lg">
                 {content.primaryCta}
               </Button>
-              <Button
-                href="/contact"
-                size="lg"
-                variant="outline"
-                className="border-white/30 text-white hover:bg-white/10 active:bg-white/10"
-              >
-                {content.secondaryCta}
-              </Button>
+              {/* Optional: no self-service "start free trial" secondary
+                  action anymore (see `PricingContent["cta"]`'s doc comment) —
+                  a single primary CTA is a valid, complete band. */}
+              {content.secondaryCta ? (
+                <Button
+                  href="/contact"
+                  size="lg"
+                  variant="outline"
+                  className="border-white/30 text-white hover:bg-white/10 active:bg-white/10"
+                >
+                  {content.secondaryCta}
+                </Button>
+              ) : null}
             </div>
 
             <p className="text-[length:var(--fs-meta)] text-white/70">{content.note}</p>

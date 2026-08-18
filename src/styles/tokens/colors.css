@@ -73,7 +73,14 @@
   --text-primary: #101214;
   --text-secondary: #54585c;
   --text-tertiary: #676a6f;
-  --text-muted: #797d82;
+  /* WCAG AA (4.5:1) floor for normal-weight running text, checked against
+     BOTH light surfaces this token sits on: the tinted page (#f4f5f1) and
+     plain white cards. #797d82 (the pre-audit value) only cleared 4.14:1 on
+     white and 3.84:1 on page — a real AA failure. #6c7075 is the lightest
+     gray that still clears 4.5:1 on the tighter of the two surfaces (4.55:1
+     on page, 4.99:1 on white). Dark theme's --text-muted (var(--fog)) is
+     unaffected — it already has ample headroom on the near-black page. */
+  --text-muted: #6c7075;
   /* line/mark role: brand lime dimmed for daylight — hairlines, dots, rail
      fills, borders, and small fills that carry ink on top */
   --accent: var(--lime-600);

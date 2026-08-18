@@ -45,9 +45,14 @@ export function PricingHero({ content }: PricingHeroProps) {
           <Button href="/contact" size="lg">
             {content.primaryCta}
           </Button>
-          <Button href="/contact" size="lg" variant="outline">
-            {content.secondaryCta}
-          </Button>
+          {/* Optional: no self-service "start free trial" secondary action
+              anymore (see `PricingContent["hero"]`'s doc comment) — a single
+              primary CTA is a valid, complete hero. */}
+          {content.secondaryCta ? (
+            <Button href="/contact" size="lg" variant="outline">
+              {content.secondaryCta}
+            </Button>
+          ) : null}
         </div>
       </Reveal>
     </Section>

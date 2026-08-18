@@ -278,8 +278,11 @@ export interface HomeContent {
     subtitle: string;
     /** Primary CTA label (book a demo). */
     primaryCta: string;
-    /** Secondary CTA label (start free trial). */
-    secondaryCta: string;
+    /** Optional secondary CTA label. Omitted sitewide since the "start free
+     *  trial" removal (there is no self-service trial — see the pricing
+     *  FAQ) — kept optional rather than deleted in case a real secondary
+     *  conversion action (not a trial) is added later. */
+    secondaryCta?: string;
     /** Pricing text-link label. */
     pricingLink: string;
     /** Small honesty note under the CTAs. */
@@ -884,8 +887,10 @@ export interface PricingContent {
     subtitle: string;
     /** Primary CTA label (book a demo). */
     primaryCta: string;
-    /** Secondary CTA label (start a free trial). */
-    secondaryCta: string;
+    /** Optional secondary CTA label. Omitted since the "start free trial"
+     *  removal — there is no self-service trial (see the FAQ's
+     *  `is-there-a-self-service-trial` answer). */
+    secondaryCta?: string;
   };
   /** Billing-cycle toggle copy, shared by every amount-priced plan card. */
   billing: {
@@ -942,8 +947,9 @@ export interface PricingContent {
     subtitle: string;
     /** Primary CTA label (book a demo). */
     primaryCta: string;
-    /** Secondary CTA label (start a free trial). */
-    secondaryCta: string;
+    /** Optional secondary CTA label. Omitted since the "start free trial"
+     *  removal — see `hero.secondaryCta`'s doc comment above. */
+    secondaryCta?: string;
     /** Small honesty note under the CTAs. */
     note: string;
   };

@@ -43,6 +43,27 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  /**
+   * `next dev` and `next build`/`next start` must never share one output
+   * directory. Next's own dev server already nests its per-process state a
+   * layer deeper (`{distDir}/dev/...`) than a production build, but both
+   * still read/write the SAME top-level `{distDir}/cache` (webpack/turbopack
+   * persistent cache, image-optimization cache) by default — a `next build`
+   * running while a stray `next dev` is still alive on the same checkout
+   * corrupts that shared cache and can leave a production `.next` missing
+   * its manifests (observed: `.next/server` + `.next/cache` present with no
+   * `BUILD_ID`/`static`, from exactly this collision). Giving dev its own
+   * top-level directory removes the shared cache entirely; `next start`
+   * always runs with `NODE_ENV=production` (never "development"), so it
+   * reliably resolves back to the real build's `.next`.
+   */
+  distDir: process.env.NODE_ENV === "development" ? ".next-dev" : ".next",
+  images: {
+    // AVIF first (best compression), WebP fallback for browsers/paths that
+    // skip AVIF — Next negotiates via the request's `Accept` header and
+    // serves the original format for anything that accepts neither.
+    formats: ["image/avif", "image/webp"],
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

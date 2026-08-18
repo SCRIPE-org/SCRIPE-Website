@@ -255,7 +255,6 @@ export const homeContent: HomeContent = {
     subtitle:
       "Bring your teams, members, venues, coaches and operations together in one powerful platform.",
     primaryCta: "Book a Demo",
-    secondaryCta: "Start Free Trial",
     pricingLink: "See pricing",
     note: "Sales-assisted onboarding · typically live within one season break.",
   },

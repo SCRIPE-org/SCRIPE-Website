@@ -10,11 +10,17 @@
  *   chapters as a flowing "flight plan" strip below the stage. This is the
  *   no-JS, reduced-motion and pre-hydration experience — a single flattened
  *   image layer, full content, no motion/parallax dependencies.
- * - Armed mode: `HeroDirector` (the only client leaf) arms the cinematic
- *   flight after `loadGsap()` resolves — the section becomes a tall scroll
- *   track, chapters become scrubbed camera beats, the mid/foreground plates
- *   and the finale plate reveal, and the flight-plan strip hides because
- *   the same information now plays as the flight itself.
+ * - Armed mode: `HeroDirector` arms the cinematic flight after `loadGsap()`
+ *   resolves — the section becomes a tall scroll track, chapters become
+ *   scrubbed camera beats, and the flight-plan strip hides because the same
+ *   information now plays as the flight itself. The mid/foreground plates
+ *   and the finale plate reveal too, but are rendered by `HeroArmedPlate`
+ *   (this file's other client leaf), which only MOUNTS its `<Image>` once
+ *   armed — a plain CSS `display: none` on their wrapper doesn't stop the
+ *   browser fetching an unmounted `<img>`'s resource, so those three plates
+ *   would otherwise download on every load, including no-JS/reduced-motion
+ *   sessions that never arm. See `HeroArmedPlate.tsx` + `src/lib/
+ *   hero-armed-store.ts` for the conditional-mount contract.
  *
  * HEADLINE SYSTEM (Task E2): the `<h1>` is a two-line value-proposition
  * statement, not the wordmark (the wordmark lives in the nav only). Line 1
@@ -74,6 +80,7 @@
 import Image from "next/image";
 import type { HomeContent } from "@/content/types";
 import { Button } from "@/components/ui/Button";
+import { HeroArmedPlate } from "./HeroArmedPlate";
 import { HeroDirector } from "./HeroDirector";
 
 /** Two-digit beat stamp (01-based) for a chapter index. */
@@ -122,16 +129,21 @@ export function Hero({ content }: HeroProps) {
 
         {/* Parallax mid layer (armed-only): stadium + pool cutout, its own
             depth ×DEPTH_MID tween (HeroDirector's `flyPath`). Sibling of
-            `.hero-rig`, not nested inside it — see the file header. */}
+            `.hero-rig`, not nested inside it — see the file header. The
+            wrapper div (GSAP's tween target, `[data-hero-plate-mid]`) always
+            renders; `HeroArmedPlate` only MOUNTS the `<Image>` itself once
+            armed, so this plate never downloads under reduced-motion/no-JS —
+            see `HeroArmedPlate.tsx`'s header. */}
         <div className="hero-plate-mid" data-hero-plate-mid aria-hidden="true">
-          <Image src="/media/hero/plate-midground.png" alt="" fill sizes="100vw" className="object-cover" />
+          <HeroArmedPlate src="/media/hero/plate-midground.png" />
         </div>
 
         {/* Finale plate (armed-only): the nadir "operational picture" shot,
             crossfades in via opacity 0.76→0.86 as the destination beat's
-            background. Always below the type layer. */}
+            background. Always below the type layer. Conditional-mount — see
+            the midground plate's comment above. */}
         <div className="hero-plate-finale" data-hero-plate-finale aria-hidden="true">
-          <Image src="/media/hero/plate-finale.png" alt="" fill sizes="100vw" className="object-cover" />
+          <HeroArmedPlate src="/media/hero/plate-finale.png" />
         </div>
 
         {/* Night grade + brand atmosphere. Order: cooling tint < legibility
@@ -236,9 +248,10 @@ export function Hero({ content }: HeroProps) {
             canopy corners on a transparent center, its own depth ×DEPTH_NEAR
             tween. Topmost layer — sits in front of everything, including the
             type layer, like a lens element on the rig. Purely decorative and
-            inert: aria-hidden, no pointer events, never blocks interaction. */}
+            inert: aria-hidden, no pointer events, never blocks interaction.
+            Conditional-mount — see the midground plate's comment above. */}
         <div className="hero-plate-fg" data-hero-plate-fg aria-hidden="true">
-          <Image src="/media/hero/plate-foreground.png" alt="" fill sizes="100vw" className="object-cover" />
+          <HeroArmedPlate src="/media/hero/plate-foreground.png" />
         </div>
       </div>
 
