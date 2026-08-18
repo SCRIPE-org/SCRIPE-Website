@@ -518,6 +518,16 @@ export async function submitLead(prev: unknown, formData: FormData): Promise<{ s
 - [ ] **Step 2: Build output check: every route × both locales prerendered as static (`○`/`●` markers); sitemap contains 12 routes × 2 locales with alternates; robots gated by `VERCEL_ENV`; canonical/OG URLs use `SITE_URL` — zero `__SITE_URL__`-style placeholders anywhere.**
 - [ ] **Step 3: Commit fixes** (`fix: seo verification findings`).
 
+### Task 25.5: Hero plates integration (added 2026-08-18 — user-delivered assets)
+
+**Files:** `src/components/sections/home/Hero.tsx`, `HeroDirector.tsx`, `src/styles/home.css`, `public/media/hero/` (copies of `assets/hero-plates/*`)
+
+- [ ] **Step 1:** Copy the 4 delivered plates from `assets/hero-plates/` into `public/media/hero/` with stable kebab names (`plate-background.png`, `plate-midground.png`, `plate-foreground.png`, `plate-finale.png`); keep `assets/hero-plates/` as the drop-in source for future higher-res replacements (same names re-copy).
+- [ ] **Step 2:** Per the Hero integration contract (Task 13 report §8): background plate replaces `campus.jpg` as the rig's base `next/image` (priority); midground cutout + bokeh foreground stack as sibling layers inside `.hero-rig` with GSAP depth multipliers (mid ×1.15, near ×1.4); finale plate crossfades in across scrub 0.76→0.86.
+- [ ] **Step 3:** Reduced-motion/no-JS static frame recomposed with the new background plate (single flattened layer, no parallax). Foreground layer `aria-hidden` + `pointer-events: none`.
+- [ ] **Step 4:** Known limitation documented: plates are 1915×821 (below 3440×1476 target) — cap the camera scale if softness is visible in reasoning; note the drop-in upgrade path.
+- [ ] **Step 5:** Gate (`npm test && typecheck && lint && build`, both locales static) + commit `feat: integrate cinematic hero plates`.
+
 ### Task 26: OG/AR visual QA + walkthrough doc
 
 - [ ] **Step 1: Render OG images at build (hit route files in build output); inspect AR OG rendering (Satori RTL is best-effort — adjust template if glyph order/alignment wrong).**
