@@ -27,7 +27,7 @@ export async function Footer() {
         <div className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1fr]">
           <div className="col-span-2 flex flex-col gap-4 sm:col-span-3 lg:col-span-1">
             <Link href="/" aria-label={t("nav.home")} className="inline-flex w-fit items-center gap-2">
-              <BrandMark size={22} className="text-text-primary" />
+              <BrandMark size={22} alt={t("common.brand")} />
               <span className="font-display text-text-primary text-[1rem] font-semibold tracking-[0.08em]">
                 <bdi>{t("common.brand")}</bdi>
               </span>

@@ -64,13 +64,15 @@ export interface BreadcrumbJsonLd {
  *
  * @param siteUrl - The site's canonical origin (e.g. `https://www.scripe.org`),
  *   no trailing slash. Env-driven so this works across environments.
- * @returns A plain `Organization` object. `logo` points at `/brand/logo.png`
- *   under `siteUrl` — a real 500x500 PNG shipped at `public/brand/logo.png`
- *   (copied from `backup/scripe-static/assets/images/scripe-logo.png`, the
- *   same source mark as `public/brand/scripe-logo-{dark,light}.svg`, just a
- *   raster export — Google's structured-data logo guidance recommends a
- *   raster format over SVG). `sameAs` is intentionally empty: no fabricated
- *   social profile links.
+ * @returns A plain `Organization` object. `logo` points at
+ *   `/brand/mark/scripe-logo-512.png` under `siteUrl` — a real, square
+ *   512×512 transparent PNG (Google's structured-data logo guidance asks
+ *   for a raster format, square, ≥112×112) shipped at
+ *   `public/brand/mark/scripe-logo-512.png`. Task E6 (3D Brand System
+ *   Everywhere) generated it via `scripts/build-brand-assets.mjs` from the
+ *   owner's real `SCRIPE_3D_MARK_TRANSPARENT.png` original — replacing the
+ *   legacy flat `/brand/logo.png` export this field used to point at.
+ *   `sameAs` is intentionally empty: no fabricated social profile links.
  */
 export function buildOrganization(siteUrl: string): OrganizationJsonLd {
   return {
@@ -78,7 +80,7 @@ export function buildOrganization(siteUrl: string): OrganizationJsonLd {
     "@type": "Organization",
     name: "SCRIPE",
     url: siteUrl,
-    logo: `${siteUrl}/brand/logo.png`,
+    logo: `${siteUrl}/brand/mark/scripe-logo-512.png`,
     sameAs: [],
   };
 }

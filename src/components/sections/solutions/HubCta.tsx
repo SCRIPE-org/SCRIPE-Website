@@ -34,7 +34,7 @@ export function HubCta({ content }: HubCtaProps) {
           <span className="atmo-cta-grain" aria-hidden="true" />
 
           <div className="relative mx-auto flex max-w-[720px] flex-col items-center gap-6">
-            <BrandMark size={40} className="text-white" />
+            <BrandMark size={40} />
             <h2 className="atmo-title font-display text-[length:var(--fs-display)] text-balance text-white">
               {content.title}
             </h2>

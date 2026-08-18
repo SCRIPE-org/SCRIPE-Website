@@ -48,7 +48,7 @@ export async function NavBar() {
 
       <div className="mx-auto flex h-[72px] max-w-[1360px] items-center gap-6 px-[clamp(var(--space-5),4vw,var(--space-9))]">
         <Link href="/" aria-label={t("nav.home")} className="inline-flex shrink-0 items-center gap-2.5">
-          <BrandMark size={26} className="text-text-primary" />
+          <BrandMark size={26} alt={t("common.brand")} priority />
           <span className="font-display text-text-primary text-[1.0625rem] font-semibold tracking-[0.08em]">
             {t("common.brand")}
           </span>

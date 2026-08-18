@@ -43,7 +43,7 @@ export function ClosingCta({ content }: ClosingCtaProps) {
           <span className="cta-corners" aria-hidden="true" />
 
           <div className="relative mx-auto flex max-w-[780px] flex-col items-center gap-6">
-            <BrandMark size={40} className="text-white" />
+            <BrandMark size={40} />
             <h2 className="font-display text-[length:var(--fs-display)] leading-[1.04] font-semibold text-balance text-white [font-variation-settings:'wdth'_120] [&:lang(ar)]:[font-variation-settings:normal] [&:lang(ar)]:leading-[1.3]">
               {content.title}
             </h2>

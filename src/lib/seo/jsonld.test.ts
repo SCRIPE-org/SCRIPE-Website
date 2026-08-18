@@ -24,7 +24,7 @@ test("buildOrganization derives @type, url, and logo from siteUrl", () => {
   assert.equal(org["@type"], "Organization");
   assert.equal(org.name, "SCRIPE");
   assert.equal(org.url, SITE_URL);
-  assert.equal(org.logo, `${SITE_URL}/brand/logo.png`);
+  assert.equal(org.logo, `${SITE_URL}/brand/mark/scripe-logo-512.png`);
   assert.deepEqual(org.sameAs, []);
 });
 
