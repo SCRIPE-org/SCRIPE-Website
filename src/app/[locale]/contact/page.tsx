@@ -13,11 +13,12 @@
  * bot defenses, and the exact split between this content pipeline and
  * `messages/*.json`'s `forms` namespace).
  *
- * Until Task 22 wires the real backend lead endpoint (design spec §5.2),
- * `ContactForm` submits through a local stub
- * (`src/lib/leads/submit-lead-stub.ts`) that always resolves the honest
- * "not yet connected" state — see that file's header for the exact contract
- * the real Server Action must keep when it replaces the stub.
+ * `ContactForm` submits through the real Server Action
+ * (`src/lib/leads/submit-lead.ts`), which posts to the backend lead endpoint
+ * (design spec §5.2) at `process.env.LEADS_ENDPOINT` — until that env var is
+ * set (see `.env.example`), every validated submission still resolves the
+ * honest "not yet connected" state rather than a fabricated success. See
+ * that file's header for the full delivery/spam/logging contract.
  */
 import type { Metadata } from "next";
 import { hasLocale } from "next-intl";

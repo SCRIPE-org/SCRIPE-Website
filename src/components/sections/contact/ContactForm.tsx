@@ -16,12 +16,15 @@
  * ── Field-label / message-vocabulary split ────────────────────────────────
  * `forms.name`/`email`/`organization`/`phone`/`type`/`message` are the six
  * field labels. `forms.required`/`emailInvalid`/`tooLong` are the three
- * validation messages every field reuses — Task 22's server-side validation
- * is expected to return these SAME three messages in
- * `LeadActionResult["fieldErrors"]`, so a client-caught error and a
- * server-caught error for the same field read identically.
- * `forms.sent`/`sentBody`/`notConnected`/`sendAnother`/`sending`/`send` are
- * the submit/result-state vocabulary.
+ * validation messages every field reuses. `submit-lead.ts`'s server-side
+ * `validateLead` returns these SAME three strings as `fieldErrors` values —
+ * but as bare message KEYS (`"required"`, not the translated sentence),
+ * never translated text and never user input (see that file's own doc
+ * comment). `translateServerFieldError` below is what turns a server key
+ * back into displayed copy via `t("forms." + key)`, so a client-caught error
+ * and a server-caught error for the same field render identically either
+ * way. `forms.sent`/`sentBody`/`notConnected`/`sendAnother`/`sending`/`send`
+ * are the submit/result-state vocabulary.
  *
  * ── Organization-type option source (binding decision) ────────────────────
  * The five `type` options are NOT page content. Four
@@ -45,11 +48,12 @@
  * hidden field at first render, filled with `Date.now()` in a `useEffect`
  * ("on mount", per the task brief) rather than during render, so server and
  * pre-hydration client markup stay byte-identical — no hydration mismatch.
- * The real action (Task 22) can compare it against its own request time to
- * reject implausibly instant submissions. Neither field is validated
- * client-side; both are read only by the server action this form eventually
- * calls — see `src/lib/leads/submit-lead-stub.ts`'s file header for the
- * exact contract that action must keep.
+ * `submitLead` (`src/lib/leads/submit-lead.ts`) compares it against its own
+ * request time to reject implausibly instant submissions. Neither field is
+ * validated client-side; both are read only by the server action — see that
+ * file's header for the exact contract, including why a spam verdict there
+ * resolves to the SAME `"sent"` status a real delivery does (never a
+ * distinct, bot-legible signal).
  *
  * ── Client-side pre-validation vs. native HTML validation ──────────────────
  * Every required/limited input keeps its real `required`/`maxLength`/
@@ -68,8 +72,8 @@
  * organization, an email-shape check, and the five max-lengths.
  *
  * ── Focus management ───────────────────────────────────────────────────────
- * On ANY invalid submission — client-side (immediate) or server-side (once
- * Task 22 returns `status: "invalid"`) — the first invalid field in field
+ * On ANY invalid submission — client-side (immediate) or server-side (the
+ * action returns `status: "invalid"`) — the first invalid field in field
  * order is focused, so a keyboard/screen-reader user lands exactly where the
  * fix is needed instead of having to hunt for it. On a resolved submission
  * (any of `sent`/`not-connected`/`spam`), the confirmation panel's own
@@ -84,7 +88,7 @@ import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/Button";
 import { cx } from "@/components/ui/cx";
 import { Field } from "@/components/ui/Field";
-import { submitLead, type LeadActionResult } from "@/lib/leads/submit-lead-stub";
+import { submitLead, type LeadActionResult } from "@/lib/leads/submit-lead";
 
 export interface ContactFormProps {
   /** The form card's narrative copy slice of the contact page content. */
@@ -166,6 +170,35 @@ function validateField(field: ValidatedField, value: string, t: (key: string) =>
   return undefined;
 }
 
+/** The only `fieldErrors` values `submitLead` (`src/lib/leads/validate.ts`)
+ *  can ever produce — the closed set {@link translateServerFieldError} is
+ *  allowed to translate. Checked explicitly rather than translating whatever
+ *  key arrives: `state.fieldErrors` is typed `Record<string, string>` (the
+ *  server action's return type, not a literal union), so this is defense in
+ *  depth against a future server-side change emitting a key with no matching
+ *  `forms.*` message — `useTranslations` throws on an unknown key, which
+ *  would otherwise crash this whole form on the exact "something went wrong
+ *  server-side" path a visitor is least equipped to recover from. */
+const KNOWN_SERVER_FIELD_ERROR_KEYS: ReadonlySet<string> = new Set(["required", "emailInvalid", "tooLong"]);
+
+/**
+ * Translates one server-reported `fieldErrors` entry — a bare `forms.*`
+ * message KEY (`"required"` / `"emailInvalid"` / `"tooLong"`), never
+ * translated text and never user input, per `submit-lead.ts`'s contract —
+ * into the same displayed copy `validateField`'s client-side check would
+ * show for an equivalent local failure.
+ *
+ * @param key - The raw `fieldErrors[field]` value from the server action's
+ *   result, or `undefined` if that field has no server-reported error.
+ * @param t - The root translator (`useTranslations()`, no namespace).
+ * @returns The translated message, or `undefined` if `key` is absent or not
+ *   one of the known message keys (see {@link KNOWN_SERVER_FIELD_ERROR_KEYS}).
+ */
+function translateServerFieldError(key: string | undefined, t: (key: string) => string): string | undefined {
+  if (!key || !KNOWN_SERVER_FIELD_ERROR_KEYS.has(key)) return undefined;
+  return t(`forms.${key}`);
+}
+
 /**
  * Renders the demo-request form card: eyebrow/intro, the honeypot and
  * time-trap fields, the six visible fields, the submit button/footnote, and
@@ -218,8 +251,8 @@ export function ContactForm({ content }: ContactFormProps) {
     setStartedAt(String(Date.now()));
   }, [formInstance]);
 
-  // Server-side "invalid" (Task 22, once wired): focus the first field the
-  // server itself rejected, the same way a client-side failure does below.
+  // Server-side "invalid": focus the first field the server itself
+  // rejected, the same way a client-side failure does below.
   useEffect(() => {
     if (state?.status !== "invalid" || !state.fieldErrors) return;
     const fieldErrors = state.fieldErrors;
@@ -229,7 +262,16 @@ export function ContactForm({ content }: ContactFormProps) {
 
   const showConfirmation =
     !dismissed && (state?.status === "sent" || state?.status === "not-connected" || state?.status === "spam");
-  const serverErrors = state?.status === "invalid" ? (state.fieldErrors ?? {}) : {};
+  const rawServerFieldErrors = state?.status === "invalid" ? (state.fieldErrors ?? {}) : {};
+  // Translate each server-reported message KEY into displayed copy — see
+  // `translateServerFieldError`'s doc comment and this file's header
+  // ("Field-label / message-vocabulary split") for why `fieldErrors` values
+  // are keys, never text, and never user input.
+  const serverErrors: Partial<Record<ValidatedField, string>> = {};
+  for (const field of VALIDATED_FIELDS) {
+    const translated = translateServerFieldError(rawServerFieldErrors[field], t);
+    if (translated) serverErrors[field] = translated;
+  }
 
   useEffect(() => {
     if (showConfirmation) panelHeadingRef.current?.focus();

@@ -1259,8 +1259,8 @@ export interface ContactChannel {
  * notes. Ported from `backup/scripe-static/contact.html` + `js/contact.js`
  * (field limits, validation copy and the "not yet connected" confirmation
  * wording are that legacy implementation's own, carried forward exactly —
- * see `src/lib/leads/submit-lead-stub.ts`'s file header for the live-wiring
- * contract Task 22 fills in).
+ * see `src/lib/leads/submit-lead.ts`'s file header for the live Server
+ * Action that now delivers submissions).
  *
  * Content-layer split (binding for `ContactForm.tsx`): this interface holds
  * only page-specific narrative copy (hero, the form card's own intro/
