@@ -13,9 +13,9 @@
  */
 import type { SolutionsHubContent } from "@/content/types";
 import { Reveal } from "@/components/motion/Reveal";
-import { Card, type CardAccent } from "@/components/ui/Card";
+import { Card } from "@/components/ui/Card";
 import { Section } from "@/components/ui/Section";
-import { ACCENT_VAR } from "./accents";
+import { ACCENT_VAR, toCardAccent } from "./accents";
 import { ArrowLink } from "./ArrowLink";
 import { ShapeGlyph } from "./ShapeGlyph";
 
@@ -49,7 +49,7 @@ export function HubGrid({ content }: HubGridProps) {
         {content.items.map((item) => (
           <Reveal key={item.href} y={20}>
             <Card
-              accent={item.accent as CardAccent}
+              accent={toCardAccent(item.accent)}
               className="sol-grid-card flex h-full flex-col gap-5"
               style={{ "--sol-accent": ACCENT_VAR[item.accent] } as React.CSSProperties}
             >

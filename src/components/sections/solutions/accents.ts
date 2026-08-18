@@ -10,6 +10,7 @@
  * section ever hardcodes a hex value.
  */
 import type { AccentId } from "@/content/types";
+import type { CardAccent } from "@/components/ui/Card";
 
 /** Background utility for small accent marker dots. */
 export const ACCENT_DOT_CLASS: Record<AccentId, string> = {
@@ -29,15 +30,6 @@ export const ACCENT_TEXT_CLASS: Record<AccentId, string> = {
   lime: "text-accent-text",
 };
 
-/** Border utility for accent-colored rules/edges. */
-export const ACCENT_BORDER_CLASS: Record<AccentId, string> = {
-  academy: "border-accent-academy",
-  venue: "border-accent-venue",
-  fi: "border-accent-fi",
-  club: "border-accent-club",
-  lime: "border-accent",
-};
-
 /**
  * Inline CSS-variable value for `--sol-accent`, the hover-wash/underline
  * color a few solution-template elements read (see `src/styles/solutions.css`).
@@ -49,3 +41,27 @@ export const ACCENT_VAR: Record<AccentId, string> = {
   club: "var(--accent-club)",
   lime: "var(--accent)",
 };
+
+/**
+ * Narrows the five-value `AccentId` down to `Card`'s four-value
+ * `CardAccent` for `HubGrid`/`OtherSolutions`'s cards. `"lime"` — the one
+ * member `AccentId` carries that `CardAccent` doesn't — is the brand accent
+ * itself, never a product-world identity, and no solutions-hub card
+ * (`src/content/{en,ar}/solutions.ts`) ever assigns it; an exhaustive switch
+ * narrows type-safely instead of an unchecked `as CardAccent` cast that
+ * would silently accept a `"lime"` value `Card` has no border class for.
+ *
+ * @param accent - The solution card's accent identity.
+ * @returns The equivalent `CardAccent`.
+ */
+export function toCardAccent(accent: AccentId): CardAccent {
+  switch (accent) {
+    case "academy":
+    case "venue":
+    case "fi":
+    case "club":
+      return accent;
+    case "lime":
+      return "club";
+  }
+}

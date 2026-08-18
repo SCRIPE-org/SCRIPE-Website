@@ -13,9 +13,12 @@
    can collide with `home.css`/`platform.css` during a client-side
    navigation between areas. Shared choreography (the `.rv` reveal system)
    stays in `src/styles/motion-utilities.css`; tokens stay in
-   `src/styles/tokens/`; the direction-semantic `.rtl-flip` arrow-flip rule
-   lives in `src/styles/home.css` §9 and is reused as-is (one small rule,
-   not worth a duplicate definition here).
+   `src/styles/tokens/`. The direction-semantic `.rtl-flip` arrow-flip rule
+   is defined below (§1a) rather than imported from `home.css` §9 — these are
+   plain global stylesheets loaded per-route, not CSS modules, and `home.css`
+   is only ever loaded on the home route, so a solutions-route navigation can
+   never rely on its chunk being present (same reasoning `resources.css` §2
+   gives for keeping its own copy).
    ============================================================================ */
 
 /* ---------------------------------------------------------------------------
@@ -50,6 +53,16 @@
   block-size: 55%;
   background: radial-gradient(52% 90% at 50% 0%, rgba(192, 255, 0, 0.14), transparent 72%);
   pointer-events: none;
+}
+
+/* ---------------------------------------------------------------------------
+   1a. Direction-semantic icon flip for `ArrowLink`'s trailing chevron — see
+   the file header for why this is its own copy rather than an import from
+   `home.css` §9.
+   --------------------------------------------------------------------------- */
+
+[dir="rtl"] .rtl-flip {
+  transform: scaleX(-1);
 }
 
 /* ---------------------------------------------------------------------------

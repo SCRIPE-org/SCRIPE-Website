@@ -15,8 +15,9 @@
  */
 import type { SolutionsHubCard } from "@/content/types";
 import { Reveal } from "@/components/motion/Reveal";
-import { Card, type CardAccent } from "@/components/ui/Card";
+import { Card } from "@/components/ui/Card";
 import { Section } from "@/components/ui/Section";
+import { toCardAccent } from "./accents";
 import { ArrowLink } from "./ArrowLink";
 import { ShapeGlyph } from "./ShapeGlyph";
 
@@ -48,7 +49,7 @@ export function OtherSolutions({ title, items }: OtherSolutionsProps) {
       >
         {items.map((item) => (
           <Reveal key={item.href} y={16}>
-            <Card accent={item.accent as CardAccent} className="flex h-full flex-col gap-4">
+            <Card accent={toCardAccent(item.accent)} className="flex h-full flex-col gap-4">
               <ShapeGlyph accent={item.accent} />
               <div className="flex-1">
                 <h3 className="font-display text-text-primary text-[length:var(--fs-h3)] font-semibold">

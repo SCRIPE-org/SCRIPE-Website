@@ -1,9 +1,10 @@
 /**
  * ArrowLink — the solutions area's shared deep-link affordance: a text link
  * with a direction-semantic arrow that flips in RTL (`.rtl-flip`, defined in
- * `src/styles/home.css` §9 and reused sitewide via that one class name — see
- * `src/styles/solutions.css`'s header for why this file does not redefine
- * it). A page-scoped copy of `src/components/sections/home/ArrowLink.tsx`'s
+ * `src/styles/solutions.css` §1a — its own copy, not an import from
+ * `home.css`, since that stylesheet only loads on the home route; see
+ * `src/styles/solutions.css`'s header for the full reasoning). A page-scoped
+ * copy of `src/components/sections/home/ArrowLink.tsx`'s
  * contract, per that file's own "self-contained page folder" convention. A
  * Server Component — renders the locale-aware `Link` from `@/i18n/navigation`.
  */

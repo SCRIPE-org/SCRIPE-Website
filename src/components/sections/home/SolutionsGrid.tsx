@@ -13,9 +13,9 @@
  */
 import type { AccentId, HomeContent } from "@/content/types";
 import { Reveal } from "@/components/motion/Reveal";
-import { Card, type CardAccent } from "@/components/ui/Card";
+import { Card } from "@/components/ui/Card";
 import { Section } from "@/components/ui/Section";
-import { ACCENT_TEXT_CLASS } from "./accents";
+import { ACCENT_TEXT_CLASS, toCardAccent } from "./accents";
 import { ArrowLink } from "./ArrowLink";
 
 /** Stroke glyph per solution shape, keyed by accent identity. */
@@ -104,7 +104,7 @@ export function SolutionsGrid({ content }: SolutionsGridProps) {
         {content.items.map((item) => (
           <Reveal key={item.href} y={20}>
             <Card
-              accent={item.accent as CardAccent}
+              accent={toCardAccent(item.accent)}
               className="flex h-full flex-col gap-5 transition-transform duration-[var(--motion-quick)] ease-[var(--ease-standard)] hover:-translate-y-0.5"
             >
               <SolutionGlyph accent={item.accent} />

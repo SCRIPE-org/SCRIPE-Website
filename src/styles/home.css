@@ -200,7 +200,7 @@
   font-size: var(--fs-cinema);
   line-height: 0.96;
   letter-spacing: 0.04em;
-  color: #ffffff;
+  color: var(--clean-white);
   text-shadow:
     0 2px 40px rgba(4, 9, 17, 0.55),
     0 1px 3px rgba(4, 9, 17, 0.35);
@@ -342,7 +342,7 @@
     "wght" 620;
   font-size: var(--fs-display);
   line-height: 1.04;
-  color: #ffffff;
+  color: var(--clean-white);
   text-wrap: balance;
   text-shadow:
     0 2px 40px rgba(4, 9, 17, 0.55),
@@ -407,7 +407,7 @@
 .hero-tick-label {
   font-size: var(--fs-meta);
   letter-spacing: 0.08em;
-  color: #ffffff;
+  color: var(--clean-white);
   opacity: 0.4;
   transition: opacity var(--motion-standard) var(--ease-standard);
   white-space: nowrap;

@@ -28,7 +28,9 @@ export async function Footer() {
           <div className="col-span-2 flex flex-col gap-4 sm:col-span-3 lg:col-span-1">
             <Link href="/" aria-label={t("nav.home")} className="inline-flex w-fit items-center gap-2">
               <BrandMark size={22} className="text-text-primary" />
-              <span className="font-display text-text-primary text-[1rem] font-semibold tracking-[0.08em]">{t("common.brand")}</span>
+              <span className="font-display text-text-primary text-[1rem] font-semibold tracking-[0.08em]">
+                <bdi>{t("common.brand")}</bdi>
+              </span>
             </Link>
             <p className="text-text-secondary max-w-[26ch] text-[length:var(--fs-small)]">{t("footer.tagline")}</p>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2">

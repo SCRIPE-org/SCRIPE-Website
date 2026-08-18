@@ -28,7 +28,7 @@ export interface DashboardStripProps {
  */
 export function DashboardStrip({ content }: DashboardStripProps) {
   return (
-    <Section id="dashboard" className="scroll-mt-24">
+    <Section id="dashboard" className="cap-anchor">
       <Reveal className="mx-auto max-w-[720px] text-center">
         <p className="text-accent-text flex items-center justify-center gap-3 text-[length:var(--fs-meta)] font-semibold tracking-[0.14em] uppercase [&:lang(ar)]:tracking-normal [&:lang(ar)]:normal-case">
           <span className="bg-accent inline-block h-px w-6" aria-hidden="true" />

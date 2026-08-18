@@ -114,7 +114,7 @@ export function Field({ label, error, hint, required, className, children }: Fie
         // warm/attention color that already flips correctly per theme, so
         // it's reused here rather than adding a new token file edit outside
         // this task's scope. Revisit once a dedicated status color lands.
-        <p id={errorId} className="text-[length:var(--fs-small)] text-accent-club">
+        <p id={errorId} role="alert" className="text-[length:var(--fs-small)] text-accent-club">
           {error}
         </p>
       )}

@@ -53,7 +53,7 @@ export function ProductFamily({ content }: ProductFamilyProps) {
                     className={`inline-block size-2 rounded-full ${ACCENT_DOT_CLASS[product.accent]}`}
                     aria-hidden="true"
                   />
-                  SCRIPE
+                  <bdi>SCRIPE</bdi>
                 </p>
                 <h3 className="font-display text-text-primary mt-2 text-[length:var(--fs-h1)] leading-[1.08] font-semibold [font-variation-settings:'wdth'_114]">
                   <bdi>{product.name}</bdi>
