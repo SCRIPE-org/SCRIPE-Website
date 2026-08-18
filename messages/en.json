@@ -60,6 +60,11 @@
     "organization": "Organization",
     "phone": "Phone",
     "type": "What kind of organization?",
-    "message": "Message"
+    "message": "Message",
+    "typeOther": "Other",
+    "typePlaceholder": "Select one",
+    "sending": "Sending…",
+    "sendAnother": "Submit another request",
+    "sentBody": "We've got it — an operations lead will be in touch within one working day."
   }
 }

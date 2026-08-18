@@ -1231,3 +1231,115 @@ export interface CompanyContent {
     note: string;
   };
 }
+
+/**
+ * One "what to expect" channel card in the contact page's side panel — the
+ * honest email/phone/response-time notes the legacy static page's aside
+ * carried (`backup/scripe-static/contact.html`). `id` doubles as the lookup
+ * key into `src/components/sections/contact/icons.tsx`'s glyph registry.
+ */
+export interface ContactChannel {
+  /** Stable id, matched to its own glyph in
+   *  `src/components/sections/contact/icons.tsx` (`"email"` | `"phone"` |
+   *  `"response"`). */
+  id: string;
+  /** Channel label (e.g. "Email"). */
+  label: string;
+  /** The channel's current value — honestly "Not published yet" for the two
+   *  channels SCRIPE has not published, or the response-time promise. */
+  value: string;
+  /** One-line note explaining what to do instead, or what the value means. */
+  note: string;
+}
+
+/**
+ * Content for the contact page (`/contact`) — the site's only form and its
+ * one true conversion surface: a typography-led hero → the demo-request form
+ * card → a "what happens next" checklist paired with honest contact-channel
+ * notes. Ported from `backup/scripe-static/contact.html` + `js/contact.js`
+ * (field limits, validation copy and the "not yet connected" confirmation
+ * wording are that legacy implementation's own, carried forward exactly —
+ * see `src/lib/leads/submit-lead-stub.ts`'s file header for the live-wiring
+ * contract Task 22 fills in).
+ *
+ * Content-layer split (binding for `ContactForm.tsx`): this interface holds
+ * only page-specific narrative copy (hero, the form card's own intro/
+ * placeholder/hint/footnote text, the side panel). Field LABELS and reusable
+ * validation/state vocabulary ("Name", "This field is required.", "Thanks.",
+ * the "not yet connected" notice, "Send"...) live in `messages/*.json`'s
+ * `forms` namespace instead — that namespace was already seeded ahead of
+ * this task (see `messages/en.json`), specifically because those strings are
+ * generic, reusable form vocabulary a client component reads via
+ * `useTranslations()`, not long-form page content tied to this one page. The
+ * organization-type select's four "shape" options reuse `nav.solutionsItems`
+ * message keys (the same labels the Solutions mega-menu and hub already
+ * show) instead of duplicating that translated copy a third time; only the
+ * fifth option ("Other" — a shape the mega-menu has no `nav.solutionsItems`
+ * entry for) gets one new dedicated message key (`forms.typeOther`). See
+ * `ContactForm.tsx`'s file header for exactly where each key is read.
+ */
+export interface ContactContent {
+  /** Page-level metadata strings. */
+  meta: {
+    /** Page title (the layout's `"%s · SCRIPE"` template wraps it). */
+    title: string;
+    /** Meta/OG description. */
+    description: string;
+    /** Breadcrumb label for the home crumb in structured data. */
+    breadcrumbHome: string;
+    /** Breadcrumb label for this page's own crumb in structured data. */
+    breadcrumbCurrent: string;
+  };
+  /** Typography-led hero/intro. No CTA button here — the form immediately
+   *  below is this page's one call to action, so a second one in the hero
+   *  would only repeat it. */
+  hero: {
+    /** Small section marker label. */
+    label: string;
+    /** Page heading. */
+    title: string;
+    /** Supporting sentence. */
+    subtitle: string;
+  };
+  /** The demo-request form's own narrative copy — never the field labels or
+   *  validation/state copy, which come from `messages/*.json`'s `forms`
+   *  namespace (see this interface's own doc comment). */
+  form: {
+    /** Small kicker label at the top of the form card (e.g. "Book a demo"). */
+    eyebrow: string;
+    /** One-sentence intro under the eyebrow. */
+    intro: string;
+    /** Example placeholder text, one per free-text field. */
+    placeholders: {
+      name: string;
+      email: string;
+      organization: string;
+      phone: string;
+      message: string;
+    };
+    /** Supporting hint text shown under a field until it carries an error. */
+    hints: {
+      phone: string;
+      type: string;
+    };
+    /** Submit button label (e.g. "Book a Demo") — page-specific conversion
+     *  copy, kept here rather than the generic `forms.send` message, the
+     *  same way every other page's CTA label lives in its own content file
+     *  (e.g. `CompanyContent["hero"]["primaryCta"]`). */
+    submitCta: string;
+    /** Small note under the submit button. */
+    footnote: string;
+  };
+  /** The "what happens next" checklist beside the form. */
+  expect: {
+    /** Panel label. */
+    label: string;
+    /** The four checklist items, in display order. */
+    items: string[];
+  };
+  /** Honest contact-channel notes (email, phone, response time). */
+  channels: {
+    /** The three channel cards, in display order. */
+    items: ContactChannel[];
+  };
+}
