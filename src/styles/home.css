@@ -60,6 +60,19 @@
 
    The plate photographs never mirror in RTL (camera coordinates are
    physical); text layers use logical properties throughout.
+
+   GROUND SEQUENCE (Task E3, §13+): the sections below the flight continue
+   the same film — mono slate stamps carry the hero rail's timecode forward
+   (hero flies 00–05; the ground runs 06 TRUSTED → 11 BRANCHES; the closing
+   band is the unnumbered end card with the hero's crop corners), obsidian
+   grounds get authored atmosphere (per-section radial glows + the hero's
+   film-grain tile, dark theme only — the light theme keeps flat token
+   surfaces until Task E5 decides its fate), and every artifact sits on the
+   elevation token ramp (`src/styles/tokens/elevation.css`). Depth doctrine:
+   `box-shadow: var(--edge-highlight), var(--shadow-N)` — the inner top
+   light always first. 3D presence (the operations board's rest tilt, card
+   hover tilts) is authored in physical degrees flipped per direction via
+   `--tilt-dir`, and every travel distance multiplies `--motion-travel`.
    ============================================================================ */
 
 /* ---------------------------------------------------------------------------
@@ -71,8 +84,9 @@
      plate runs truly full-bleed behind the blurred nav surface. */
   margin-block-start: -72px;
   /* Mono stack for the film-annotation stamps (beat meta, rail numbers).
-     System monos only — no font payload. */
-  --hero-mono: ui-monospace, "Cascadia Mono", Consolas, "Liberation Mono", monospace;
+     Aliases the shared token (src/styles/tokens/typography.css) since Task
+     E3 extended the same annotation language to the ground sections. */
+  --hero-mono: var(--font-mono-base);
 }
 
 .hero[data-armed] {
@@ -233,7 +247,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-image: var(--film-grain);
   background-size: 160px 160px;
   mix-blend-mode: overlay;
   opacity: 0.07;
@@ -929,16 +943,63 @@
 }
 
 /* ---------------------------------------------------------------------------
-   12. Closing CTA — obsidian panel with the lime "horizon" edge-light.
-   Deliberately a single-look brand moment: obsidian in both themes.
+   12. Closing CTA — the film's END CARD (Task E3): obsidian panel with the
+   lime "horizon" edge-light, the hero's crop-mark corners and film grain,
+   floating on the deepest shadow step. Deliberately a single-look brand
+   moment: obsidian in both themes — the page starts and ends in the same
+   night. All annotation layers are aria-hidden spans in ClosingCta.tsx.
    --------------------------------------------------------------------------- */
 
 .cta-panel {
   position: relative;
   overflow: hidden;
-  background: var(--obsidian);
+  background:
+    radial-gradient(90% 120% at 50% 118%, rgba(23, 26, 29, 0.9), transparent 60%),
+    var(--obsidian);
   border: 1px solid #26282c;
   border-radius: var(--radius-xl-base);
+  box-shadow: var(--edge-highlight), var(--shadow-4);
+}
+
+/* Crop-mark corners — the hero's framing device closes the film. */
+.cta-corners {
+  position: absolute;
+  inset: clamp(14px, 2vw, 26px);
+  pointer-events: none;
+}
+
+.cta-corners::before,
+.cta-corners::after {
+  content: "";
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  opacity: 0.5;
+}
+
+.cta-corners::before {
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  border-block-start: 1px solid var(--lime-400);
+  border-inline-start: 1px solid var(--lime-400);
+}
+
+.cta-corners::after {
+  inset-block-end: 0;
+  inset-inline-end: 0;
+  border-block-end: 1px solid var(--lime-400);
+  border-inline-end: 1px solid var(--lime-400);
+}
+
+/* Film grain, same tile as the hero's (see --film-grain in §13). */
+.cta-grain {
+  position: absolute;
+  inset: 0;
+  background-image: var(--film-grain);
+  background-size: 160px 160px;
+  mix-blend-mode: overlay;
+  opacity: 0.06;
+  pointer-events: none;
 }
 
 .cta-horizon {
@@ -957,4 +1018,619 @@
   block-size: 55%;
   background: radial-gradient(52% 90% at 50% 0%, rgba(192, 255, 0, 0.14), transparent 72%);
   pointer-events: none;
+}
+
+/* ---------------------------------------------------------------------------
+   13. Ground sequence — shared atmosphere + slate + elevation system for
+   every section below the flight (Task E3). See the file header's GROUND
+   SEQUENCE note for the doctrine. Class inventory:
+
+   .gs            section root: hosts the two atmosphere layers
+   .gs-*          per-section atmosphere recipes (dark theme only)
+   .slate         the film-slate section marker (mono timecode + rule)
+   .gs-title      section heading in the hero's extended-heavy voice
+   .panel         raised artifact surface (layered border + edge light)
+   .chip-lit      elevated chip surface (categories, modules, branches)
+   .pf-card       product-family ledger card (+ .pf-row hover wash, §10)
+   .vg-*          abstract product-UI vignettes (CSS/SVG, aria-hidden)
+   .board-scene / .board-3d   operations board 3D presence
+   .sol-card      solutions tilt card
+   .auto-panel / .auto-no     automation chain desk + step roundels
+   .conv-*        branches convergence diagram
+   --------------------------------------------------------------------------- */
+
+:root {
+  /* The film-grain tile every grain layer shares (hero §2, end card §12,
+     ground sections below). Static — never animated. */
+  --film-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Section root: two zero-cost pseudo layers under the content — ::before is
+   the authored glow recipe (--gs-atmo), ::after the film grain. Both default
+   to nothing; the dark theme opts sections in below. isolation keeps the
+   negative z-index layers inside this stacking context. */
+.gs {
+  position: relative;
+  isolation: isolate;
+}
+
+.gs::before,
+.gs::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.gs::before {
+  background: var(--gs-atmo, none);
+}
+
+.gs::after {
+  background-image: var(--film-grain);
+  background-size: 160px 160px;
+  mix-blend-mode: overlay;
+  opacity: var(--gs-grain, 0);
+}
+
+/* Per-section atmosphere (dark theme only — the light theme stays on flat
+   token surfaces until Task E5 decides it). Brand rule: at most ONE lime
+   moment per viewport — glows here stay cool/neutral because each section
+   already spends its lime on a designed element (stamp, rail, horizon). */
+[data-theme="dark"] .gs {
+  --gs-grain: 0.05;
+}
+
+/* trusted: the hero hand-off — cool overhead light falling from the stage. */
+[data-theme="dark"] .gs-trusted {
+  --gs-atmo: radial-gradient(46% 70% at 50% -12%, rgba(168, 190, 224, 0.055), transparent 72%);
+}
+
+/* product: a raised ground band (the ledger desk) + cool key light on the
+   heading corner. Top/bottom hairline-free — the ground change IS the
+   separator. */
+[data-theme="dark"] .gs-product {
+  --gs-atmo:
+    radial-gradient(38% 52% at 14% 8%, rgba(168, 190, 224, 0.05), transparent 70%),
+    linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.022) 9%, rgba(255, 255, 255, 0.022) 91%, transparent 100%);
+}
+
+/* platform: the operations room — faint schedule-grid lines + a cool glow
+   behind the board column (the board itself carries the lime live row). */
+[data-theme="dark"] .gs-platform {
+  --gs-atmo:
+    radial-gradient(44% 60% at 78% 34%, rgba(139, 133, 232, 0.07), transparent 70%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.016) 0 1px, transparent 1px 96px),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.014) 0 1px, transparent 1px 96px);
+}
+
+/* solutions: quiet center-stage wash behind the four shapes. */
+[data-theme="dark"] .gs-solutions {
+  --gs-atmo: radial-gradient(52% 56% at 50% 6%, rgba(168, 190, 224, 0.05), transparent 74%);
+}
+
+/* automation: second raised ground band; the chain's lime rail is the
+   section's own light source. */
+[data-theme="dark"] .gs-automation {
+  --gs-atmo:
+    radial-gradient(34% 46% at 12% 30%, rgba(168, 190, 224, 0.045), transparent 70%),
+    linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.022) 9%, rgba(255, 255, 255, 0.022) 91%, transparent 100%);
+}
+
+/* branches: convergence light pooling at the center of the diagram. */
+[data-theme="dark"] .gs-branches {
+  --gs-atmo: radial-gradient(40% 52% at 50% 58%, rgba(168, 190, 224, 0.06), transparent 72%);
+}
+
+/* ---- Film slate: the ground timecode marker ------------------------------ */
+
+.slate {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-block-end: clamp(16px, 2.6vh, 24px);
+}
+
+.slate-center {
+  justify-content: center;
+}
+
+.slate-stamp {
+  margin: 0;
+  font-family: var(--font-mono-base);
+  font-size: var(--fs-meta);
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+  white-space: nowrap;
+}
+
+:lang(ar) .slate-stamp {
+  letter-spacing: 0.06em;
+}
+
+/* Symmetric fade — direction-proof, reads as a designed dash in start-
+   aligned slates and as flanking rules in centered ones. */
+.slate-rule {
+  block-size: 1px;
+  flex: 0 1 150px;
+  background: linear-gradient(90deg, transparent, var(--border-strong), transparent);
+}
+
+.slate-center .slate-rule {
+  flex-basis: 56px;
+}
+
+/* ---- Section heading voice (the hero statement's extended-heavy axis) --- */
+
+.gs-title {
+  margin: 0;
+  font-family: var(--font-display-base);
+  font-variation-settings:
+    "wdth" 120,
+    "wght" 730;
+  font-size: var(--fs-display);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+
+:lang(ar) .gs-title {
+  font-family: var(--font-display-ar-base);
+  font-variation-settings: normal;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+
+/* ---- Elevated surfaces --------------------------------------------------- */
+
+.panel {
+  position: relative;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg-base);
+  box-shadow: var(--edge-highlight), var(--shadow-2);
+}
+
+[data-theme="dark"] .panel {
+  background: linear-gradient(180deg, #1d2024 0%, #17191c 100%);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.panel-deep {
+  box-shadow: var(--edge-highlight), var(--shadow-3);
+}
+
+.chip-lit {
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--edge-highlight), var(--shadow-1);
+}
+
+[data-theme="dark"] .chip-lit {
+  background: linear-gradient(180deg, #1c1f23 0%, #16181b 100%);
+  border-color: rgba(255, 255, 255, 0.09);
+}
+
+/* ---- Product family: ledger cards + vignettes ---------------------------- */
+
+/* The ledger row elevated to a card surface (replaces the old naked
+   hairline rows). Keeps §10's .pf-row accent hover wash on top. */
+.pf-card {
+  border-radius: var(--radius-lg-base);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-raised);
+  box-shadow: var(--edge-highlight), var(--shadow-2);
+  transition:
+    transform var(--motion-standard) var(--ease-settle),
+    box-shadow var(--motion-standard) var(--ease-standard),
+    background-color var(--motion-quick) var(--ease-standard);
+}
+
+[data-theme="dark"] .pf-card {
+  background: linear-gradient(180deg, #191c1f 0%, #141619 100%);
+  border-color: rgba(255, 255, 255, 0.07);
+}
+
+@media (hover: hover) {
+  .pf-card:hover {
+    transform: translateY(calc(-4px * var(--motion-travel)));
+    box-shadow: var(--edge-highlight), var(--shadow-3);
+  }
+}
+
+/* Vignette frame: a mini operations display docked at the row's end — inner
+   border, top sheen, its own deeper ground. Turned toward the reader like a
+   desk monitor; the turn is physical, so it flips with direction. */
+.vg {
+  --tilt-dir: 1;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-md-base);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-overlay);
+  box-shadow: var(--edge-highlight), var(--shadow-1);
+  padding: clamp(14px, 1.6vw, 20px);
+  transform: perspective(1100px) rotateY(calc(-4deg * var(--tilt-dir)));
+  transition: transform var(--motion-deliberate) var(--ease-settle);
+}
+
+[dir="rtl"] .vg {
+  --tilt-dir: -1;
+}
+
+[data-theme="dark"] .vg {
+  background: linear-gradient(180deg, #101215 0%, #0d0f11 100%);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.vg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(200deg, rgba(255, 255, 255, 0.05), transparent 38%);
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .pf-card:hover .vg {
+    transform: perspective(1100px) rotateY(calc(-4deg * var(--tilt-dir) * (1 - var(--motion-travel))));
+  }
+}
+
+/* Booking-grid vignette (Venue): a week of slot cells, a few filled in the
+   product's own accent, one held cell outlined. Abstract — no labels. */
+.vg-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.vg-cell {
+  block-size: clamp(12px, 1.4vw, 18px);
+  border-radius: var(--radius-xs-base);
+  background: rgba(127, 137, 146, 0.14);
+}
+
+[data-theme="dark"] .vg-cell {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.vg-cell-fill {
+  background: color-mix(in srgb, var(--vg-accent) 62%, transparent);
+  box-shadow: 0 0 10px -2px color-mix(in srgb, var(--vg-accent) 45%, transparent);
+}
+
+.vg-cell-hold {
+  background: transparent;
+  border: 1px dashed color-mix(in srgb, var(--vg-accent) 80%, transparent);
+}
+
+/* Session-rhythm vignette (Academy): attendance dot rows + progress bars. */
+.vg-rhythm {
+  display: grid;
+  gap: 9px;
+}
+
+.vg-rhythm-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.vg-dot {
+  inline-size: 7px;
+  block-size: 7px;
+  border-radius: 50%;
+  background: rgba(127, 137, 146, 0.2);
+}
+
+[data-theme="dark"] .vg-dot {
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.vg-dot-fill {
+  background: color-mix(in srgb, var(--vg-accent) 62%, transparent);
+}
+
+.vg-bar {
+  flex: 1 1 auto;
+  block-size: 5px;
+  border-radius: 999px;
+  background: rgba(127, 137, 146, 0.14);
+  overflow: hidden;
+}
+
+[data-theme="dark"] .vg-bar {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.vg-bar-fill {
+  display: block;
+  block-size: 100%;
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--vg-accent) 72%, transparent);
+  box-shadow: 0 0 10px -2px color-mix(in srgb, var(--vg-accent) 45%, transparent);
+}
+
+/* Pitch vignette (Football Intelligence): the SVG lives in the component;
+   here only its ink and its size cap (keeps the FI ledger card in the same
+   height family as its siblings). */
+.vg-pitch {
+  display: block;
+  inline-size: 100%;
+  max-inline-size: 300px;
+  block-size: auto;
+  margin-inline: auto;
+  color: var(--vg-accent);
+}
+
+/* ---- Platform: operations board 3D presence ------------------------------ */
+
+/* Scene wrapper: owns the camera (perspective) + the glow bloom behind the
+   board. Scroll-driven: --board-swing eases the board from a deeper turn to
+   its rest angle as the section scrolls in (registered property; motion- and
+   support-gated — the fallback is the rest tilt, a static presentation). */
+.board-scene {
+  --tilt-dir: 1;
+  position: relative;
+  perspective: 1600px;
+}
+
+[dir="rtl"] .board-scene {
+  --tilt-dir: -1;
+}
+
+.board-scene::before {
+  content: "";
+  position: absolute;
+  inset: -10% -7%;
+  background: radial-gradient(58% 62% at 50% 46%, rgba(139, 133, 232, 0.14), transparent 70%);
+  pointer-events: none;
+}
+
+.board-3d {
+  position: relative;
+  transform: rotateY(calc((-5deg + var(--board-swing, 0deg)) * var(--tilt-dir))) rotateX(1.2deg);
+  transition: transform var(--motion-deliberate) var(--ease-settle);
+  border-radius: var(--radius-lg-base);
+  box-shadow: var(--edge-highlight), var(--shadow-4);
+}
+
+/* Leveling on hover — the artifact meets the reader flat. */
+@media (hover: hover) {
+  .board-3d:hover {
+    transform: none;
+  }
+}
+
+/* Small screens: the tilt costs legibility with no room to spare. */
+@media (max-width: 47.9rem) {
+  .board-3d {
+    transform: none;
+  }
+}
+
+/* Registered at top level (nesting @property in conditional rules is not
+   reliably supported); harmless where the animation below never runs. */
+@property --board-swing {
+  syntax: "<angle>";
+  inherits: true;
+  initial-value: 0deg;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .board-scene {
+      animation: board-swing-in linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 45%;
+    }
+
+    @keyframes board-swing-in {
+      from {
+        --board-swing: -5deg;
+      }
+      to {
+        --board-swing: 0deg;
+      }
+    }
+  }
+}
+
+/* The board's "in session" row — the platform section's one lime moment. */
+.board-live {
+  background: color-mix(in srgb, var(--accent) 5%, transparent);
+}
+
+/* ---- Solutions: tilt cards ----------------------------------------------- */
+
+.sol-card {
+  --sol-accent: var(--accent);
+  position: relative;
+  box-shadow: var(--edge-highlight), var(--shadow-2);
+  transition:
+    transform var(--motion-standard) var(--ease-settle),
+    box-shadow var(--motion-standard) var(--ease-standard),
+    border-color var(--motion-quick) linear;
+}
+
+[data-theme="dark"] .sol-card {
+  background: linear-gradient(180deg, #1a1d20 0%, #141619 100%);
+}
+
+@media (hover: hover) {
+  .sol-card:hover {
+    transform: perspective(1000px) translateY(calc(-6px * var(--motion-travel)))
+      rotateX(calc(1.5deg * var(--motion-travel)));
+    box-shadow: var(--edge-highlight), var(--shadow-3);
+  }
+}
+
+.sol-glyph {
+  display: grid;
+  place-items: center;
+  inline-size: 42px;
+  block-size: 42px;
+  flex-shrink: 0;
+  border-radius: var(--radius-md-base);
+  color: var(--sol-accent);
+  border: 1px solid color-mix(in srgb, var(--sol-accent) 32%, transparent);
+  background: color-mix(in srgb, var(--sol-accent) 10%, transparent);
+  box-shadow: 0 0 22px -6px color-mix(in srgb, var(--sol-accent) 38%, transparent);
+}
+
+/* ---- Automation: control desk -------------------------------------------- */
+
+.auto-panel {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg-base);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-raised);
+  box-shadow: var(--edge-highlight), var(--shadow-3);
+}
+
+[data-theme="dark"] .auto-panel {
+  background: linear-gradient(180deg, #17191d 0%, #121417 100%);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Ambient key light where the chain begins (logical start corner). */
+.auto-panel::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: 46%;
+  block-size: 70%;
+  background: radial-gradient(70% 90% at 0% 0%, rgba(168, 190, 224, 0.06), transparent 72%);
+  pointer-events: none;
+}
+
+/* Step roundel: a lit instrument, not a flat outline. */
+.auto-no {
+  display: grid;
+  place-items: center;
+  inline-size: 34px;
+  block-size: 34px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-overlay);
+  box-shadow: var(--edge-highlight), var(--shadow-1);
+  font-family: var(--font-mono-base);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .auto-no {
+  background: linear-gradient(180deg, #202428 0%, #17191c 100%);
+}
+
+/* ---- Branches: convergence diagram --------------------------------------- */
+
+.conv {
+  display: grid;
+  grid-template-columns: auto minmax(36px, 1fr) auto minmax(36px, 1fr) auto;
+  align-items: center;
+  gap: clamp(12px, 1.6vw, 22px);
+  max-inline-size: 1080px;
+  margin-inline: auto;
+}
+
+/* Connector rail: energy flowing toward the org node — neutral (the
+   destination owns the section's lime), with a terminal dot so the flow
+   direction reads. The dot sits at the rail's inline end in LTR and is
+   mirrored by the logical inset in RTL. */
+.conv-rail {
+  position: relative;
+  block-size: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-strong) 26%, var(--border-strong) 100%);
+}
+
+[dir="rtl"] .conv-rail {
+  background: linear-gradient(270deg, transparent, var(--border-strong) 26%, var(--border-strong) 100%);
+}
+
+.conv-rail::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-end: -1px;
+  transform: translateY(-50%);
+  inline-size: 5px;
+  block-size: 5px;
+  border-radius: 50%;
+  background: var(--border-strong);
+}
+
+/* The organization node: the diagram's gravitational center — bigger
+   surface, brand mark, a cool halo lifting it off the panel. */
+.conv-node {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 22px;
+  border-radius: var(--radius-md-base);
+  white-space: nowrap;
+  box-shadow:
+    var(--edge-highlight),
+    var(--shadow-2),
+    0 0 44px -6px rgba(168, 190, 224, 0.18);
+}
+
+/* The destination: the operational picture, framed as the story's payoff —
+   a lime-edged chip with a soft bloom (this section's one lime moment). */
+.conv-dest {
+  position: relative;
+  white-space: nowrap;
+  padding: 14px 20px;
+  border-radius: var(--radius-md-base);
+  border: 1px solid color-mix(in srgb, var(--accent) 42%, transparent);
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+  color: var(--accent-text);
+  font-weight: 600;
+  box-shadow: var(--glow-accent);
+}
+
+@media (max-width: 63.9rem) {
+  .conv {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    gap: 14px;
+  }
+
+  .conv-rail {
+    inline-size: 1px;
+    block-size: 34px;
+    background: linear-gradient(180deg, transparent, var(--border-strong) 30%, var(--border-strong) 100%);
+  }
+
+  [dir="rtl"] .conv-rail {
+    background: linear-gradient(180deg, transparent, var(--border-strong) 30%, var(--border-strong) 100%);
+  }
+
+  .conv-rail::after {
+    inset-block-start: auto;
+    inset-block-end: -1px;
+    inset-inline-end: 50%;
+    transform: translateX(50%);
+  }
+
+  [dir="rtl"] .conv-rail::after {
+    transform: translateX(-50%);
+  }
+}
+
+/* Interlude-scale variant of the section heading voice (the trust strip is
+   a quiet bridge, not a statement piece). */
+.gs-title-sm {
+  font-size: var(--fs-h1);
 }

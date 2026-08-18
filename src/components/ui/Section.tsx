@@ -9,15 +9,14 @@
  * clamps to a readable measure — the standard "section owns rhythm, inner
  * container owns width" split. A Server Component — no hooks.
  *
- * Fusion's token set (`src/styles/tokens`) doesn't yet define container
- * max-width tokens, so the three `width` steps below are literal pixel
- * values rather than `var(--...)` references; the `--space-*` scale is used
- * everywhere else (block padding, inline gutter) since those tokens do
- * exist. The default/wide figures are sourced from the standalone design
- * reference's documented container doctrine (`--container-max: 1360px` in
- * `backup/_ds`'s tokens/spacing.css), not invented — `wide` is a deliberate
- * step up from that baseline for sections that want more breathing room
- * (e.g. wide media, multi-column evidence) without going full-bleed.
+ * Rhythm (Task E3): the block padding was compressed ~40% (from a 96–160px
+ * clamp to 64–96px) as part of the cinematic elevation wave — the old scale
+ * produced dead viewport-height oceans between designed content. Sections
+ * that need to breathe differently extend via `className` (`!py-*`).
+ *
+ * Width steps resolve through the `--container-*` tokens
+ * (`src/styles/tokens/spacing.css`), added in the same wave — the previous
+ * literal pixel values are now ledgered there with their provenance.
  */
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { cx } from "./cx";
@@ -26,8 +25,8 @@ import { cx } from "./cx";
 export type SectionWidth = "default" | "wide" | "full";
 
 const WIDTH_CLASSES: Record<SectionWidth, string> = {
-  default: "max-w-[1360px]",
-  wide: "max-w-[1680px]",
+  default: "max-w-[var(--container-default)]",
+  wide: "max-w-[var(--container-wide)]",
   full: "max-w-none",
 };
 
@@ -52,7 +51,7 @@ export function Section({ id, width = "default", className, children, ...rest }:
   return (
     <section
       id={id}
-      className={cx("py-[clamp(var(--space-12),12vh,var(--space-14))]", className)}
+      className={cx("py-[clamp(var(--space-10),8vh,var(--space-12))]", className)}
       {...rest}
     >
       <div className={cx("mx-auto px-[clamp(var(--space-5),4vw,var(--space-9))]", WIDTH_CLASSES[width])}>

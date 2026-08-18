@@ -71,6 +71,7 @@ export const homeContent: HomeContent = {
     secondaryCta: "تحدث إلى المبيعات",
   },
   trusted: {
+    stamp: "الثقة",
     title: "موضع ثقة المنظمات الرياضية الحديثة",
     subtitle: "منصة واحدة للأندية والأكاديميات والمنشآت والمنظمات متعددة الرياضات.",
     categories: [
@@ -82,6 +83,7 @@ export const homeContent: HomeContent = {
     ],
   },
   productFamily: {
+    stamp: "عائلة المنتجات",
     title: "ثلاثة منتجات. نظام تشغيل واحد.",
     subtitle:
       "كل المنتجات تعمل على السجل المتصل نفسه. ابدأ من حيث تقف منظمتك فعلًا — لا شيء يُعاد إدخاله أو تُعاد مطابقته مرتين.",
@@ -178,6 +180,7 @@ export const homeContent: HomeContent = {
     deepLink: "شاهد القدرات الـ١٣ في صفحة المنصة",
   },
   solutions: {
+    stamp: "الحلول",
     title: "أربع طرق لتنظيم الرياضة. نظام واحد تحتها.",
     subtitle: "اختر الشكل الذي يطابق منظمتك — والسجل تحته هو نفسه.",
     items: [
@@ -213,6 +216,7 @@ export const homeContent: HomeContent = {
     compareCta: "قارن الحلول الأربعة",
   },
   automation: {
+    stamp: "الأتمتة",
     title: "يجب أن يدير تشغيلك نفسه بنفسه.",
     subtitle: "حجز واحد يُطلق السلسلة كاملة — الحجز، الدفع، القائمة، التذكير، الحضور، التقرير.",
     steps: [
@@ -226,6 +230,7 @@ export const homeContent: HomeContent = {
     deepLink: "شاهد وحدتَي الأتمتة والإشعارات",
   },
   branches: {
+    stamp: "الفروع",
     title: "منظمة واحدة. كل فرع. صورة تشغيلية واحدة.",
     subtitle: "كل فرع يحتفظ بجدوله وطاقمه. وتقارير المجموعة تقرأ عبرها جميعًا دون سجلات مكررة.",
     chips: [

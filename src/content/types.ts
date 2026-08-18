@@ -174,6 +174,11 @@ export interface HomeContent {
   };
   /** Honest positioning strip (`#trusted`) — categories, never fake logos. */
   trusted: {
+    /** Film-slate stamp label — the ground sequence continues the hero
+     *  rail's timecode below the fold (`06 / <stamp>`; see `src/styles/
+     *  home.css` §13). Short label, genuine per locale; the number itself
+     *  is layout (Latin digits, board-times precedent), never content. */
+    stamp: string;
     /** Section heading. */
     title: string;
     /** Supporting sentence. */
@@ -183,6 +188,8 @@ export interface HomeContent {
   };
   /** Product family section (`#product`) — the three SCRIPE products. */
   productFamily: {
+    /** Film-slate stamp label (`07 / <stamp>`) — see `trusted.stamp`. */
+    stamp: string;
     /** Section heading. */
     title: string;
     /** Supporting sentence. */
@@ -192,7 +199,8 @@ export interface HomeContent {
   };
   /** Platform overview (`#platform`) — narrative + operations-board evidence. */
   platform: {
-    /** Small section marker label. */
+    /** Small section marker label — doubles as this section's film-slate
+     *  stamp (`08 / <label>`; see `trusted.stamp` for the system). */
     label: string;
     /** Section heading. */
     title: string;
@@ -218,6 +226,8 @@ export interface HomeContent {
   };
   /** Solutions grid (`#solutions`) — the four organization shapes. */
   solutions: {
+    /** Film-slate stamp label (`09 / <stamp>`) — see `trusted.stamp`. */
+    stamp: string;
     /** Section heading. */
     title: string;
     /** Supporting sentence. */
@@ -229,6 +239,8 @@ export interface HomeContent {
   };
   /** Automation chain story (`#automation`). */
   automation: {
+    /** Film-slate stamp label (`10 / <stamp>`) — see `trusted.stamp`. */
+    stamp: string;
     /** Section heading. */
     title: string;
     /** Supporting sentence. */
@@ -240,6 +252,8 @@ export interface HomeContent {
   };
   /** Multi-branch convergence story (`#branches`). */
   branches: {
+    /** Film-slate stamp label (`11 / <stamp>`) — see `trusted.stamp`. */
+    stamp: string;
     /** Section heading. */
     title: string;
     /** Supporting sentence. */

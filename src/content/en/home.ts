@@ -74,6 +74,7 @@ export const homeContent: HomeContent = {
     secondaryCta: "Talk to sales",
   },
   trusted: {
+    stamp: "Trusted",
     title: "Trusted by modern sports organizations",
     subtitle: "One platform for clubs, academies, venues and multi-sport organizations.",
     categories: [
@@ -85,6 +86,7 @@ export const homeContent: HomeContent = {
     ],
   },
   productFamily: {
+    stamp: "Product family",
     title: "Three products. One operating system.",
     subtitle:
       "Every product runs on the same connected record. Start where your organization actually sits — nothing gets re-entered or reconciled twice.",
@@ -182,6 +184,7 @@ export const homeContent: HomeContent = {
     deepLink: "See all 13 capabilities on the platform page",
   },
   solutions: {
+    stamp: "Solutions",
     title: "Four ways sport is organized. One system underneath.",
     subtitle: "Pick the shape that matches your organization — the record underneath is the same.",
     items: [
@@ -217,6 +220,7 @@ export const homeContent: HomeContent = {
     compareCta: "Compare all four solutions",
   },
   automation: {
+    stamp: "Automation",
     title: "Your operations should run themselves.",
     subtitle:
       "One booking sets off the whole chain — reservation, payment, roster, reminder, attendance, report.",
@@ -231,6 +235,7 @@ export const homeContent: HomeContent = {
     deepLink: "See the automation and notification modules",
   },
   branches: {
+    stamp: "Branches",
     title: "One organization. Every branch. One operational picture.",
     subtitle:
       "Each branch keeps its own timetable and staff. Group reporting reads across all of them without duplicate records.",

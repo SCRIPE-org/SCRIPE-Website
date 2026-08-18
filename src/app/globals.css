@@ -2,6 +2,7 @@
 @import "../styles/tokens/typography.css";
 @import "../styles/tokens/spacing.css";
 @import "../styles/tokens/motion.css";
+@import "../styles/tokens/elevation.css";
 @import "../styles/tokens/z.css";
 @import "../styles/motion-utilities.css";
 @import "tailwindcss";
@@ -39,6 +40,8 @@
   --font-body: var(--font-body-base);
   --font-display-ar: var(--font-display-ar-base);
   --font-body-ar: var(--font-body-ar-base);
+  /* `font-mono` utility → the film-annotation mono stack (system monos) */
+  --font-mono: var(--font-mono-base);
 }
 
 body {

@@ -5,6 +5,14 @@
    ============================================================================ */
 
 :root {
+  /* container doctrine: the two inner max-inline-size steps every Section
+     clamps to (see src/components/ui/Section.tsx). Sourced from the
+     standalone design reference's --container-max: 1360px; `wide` is the
+     deliberate step up for wide-media sections. Tokenized by Task E3 —
+     before that the Section primitive carried these as literal pixels. */
+  --container-default: 1360px;
+  --container-wide: 1680px;
+
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;

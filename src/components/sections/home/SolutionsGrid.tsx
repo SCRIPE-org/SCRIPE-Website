@@ -1,22 +1,27 @@
 /**
  * SolutionsGrid (`#solutions`) — the four organization shapes SCRIPE
- * configures for.
+ * configures for (ground slate `09 / Solutions` — see `Slate.tsx`).
  *
  * A genuine four-way choice, so cards are the honest affordance here (the
- * one card grid on the page): each `Card` carries its product-world accent
- * as the top edge (the design contract for the Card primitive), an
- * accent-colored glyph, title, one-line description and an explore link.
- * Icons are minimal strokes in the accent color — shape identity, not
- * decoration. Header is centered to mark the rhythm change from the
- * start-aligned platform split above. A Server Component; `Reveal` is the
+ * one card grid on the page): each `Card` keeps its product-world accent
+ * top edge (the design contract for the Card primitive) and gains Task E3's
+ * depth treatment — the `.sol-card` surface (elevation ramp + dark gradient
+ * ground) with a hover tilt (`perspective` + `rotateX`, travel gated by
+ * `--motion-travel`), and an accent-lit glyph tile (`.sol-glyph` — tinted
+ * ground, tinted border, soft accent bloom; `--sol-accent` carries the
+ * world's color into the CSS). Icons are minimal strokes — shape identity,
+ * not decoration. Header is centered to mark the rhythm change from the
+ * start-aligned platform split above; the section ground is the
+ * `.gs-solutions` center-stage wash. A Server Component; `Reveal` is the
  * only client leaf.
  */
 import type { AccentId, HomeContent } from "@/content/types";
 import { Reveal } from "@/components/motion/Reveal";
 import { Card } from "@/components/ui/Card";
 import { Section } from "@/components/ui/Section";
-import { ACCENT_TEXT_CLASS, toCardAccent } from "./accents";
+import { ACCENT_VAR, toCardAccent } from "./accents";
 import { ArrowLink } from "./ArrowLink";
+import { Slate } from "./Slate";
 
 /** Stroke glyph per solution shape, keyed by accent identity. */
 function SolutionGlyph({ accent }: { accent: AccentId }) {
@@ -54,10 +59,7 @@ function SolutionGlyph({ accent }: { accent: AccentId }) {
   };
 
   return (
-    <span
-      className={`border-border-subtle grid size-10 shrink-0 place-items-center rounded-md border ${ACCENT_TEXT_CLASS[accent]}`}
-      aria-hidden="true"
-    >
+    <span className="sol-glyph" aria-hidden="true">
       <svg
         width="20"
         height="20"
@@ -86,18 +88,17 @@ export interface SolutionsGridProps {
  */
 export function SolutionsGrid({ content }: SolutionsGridProps) {
   return (
-    <Section id="solutions" className="scroll-mt-24">
+    <Section id="solutions" className="gs gs-solutions scroll-mt-24">
       <Reveal className="mx-auto max-w-[820px] text-center">
-        <h2 className="font-display text-text-primary text-[length:var(--fs-display)] leading-[1.06] font-semibold text-balance [font-variation-settings:'wdth'_114] [&:lang(ar)]:[font-variation-settings:normal] [&:lang(ar)]:leading-[1.3]">
-          {content.title}
-        </h2>
-        <p className="text-text-secondary mx-auto mt-5 max-w-[58ch] text-[length:var(--fs-lead)] text-pretty">
+        <Slate no="09" label={content.stamp} center />
+        <h2 className="gs-title">{content.title}</h2>
+        <p className="text-text-secondary mx-auto mt-4 max-w-[58ch] text-[length:var(--fs-lead)] text-pretty">
           {content.subtitle}
         </p>
       </Reveal>
 
       <div
-        className="mt-12 grid gap-5 sm:grid-cols-2 xl:grid-cols-4"
+        className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-4"
         data-rv-stagger
         style={{ "--rv-stagger-step": "90ms" } as React.CSSProperties}
       >
@@ -105,7 +106,8 @@ export function SolutionsGrid({ content }: SolutionsGridProps) {
           <Reveal key={item.href} y={20}>
             <Card
               accent={toCardAccent(item.accent)}
-              className="flex h-full flex-col gap-5 transition-transform duration-[var(--motion-quick)] ease-[var(--ease-standard)] hover:-translate-y-0.5"
+              className="sol-card flex h-full flex-col gap-5"
+              style={{ "--sol-accent": ACCENT_VAR[item.accent] } as React.CSSProperties}
             >
               <SolutionGlyph accent={item.accent} />
               <div className="flex-1">
@@ -122,7 +124,7 @@ export function SolutionsGrid({ content }: SolutionsGridProps) {
         ))}
       </div>
 
-      <div className="mt-10 flex justify-center">
+      <div className="mt-9 flex justify-center">
         <ArrowLink href="/solutions">{content.compareCta}</ArrowLink>
       </div>
     </Section>
