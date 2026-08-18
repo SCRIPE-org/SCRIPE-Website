@@ -9,8 +9,18 @@
 import type { Locale, PageId } from "./types";
 import { homeContent as homeEn } from "./en/home";
 import { platformContent as platformEn } from "./en/platform";
+import { solutionsContent as solutionsEn } from "./en/solutions";
+import { solutionClubsContent as solutionClubsEn } from "./en/solution-clubs";
+import { solutionAcademiesContent as solutionAcademiesEn } from "./en/solution-academies";
+import { solutionVenuesContent as solutionVenuesEn } from "./en/solution-venues";
+import { solutionMultiSportContent as solutionMultiSportEn } from "./en/solution-multi-sport";
 import { homeContent as homeAr } from "./ar/home";
 import { platformContent as platformAr } from "./ar/platform";
+import { solutionsContent as solutionsAr } from "./ar/solutions";
+import { solutionClubsContent as solutionClubsAr } from "./ar/solution-clubs";
+import { solutionAcademiesContent as solutionAcademiesAr } from "./ar/solution-academies";
+import { solutionVenuesContent as solutionVenuesAr } from "./ar/solution-venues";
+import { solutionMultiSportContent as solutionMultiSportAr } from "./ar/solution-multi-sport";
 
 /**
  * Maps each registered page to its content for every locale.
@@ -22,6 +32,11 @@ import { platformContent as platformAr } from "./ar/platform";
 export const CONTENT_REGISTRY: Partial<Record<PageId, Record<Locale, unknown>>> = {
   home: { en: homeEn, ar: homeAr },
   platform: { en: platformEn, ar: platformAr },
+  solutions: { en: solutionsEn, ar: solutionsAr },
+  solutionClubs: { en: solutionClubsEn, ar: solutionClubsAr },
+  solutionAcademies: { en: solutionAcademiesEn, ar: solutionAcademiesAr },
+  solutionVenues: { en: solutionVenuesEn, ar: solutionVenuesAr },
+  solutionMultiSport: { en: solutionMultiSportEn, ar: solutionMultiSportAr },
 };
 
 /**

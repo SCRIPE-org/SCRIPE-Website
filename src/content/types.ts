@@ -442,3 +442,259 @@ export interface PlatformContent {
     note: string;
   };
 }
+
+/**
+ * One metric shown in a solution's hero snapshot panel or a hub card's mini
+ * stat row — a labelled figure with no caption (unlike {@link EvidenceStat},
+ * which a solution page's outcomes strip uses instead). Matches the legacy
+ * static site's compact "what this looks like" panel
+ * (`backup/scripe-static/solutions/*.html`).
+ */
+export interface SolutionStat {
+  /** The metric's label (e.g. "Squads"). */
+  label: string;
+  /** The metric's already-formatted value (e.g. "14", "97%"). */
+  value: string;
+}
+
+/** One friction point named in a solution page's pain-points section. */
+export interface SolutionPainPoint {
+  /** Short friction title (e.g. "Who's actually free tonight"). */
+  title: string;
+  /** One–two sentence description of the friction and its cost. */
+  description: string;
+}
+
+/** One capability tile in a solution page's capabilities grid. */
+export interface SolutionCapability {
+  /** Key into the shared capability icon registry
+   *  (`src/components/sections/solutions/CapabilityIcon.tsx`). */
+  icon: string;
+  /** Capability title (e.g. "Teams and squads"). */
+  title: string;
+  /** One-sentence description of what the capability does. */
+  description: string;
+}
+
+/**
+ * Content shared by all four solution pages (`solutionClubs`,
+ * `solutionAcademies`, `solutionVenues`, `solutionMultiSport`) — ONE
+ * interface every `src/app/[locale]/solutions/[slug]/page.tsx` render draws
+ * from, with the per-solution personality carried entirely by copy and the
+ * registry's own accent identity (`src/components/sections/solutions/registry.ts`),
+ * never by a per-slug branch inside the template.
+ *
+ * Ported from `backup/scripe-static/solutions/*.html` — all four legacy
+ * pages share this exact section shape: hero (with a "what this looks like"
+ * mini stat panel) → a "focus" capability grid → an "operating day" narrative
+ * (a meters + evidence-board mockup) → a "numbers" KPI strip → cross-links to
+ * the other three solutions → closing CTA. The "operating day" mockup is
+ * deliberately recomposed into concise `painPoints` prose here instead of
+ * ported as a second evidence mockup — the same simplification
+ * `src/content/en/platform.ts`'s file header documents for `DashboardStrip`
+ * replacing the legacy "product experience" screenshot: the same honest
+ * claim, without duplicating `CapabilityEvidence`'s board/meters machinery a
+ * third time. The cross-links section is not part of this interface — the
+ * `[slug]` template derives it from `SolutionsHubContent["grid"]["items"]`
+ * (filtering out the current slug) rather than repeating the other three
+ * solutions' title/description/href four times over.
+ */
+export interface SolutionContent {
+  /** Page-level metadata strings. */
+  meta: {
+    /** Page title (the layout's `"%s · SCRIPE"` template wraps it). */
+    title: string;
+    /** Meta/OG description. */
+    description: string;
+    /** Breadcrumb label for the home crumb in structured data. */
+    breadcrumbHome: string;
+    /** Breadcrumb label for the solutions-hub crumb in structured data. */
+    breadcrumbSolutions: string;
+    /** Breadcrumb label for this page's own crumb in structured data. */
+    breadcrumbCurrent: string;
+  };
+  /** Hero: headline, subtitle, CTAs and a small evidence snapshot. */
+  hero: {
+    /** Small marker label above the heading (the solution's display name). */
+    eyebrow: string;
+    /** Page heading. */
+    title: string;
+    /** Supporting sentence. */
+    subtitle: string;
+    /** Primary CTA label (book a demo). */
+    primaryCta: string;
+    /** Secondary CTA label (see pricing). */
+    secondaryCta: string;
+    /** The "what this looks like" mini evidence panel beside the hero copy. */
+    snapshot: {
+      /** Panel label (e.g. "What this looks like"). */
+      label: string;
+      /** Three illustrative metrics. */
+      stats: SolutionStat[];
+      /** Honesty note under the stats (sample data, not live). */
+      note: string;
+    };
+  };
+  /** The friction this solution exists to remove. */
+  painPoints: {
+    /** Section heading. */
+    title: string;
+    /** Supporting sentence. */
+    subtitle: string;
+    /** Three named frictions. */
+    items: SolutionPainPoint[];
+  };
+  /** The capability grid — what this organization shape actually runs on. */
+  capabilities: {
+    /** Section heading. */
+    title: string;
+    /** Supporting sentence. */
+    subtitle: string;
+    /** The capability tiles, in display order. */
+    items: SolutionCapability[];
+  };
+  /** The KPI strip — "one place the numbers agree." */
+  outcomes: {
+    /** Section heading. */
+    title: string;
+    /** Supporting sentence. */
+    subtitle: string;
+    /** Four illustrative headline figures. */
+    stats: EvidenceStat[];
+    /** Honesty note under the strip (sample data, not live). */
+    note: string;
+  };
+  /** Heading for the cross-links to the other three solutions. The links
+   *  themselves are not stored here — the `[slug]` template derives them
+   *  from `SolutionsHubContent["grid"]["items"]` (see `SolutionContent`'s
+   *  own doc comment above for why). */
+  otherSolutions: {
+    /** Section heading. */
+    title: string;
+  };
+  /** Closing conversion band. */
+  cta: {
+    /** Section heading. */
+    title: string;
+    /** Supporting sentence. */
+    subtitle: string;
+    /** Primary CTA label (book a demo). */
+    primaryCta: string;
+    /** Secondary CTA label (explore the platform). */
+    secondaryCta: string;
+    /** Small honesty note under the CTAs. */
+    note: string;
+  };
+}
+
+/**
+ * One solution card in the hub's grid — the {@link SolutionEntry} shape plus
+ * the mini stat row the legacy hub page's cards carried
+ * (`backup/scripe-static/solutions.html`).
+ */
+export interface SolutionsHubCard {
+  /** Solution shape title (e.g. "Sports Clubs"). */
+  title: string;
+  /** One-sentence description of the shape. */
+  description: string;
+  /** Label of the card's explore link. */
+  cta: string;
+  /** Locale-less internal route the card links to. */
+  href: string;
+  /** Product-world accent identity. */
+  accent: AccentId;
+  /** Three illustrative metrics shown under the description. */
+  stats: SolutionStat[];
+}
+
+/**
+ * One column of the hub's "same platform, different centre of gravity"
+ * comparison grid.
+ */
+export interface SolutionsHubCompareColumn {
+  /** Solution shape title (e.g. "Sports Clubs"). */
+  title: string;
+  /** Label of the column's deep link. */
+  cta: string;
+  /** Locale-less internal route the column's deep link points at. */
+  href: string;
+  /** Product-world accent identity. */
+  accent: AccentId;
+  /** The modules this organization shape leans on first. */
+  features: string[];
+}
+
+/**
+ * Content for the solutions hub page (`/solutions`) — hero → a grid of four
+ * solution gateways → a comparison grid → the "what never changes" shared
+ * value proposition → closing CTA. Ported from
+ * `backup/scripe-static/solutions.html`.
+ */
+export interface SolutionsHubContent {
+  /** Page-level metadata strings. */
+  meta: {
+    /** Page title (the layout's `"%s · SCRIPE"` template wraps it). */
+    title: string;
+    /** Meta/OG description. */
+    description: string;
+    /** Breadcrumb label for the home crumb in structured data. */
+    breadcrumbHome: string;
+    /** Breadcrumb label for this page's own crumb in structured data. */
+    breadcrumbCurrent: string;
+  };
+  /** Typography-led hero/intro. */
+  hero: {
+    /** Small marker label above the heading. */
+    eyebrow: string;
+    /** Page heading. */
+    title: string;
+    /** Supporting sentence. */
+    subtitle: string;
+    /** Primary CTA label (book a demo). */
+    primaryCta: string;
+    /** Secondary CTA label (explore the platform). */
+    secondaryCta: string;
+  };
+  /** The four-card solution gateway grid. */
+  grid: {
+    /** Section heading. */
+    title: string;
+    /** Supporting sentence. */
+    subtitle: string;
+    /** The four solution cards. */
+    items: SolutionsHubCard[];
+  };
+  /** The "same platform, different centre of gravity" comparison grid. */
+  compare: {
+    /** Section heading. */
+    title: string;
+    /** Supporting sentence. */
+    subtitle: string;
+    /** One column per solution shape. */
+    columns: SolutionsHubCompareColumn[];
+  };
+  /** The "what never changes" shared value proposition split. */
+  shared: {
+    /** Section heading. */
+    title: string;
+    /** Label of the deep link into the platform page. */
+    cta: string;
+    /** Locale-less internal route the deep link points at. */
+    href: string;
+    /** The checklist of what every solution shares underneath. */
+    points: string[];
+  };
+  /** Closing conversion band. */
+  cta: {
+    /** Section heading. */
+    title: string;
+    /** Supporting sentence. */
+    subtitle: string;
+    /** Primary CTA label (book a demo). */
+    primaryCta: string;
+    /** Secondary CTA label (see pricing). */
+    secondaryCta: string;
+    /** Small honesty note under the CTAs. */
+    note: string;
+  };
+}

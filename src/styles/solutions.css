@@ -1,0 +1,105 @@
+/* ============================================================================
+   SCRIPE — Solutions area styles (hub + the four solution pages' shared
+   template)
+
+   Scope: imported by BOTH `src/app/[locale]/solutions/page.tsx` (the hub)
+   AND `src/app/[locale]/solutions/[slug]/page.tsx` (the template) — the one
+   deliberate exception to the "one stylesheet per route" pattern
+   `src/styles/home.css` and `src/styles/platform.css` otherwise follow: the
+   hub and the four solution pages are one feature area sharing one visual
+   system (most visibly the closing CTA panel, identical brand moment on all
+   five routes), so splitting this into two near-duplicate files would only
+   invite drift. Class names are prefixed `.sol-` throughout so nothing here
+   can collide with `home.css`/`platform.css` during a client-side
+   navigation between areas. Shared choreography (the `.rv` reveal system)
+   stays in `src/styles/motion-utilities.css`; tokens stay in
+   `src/styles/tokens/`; the direction-semantic `.rtl-flip` arrow-flip rule
+   lives in `src/styles/home.css` §9 and is reused as-is (one small rule,
+   not worth a duplicate definition here).
+   ============================================================================ */
+
+/* ---------------------------------------------------------------------------
+   1. Closing CTA — obsidian panel with the lime "horizon" edge-light, the
+   same brand moment `home.css` §12 and `platform.css` §4 give their own
+   closing bands. Deliberately a single-look brand moment: obsidian in both
+   themes. Shared by the hub's closing CTA and every solution page's closing
+   CTA (`SolutionCta.tsx` / `HubCta.tsx`).
+   --------------------------------------------------------------------------- */
+
+.sol-cta-panel {
+  position: relative;
+  overflow: hidden;
+  background: var(--obsidian);
+  border: 1px solid #26282c;
+  border-radius: var(--radius-xl-base);
+}
+
+.sol-cta-horizon {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: 1px;
+  background: linear-gradient(90deg, transparent 8%, rgba(192, 255, 0, 0.8) 50%, transparent 92%);
+  pointer-events: none;
+}
+
+.sol-cta-bloom {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: 55%;
+  background: radial-gradient(52% 90% at 50% 0%, rgba(192, 255, 0, 0.14), transparent 72%);
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------------------
+   2. Pain-point list — a hairline-divided grid (never a bordered card; see
+   `PainPoints.tsx`'s own header for why), each item's short rule echoing the
+   home hero's flight-plan strip (`home.css` §8's `.hero-plan-item`). Sizing
+   only — color comes from the page's own `ACCENT_DOT_CLASS` background
+   utility applied alongside this class in JSX (a CSS custom property here
+   would not cascade: each section is its own sibling `<section>`, not a
+   descendant of a shared accent-scoped ancestor).
+   --------------------------------------------------------------------------- */
+
+.sol-pain-item {
+  border-block-start: 1px solid var(--border-subtle);
+  padding-block-start: var(--space-5);
+}
+
+.sol-pain-rule {
+  display: inline-block;
+  inline-size: 22px;
+  block-size: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   3. Outcomes strip meter rule — the small dash above each headline figure,
+   reusing the dashboard-strip idiom (`platform.css`'s sibling
+   `DashboardStrip.tsx` composes the same shape inline). Sizing only, same
+   reasoning as `.sol-pain-rule` above.
+   --------------------------------------------------------------------------- */
+
+.sol-outcome-rule {
+  display: block;
+  inline-size: 20px;
+  block-size: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   4. Hub grid card — accent-tinted hover wash, the same idiom
+   `home.css` §10 gives the home page's product-family rows (`.pf-row`).
+   Unlike §2/§3 above, this one custom property IS scoped correctly: each
+   card sets `--sol-accent` on itself (`HubGrid.tsx`), and this rule reads it
+   back from that same element, no cross-section cascade required.
+   --------------------------------------------------------------------------- */
+
+.sol-grid-card {
+  transition: background-color var(--motion-quick) var(--ease-standard);
+}
+
+@media (hover: hover) {
+  .sol-grid-card:hover {
+    background-color: color-mix(in srgb, var(--sol-accent) 4%, var(--surface-raised));
+  }
+}
