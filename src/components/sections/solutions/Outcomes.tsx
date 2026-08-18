@@ -9,8 +9,11 @@
  * header — the DashboardStrip's own device, legitimately reused because
  * this section plays the identical role (a closing evidence strip) rather
  * than being scaffolding repeated for its own sake. Ported from
- * `backup/scripe-static/solutions/*.html`'s "numbers" section. A Server
- * Component; `Reveal` is the only client leaf.
+ * `backup/scripe-static/solutions/*.html`'s "numbers" section.
+ *
+ * Task E4: the KPI panel moved off its old one-off `shadow-[...]` onto the
+ * shared elevation ramp (`.atmo-panel`, `src/styles/tokens/atmosphere.css`).
+ * A Server Component; `Reveal` is the only client leaf.
  */
 import type { AccentId, SolutionContent } from "@/content/types";
 import { Reveal } from "@/components/motion/Reveal";
@@ -33,7 +36,7 @@ export function Outcomes({ content, accent }: OutcomesProps) {
   return (
     <Section>
       <Reveal className="mx-auto max-w-[680px] text-center">
-        <h2 className="font-display text-text-primary text-[length:var(--fs-display)] leading-[1.06] font-semibold text-balance [font-variation-settings:'wdth'_114] [&:lang(ar)]:[font-variation-settings:normal] [&:lang(ar)]:leading-[1.3]">
+        <h2 className="atmo-title font-display text-text-primary text-[length:var(--fs-display)] text-balance">
           {content.title}
         </h2>
         <p className="text-text-secondary mx-auto mt-5 max-w-[58ch] text-[length:var(--fs-lead)] text-pretty">
@@ -42,7 +45,7 @@ export function Outcomes({ content, accent }: OutcomesProps) {
       </Reveal>
 
       <Reveal y={24} className="mt-12">
-        <div className="border-border-subtle bg-surface-raised overflow-hidden rounded-lg border shadow-[0_24px_60px_-32px_rgba(0,0,0,0.4)]">
+        <div className="atmo-panel overflow-hidden rounded-lg">
           <div className="flex flex-wrap">
             {content.stats.map((stat) => (
               <div

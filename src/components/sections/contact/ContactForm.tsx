@@ -71,6 +71,13 @@
  * limits (`backup/scripe-static/js/contact.js`): required name/email/
  * organization, an email-shape check, and the five max-lengths.
  *
+ * ── Elevation (Task E4) ─────────────────────────────────────────────────────
+ * The form card moved from a flat border onto the shared elevation ramp
+ * (`.atmo-panel`, `src/styles/tokens/atmosphere.css`); the confirmation
+ * panel keeps its own intentionally stronger `border-border-strong` (a
+ * deliberate signal on the resolved state) and takes only the ramp's shadow
+ * half (`.atmo-lift`), which never touches border/background.
+ *
  * ── Focus management ───────────────────────────────────────────────────────
  * On ANY invalid submission — client-side (immediate) or server-side (the
  * action returns `status: "invalid"`) — the first invalid field in field
@@ -321,7 +328,7 @@ export function ContactForm({ content }: ContactFormProps) {
   if (showConfirmation) {
     const isNotConnected = state?.status === "not-connected";
     return (
-      <Reveal className="min-w-0 rounded-lg border border-border-strong bg-surface-raised p-8 sm:p-10">
+      <Reveal className="atmo-lift min-w-0 rounded-lg border border-border-strong bg-surface-raised p-8 sm:p-10">
         <div role="status">
           <span
             aria-hidden="true"
@@ -365,7 +372,7 @@ export function ContactForm({ content }: ContactFormProps) {
         noValidate
         action={formAction}
         onSubmit={handleSubmit}
-        className="grid gap-6 rounded-lg border border-border-subtle bg-surface-raised p-6 sm:p-8"
+        className="atmo-panel grid gap-6 rounded-lg p-6 sm:p-8"
       >
         <div className="grid gap-1.5">
           <span className="text-[length:var(--fs-meta)] font-semibold uppercase tracking-[0.14em] text-accent-text [&:lang(ar)]:tracking-normal [&:lang(ar)]:normal-case">

@@ -19,6 +19,14 @@
  * highlighted Growth column keeps its own solid background so it doesn't
  * show through the row label's sticky cell as it scrolls underneath.
  *
+ * Task E4: the header marker runs in the ground sequence's mono
+ * film-grammar (see `PricingHero.tsx`'s header), the section sits on a quiet
+ * cool ground glow (`.atmo`, `.pricing-compare-atmo` in `pricing.css` §4),
+ * and the table wrapper moved off a flat border onto the shared elevation
+ * ramp (`.atmo-panel`) — the sticky row-label column and the highlighted
+ * Growth column both keep their own opaque backgrounds untouched, so neither
+ * one shows the new gradient ground through as it scrolls underneath.
+ *
  * A Server Component — no client JS.
  */
 import type { PricingContent, PricingComparisonValue, PricingPlan } from "@/content/types";
@@ -100,13 +108,13 @@ function ValueCell({
  */
 export function ComparisonTable({ content, plans }: ComparisonTableProps) {
   return (
-    <Section id="compare" className="bg-surface-overlay/40 scroll-mt-24">
+    <Section id="compare" className="atmo pricing-compare-atmo bg-surface-overlay/40 scroll-mt-24">
       <Reveal className="max-w-[760px]">
-        <p className="text-accent-text flex items-center gap-3 text-[length:var(--fs-meta)] font-semibold tracking-[0.14em] uppercase [&:lang(ar)]:tracking-normal [&:lang(ar)]:normal-case">
+        <p className="text-accent-text flex items-center gap-3 font-mono text-[length:var(--fs-meta)] font-medium tracking-[0.22em] uppercase [&:lang(ar)]:tracking-[0.06em]">
           <span className="bg-accent inline-block h-px w-6" aria-hidden="true" />
           {content.label}
         </p>
-        <h2 className="font-display text-text-primary mt-5 text-[length:var(--fs-display)] leading-[1.06] font-semibold text-balance [font-variation-settings:'wdth'_114] [&:lang(ar)]:[font-variation-settings:normal] [&:lang(ar)]:leading-[1.3]">
+        <h2 className="atmo-title font-display text-text-primary mt-5 text-[length:var(--fs-display)] text-balance">
           {content.title}
         </h2>
         <p className="text-text-secondary mt-5 max-w-[62ch] text-[length:var(--fs-lead)] text-pretty">
@@ -119,7 +127,7 @@ export function ComparisonTable({ content, plans }: ComparisonTableProps) {
           role="region"
           aria-label={content.title}
           tabIndex={0}
-          className="border-border-subtle bg-surface-raised overflow-x-auto rounded-lg border focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--focus-ring)]"
+          className="atmo-panel overflow-x-auto rounded-lg focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--focus-ring)]"
         >
           <table className="w-full min-w-[640px] border-collapse">
             <caption className="caption-bottom text-text-muted px-6 py-5 text-start text-[length:var(--fs-meta)] text-pretty">

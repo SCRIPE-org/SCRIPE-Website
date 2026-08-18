@@ -10,8 +10,13 @@
  * derives `items` from `SolutionsHubContent["grid"]["items"]` (the hub's own
  * content, already registered under the `"solutions"` `PageId`), filtering
  * out the current slug, so the other three solutions' title/description/href
- * are authored exactly once rather than four times over. A Server
- * Component; `Reveal` is the only client leaf.
+ * are authored exactly once rather than four times over.
+ *
+ * Task E4: each card gains the shadow half of the shared elevation ramp
+ * (`.atmo-lift` — not the full `.atmo-panel` recipe, which would fight
+ * `Card`'s own `border-t-*` accent-edge contract; see `atmo-lift`'s own
+ * comment in `src/styles/tokens/atmosphere.css`). A Server Component;
+ * `Reveal` is the only client leaf.
  */
 import type { SolutionsHubCard } from "@/content/types";
 import { Reveal } from "@/components/motion/Reveal";
@@ -37,7 +42,7 @@ export function OtherSolutions({ title, items }: OtherSolutionsProps) {
   return (
     <Section className="border-border-subtle border-t">
       <Reveal>
-        <h2 className="font-display text-text-primary max-w-[62ch] text-[length:var(--fs-h1)] font-semibold text-balance [font-variation-settings:'wdth'_114]">
+        <h2 className="atmo-title font-display text-text-primary max-w-[62ch] text-[length:var(--fs-h1)]">
           {title}
         </h2>
       </Reveal>
@@ -49,7 +54,7 @@ export function OtherSolutions({ title, items }: OtherSolutionsProps) {
       >
         {items.map((item) => (
           <Reveal key={item.href} y={16}>
-            <Card accent={toCardAccent(item.accent)} className="flex h-full flex-col gap-4">
+            <Card accent={toCardAccent(item.accent)} className="atmo-lift flex h-full flex-col gap-4">
               <ShapeGlyph accent={item.accent} />
               <div className="flex-1">
                 <h3 className="font-display text-text-primary text-[length:var(--fs-h3)] font-semibold">

@@ -16,6 +16,9 @@
  * A Server Component — no interactivity here at all, so none of this page's
  * client bundle weight comes from this panel; `Reveal` is the only client
  * leaf, matching every other section on the site.
+ *
+ * Task E4: the channel-note panel moved from a flat border onto the shared
+ * elevation ramp (`.atmo-panel`, `src/styles/tokens/atmosphere.css`).
  */
 import type { ContactContent } from "@/content/types";
 import { Reveal } from "@/components/motion/Reveal";
@@ -50,7 +53,7 @@ export function ContactExpect({ expect, channels }: ContactExpectProps) {
         </ul>
       </div>
 
-      <div className="grid gap-5 rounded-lg border border-border-subtle bg-surface-raised p-6">
+      <div className="atmo-panel grid gap-5 rounded-lg p-6">
         {channels.items.map((channel) => (
           <div key={channel.id} className="flex items-start gap-3">
             <span

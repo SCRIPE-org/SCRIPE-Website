@@ -89,34 +89,30 @@
 }
 
 /* ---------------------------------------------------------------------------
-   4. Closing CTA — obsidian panel with the lime "horizon" edge-light, the
-   same brand moment `src/styles/home.css` §12 gives the home page's own
-   closing band. Deliberately a single-look brand moment: obsidian in both
-   themes.
+   4. Closing CTA — the obsidian panel + lime "horizon" edge-light brand
+   moment now lives once, shared, in `src/styles/tokens/atmosphere.css`
+   (`.atmo-cta-panel`/`.atmo-cta-horizon`/`.atmo-cta-bloom`/`.atmo-cta-grain`,
+   loaded from `globals.css` on every route) — Task E4 consolidated this out
+   of six page-scoped copies (this file, `pricing.css`, `solutions.css`,
+   `resources.css`, `company.css`, `not-found.css`) that had drifted apart
+   only in class-name prefix, never in the rule itself. `ClosingCta.tsx` below
+   composes the shared classes directly.
    --------------------------------------------------------------------------- */
 
-.cap-cta-panel {
-  position: relative;
-  overflow: hidden;
-  background: var(--obsidian);
-  border: 1px solid #26282c;
-  border-radius: var(--radius-xl-base);
+/* ---------------------------------------------------------------------------
+   5. Ground atmosphere (Task E4) — cool radial glows anchored to this page's
+   two dark-toned moments (the hero and the dashboard payoff strip), dark
+   theme only, ≤7% alpha per the brand doctrine `home.css` §13 sets. Combined
+   with the shared `.atmo` root (`src/styles/tokens/atmosphere.css`) on each
+   section; the hero also takes `.atmo-grain` — the page's one hero-toned
+   moment, echoing the home hero's own grain rather than spreading it across
+   every content section on the page.
+   --------------------------------------------------------------------------- */
+
+[data-theme="dark"] .cap-hero-atmo {
+  --atmo-glow: radial-gradient(46% 65% at 18% -6%, rgba(139, 133, 232, 0.06), transparent 72%);
 }
 
-.cap-cta-horizon {
-  position: absolute;
-  inset-inline: 0;
-  inset-block-start: 0;
-  block-size: 1px;
-  background: linear-gradient(90deg, transparent 8%, rgba(192, 255, 0, 0.8) 50%, transparent 92%);
-  pointer-events: none;
-}
-
-.cap-cta-bloom {
-  position: absolute;
-  inset-inline: 0;
-  inset-block-start: 0;
-  block-size: 55%;
-  background: radial-gradient(52% 90% at 50% 0%, rgba(192, 255, 0, 0.14), transparent 72%);
-  pointer-events: none;
+[data-theme="dark"] .cap-dashboard-atmo {
+  --atmo-glow: radial-gradient(48% 60% at 50% 20%, rgba(168, 190, 224, 0.05), transparent 72%);
 }

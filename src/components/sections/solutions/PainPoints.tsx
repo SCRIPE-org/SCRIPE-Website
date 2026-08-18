@@ -33,7 +33,7 @@ export function PainPoints({ content, accent }: PainPointsProps) {
   return (
     <Section>
       <Reveal className="max-w-[720px]">
-        <h2 className="font-display text-text-primary text-[length:var(--fs-h1)] font-semibold text-balance [font-variation-settings:'wdth'_114]">
+        <h2 className="atmo-title font-display text-text-primary text-[length:var(--fs-h1)]">
           {content.title}
         </h2>
         <p className="text-text-secondary mt-4 max-w-[62ch] text-[length:var(--fs-lead)] text-pretty">

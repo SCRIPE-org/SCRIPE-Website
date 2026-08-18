@@ -32,16 +32,16 @@ export function PricingFaq({ content }: PricingFaqProps) {
   return (
     <Section id="faq" className="scroll-mt-24">
       <Reveal className="max-w-[720px]">
-        <p className="text-accent-text flex items-center gap-3 text-[length:var(--fs-meta)] font-semibold tracking-[0.14em] uppercase [&:lang(ar)]:tracking-normal [&:lang(ar)]:normal-case">
+        <p className="text-accent-text flex items-center gap-3 font-mono text-[length:var(--fs-meta)] font-medium tracking-[0.22em] uppercase [&:lang(ar)]:tracking-[0.06em]">
           <span className="bg-accent inline-block h-px w-6" aria-hidden="true" />
           {content.label}
         </p>
-        <h2 className="font-display text-text-primary mt-5 text-[length:var(--fs-display)] leading-[1.06] font-semibold text-balance [font-variation-settings:'wdth'_114] [&:lang(ar)]:[font-variation-settings:normal] [&:lang(ar)]:leading-[1.3]">
+        <h2 className="atmo-title font-display text-text-primary mt-5 text-[length:var(--fs-display)] text-balance">
           {content.title}
         </h2>
       </Reveal>
 
-      <Reveal y={20} className="border-border-subtle bg-surface-raised mt-10 divide-y divide-[var(--border-subtle)] overflow-hidden rounded-lg border">
+      <Reveal y={20} className="atmo-panel mt-10 divide-y divide-[var(--border-subtle)] overflow-hidden rounded-lg">
         {content.items.map((item) => (
           <details key={item.question} className="faq-item group px-6 py-1">
             <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 text-start">

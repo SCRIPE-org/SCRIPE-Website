@@ -17,7 +17,12 @@
  * reading page yet (see `ResourceItem`'s doc comment in
  * `src/content/types.ts` for the future-MDX contract these cards are
  * shaped for), so cards render as plain `<article>`s, never a `<Link>` that
- * would 404. A Server Component; `Reveal` is the only client leaf.
+ * would 404.
+ *
+ * Task E4: each card moved from a flat `border` onto the shared elevation
+ * ramp (`.atmo-panel`, `src/styles/tokens/atmosphere.css`), and the heading
+ * onto the ground sequence's heavy title voice (`.atmo-title`). A Server
+ * Component; `Reveal` is the only client leaf.
  */
 import type { ResourcesContent } from "@/content/types";
 import { Reveal } from "@/components/motion/Reveal";
@@ -39,7 +44,7 @@ export function GuidesGrid({ content }: GuidesGridProps) {
     <Section id="guides" className="scroll-mt-24">
       <Reveal className="flex items-center gap-2.5">
         <span className="bg-accent-academy inline-block size-2.5 rounded-full" aria-hidden="true" />
-        <h2 className="font-display text-text-primary text-[length:var(--fs-h1)] font-semibold text-balance [font-variation-settings:'wdth'_114]">
+        <h2 className="atmo-title font-display text-text-primary text-[length:var(--fs-h1)]">
           {content.title}
         </h2>
       </Reveal>
@@ -54,7 +59,7 @@ export function GuidesGrid({ content }: GuidesGridProps) {
       >
         {content.items.map((item) => (
           <Reveal key={item.slug} y={20}>
-            <article className="border-border-subtle bg-surface-raised flex h-full flex-col gap-4 rounded-lg border p-6">
+            <article className="atmo-panel flex h-full flex-col gap-4 rounded-lg p-6">
               <div className="flex items-start gap-3">
                 <span className="border-border-subtle text-accent-academy grid size-9 shrink-0 place-items-center rounded-md border">
                   <GuideIcon />

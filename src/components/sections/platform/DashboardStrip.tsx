@@ -9,8 +9,15 @@
  * these same figures; that scope is intentionally not ported here (see
  * `src/content/en/platform.ts`'s file header) — a wide three-stat strip
  * makes the same honest claim with the same evidence, at a fraction of the
- * markup and none of the maintenance surface. A Server Component; `Reveal`
- * is the only client leaf.
+ * markup and none of the maintenance surface.
+ *
+ * Task E4: the marker reuses the hero's mono film-grammar (see
+ * `CapabilityHero.tsx`'s header), the strip sits in a quiet cool ground glow
+ * (`.atmo`, `.cap-dashboard-atmo` in `platform.css` §5 — no grain, this
+ * section is a content payoff, not a hero-toned moment), and the stat panel
+ * moves off its old one-off `shadow-[...]` onto the shared elevation ramp
+ * (`.atmo-panel`, `src/styles/tokens/atmosphere.css`). A Server Component;
+ * `Reveal` is the only client leaf.
  */
 import type { PlatformContent } from "@/content/types";
 import { Reveal } from "@/components/motion/Reveal";
@@ -28,13 +35,13 @@ export interface DashboardStripProps {
  */
 export function DashboardStrip({ content }: DashboardStripProps) {
   return (
-    <Section id="dashboard" className="cap-anchor">
+    <Section id="dashboard" className="atmo cap-dashboard-atmo cap-anchor">
       <Reveal className="mx-auto max-w-[720px] text-center">
-        <p className="text-accent-text flex items-center justify-center gap-3 text-[length:var(--fs-meta)] font-semibold tracking-[0.14em] uppercase [&:lang(ar)]:tracking-normal [&:lang(ar)]:normal-case">
+        <p className="text-accent-text flex items-center justify-center gap-3 font-mono text-[length:var(--fs-meta)] font-medium tracking-[0.22em] uppercase [&:lang(ar)]:tracking-[0.06em]">
           <span className="bg-accent inline-block h-px w-6" aria-hidden="true" />
           {content.label}
         </p>
-        <h2 className="font-display text-text-primary mt-5 text-[length:var(--fs-display)] leading-[1.06] font-semibold text-balance [font-variation-settings:'wdth'_114] [&:lang(ar)]:[font-variation-settings:normal] [&:lang(ar)]:leading-[1.3]">
+        <h2 className="atmo-title font-display text-text-primary mt-5 text-[length:var(--fs-display)] text-balance">
           {content.title}
         </h2>
         <p className="text-text-secondary mx-auto mt-5 max-w-[58ch] text-[length:var(--fs-lead)] text-pretty">
@@ -43,7 +50,7 @@ export function DashboardStrip({ content }: DashboardStripProps) {
       </Reveal>
 
       <Reveal y={24} className="mt-12">
-        <div className="border-border-subtle bg-surface-raised overflow-hidden rounded-lg border shadow-[0_24px_60px_-32px_rgba(0,0,0,0.4)]">
+        <div className="atmo-panel overflow-hidden rounded-lg">
           <div className="flex flex-wrap">
             {content.stats.map((stat) => (
               <div

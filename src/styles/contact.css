@@ -1,0 +1,25 @@
+/* ============================================================================
+   SCRIPE — Contact page styles (hero ground atmosphere)
+
+   Scope: imported by `src/app/[locale]/contact/page.tsx` only — everything
+   in here is contact-page-specific. Shared choreography (the `.rv` reveal
+   system) stays in `src/styles/motion-utilities.css`; tokens stay in
+   `src/styles/tokens/`. Before Task E4 this page had no dedicated
+   stylesheet — its form/panel surfaces run entirely on Tailwind utilities
+   plus the `Field`/`Button` primitives, and still do; this file exists
+   solely to host the one named `--atmo-glow` modifier class the hero needs
+   (see `ContactHero.tsx`'s header for why that has to be a real CSS rule,
+   theme-scoped via `[data-theme="dark"]`, rather than an inline style —
+   inline styles can't be conditioned on `[data-theme]` at all).
+   ============================================================================ */
+
+/* ---------------------------------------------------------------------------
+   1. Ground atmosphere (Task E4) — a cool radial glow anchored to the hero,
+   dark theme only, ≤7% alpha per the brand doctrine `home.css` §13 sets.
+   Combined with the shared `.atmo`/`.atmo-grain` roots
+   (`src/styles/tokens/atmosphere.css`) — this page's one hero-toned moment.
+   --------------------------------------------------------------------------- */
+
+[data-theme="dark"] .contact-hero-atmo {
+  --atmo-glow: radial-gradient(46% 65% at 18% -6%, rgba(192, 255, 0, 0.045), transparent 72%);
+}

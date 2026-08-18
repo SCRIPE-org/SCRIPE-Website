@@ -39,7 +39,7 @@ export function ProductReading({ content }: ProductReadingProps) {
   return (
     <Section id="product" className="scroll-mt-24">
       <Reveal className="max-w-[720px]">
-        <h2 className="font-display text-text-primary text-[length:var(--fs-h1)] font-semibold text-balance [font-variation-settings:'wdth'_114]">
+        <h2 className="atmo-title font-display text-text-primary text-[length:var(--fs-h1)]">
           {content.title}
         </h2>
         <p className="text-text-secondary mt-3 text-[length:var(--fs-lead)] text-pretty">{content.subtitle}</p>
@@ -54,7 +54,7 @@ export function ProductReading({ content }: ProductReadingProps) {
           <Reveal key={item.id} y={16}>
             <Link
               href={`/platform#${item.id}`}
-              className="group border-border-subtle bg-surface-raised hover:border-border-strong hover:bg-surface-overlay flex h-full flex-col gap-2 rounded-lg border p-5 transition-colors duration-[var(--motion-quick)]"
+              className="group border-border-subtle bg-surface-raised hover:border-border-strong hover:bg-surface-overlay atmo-lift flex h-full flex-col gap-2 rounded-lg border p-5 transition-colors duration-[var(--motion-quick)]"
             >
               <div className="flex items-center gap-3">
                 <span className={`shrink-0 ${ACCENT_TEXT_CLASS[item.accent]}`}>

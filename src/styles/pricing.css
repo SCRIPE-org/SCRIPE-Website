@@ -64,34 +64,26 @@
 }
 
 /* ---------------------------------------------------------------------------
-   3. Closing CTA — obsidian panel with the lime "horizon" edge-light, the
-   same brand moment `platform.css` §4 and `solutions.css` §1 give their own
-   closing bands. Deliberately a single-look brand moment: obsidian in both
-   themes.
+   3. Closing CTA — the obsidian panel + lime "horizon" edge-light brand
+   moment now lives once, shared, in `src/styles/tokens/atmosphere.css`
+   (`.atmo-cta-panel`/`.atmo-cta-horizon`/`.atmo-cta-bloom`/`.atmo-cta-grain`,
+   loaded from `globals.css` on every route) — Task E4 consolidated this out
+   of six page-scoped copies. `ClosingCta.tsx` below composes the shared
+   classes directly.
    --------------------------------------------------------------------------- */
 
-.pricing-cta-panel {
-  position: relative;
-  overflow: hidden;
-  background: var(--obsidian);
-  border: 1px solid #26282c;
-  border-radius: var(--radius-xl-base);
+/* ---------------------------------------------------------------------------
+   4. Ground atmosphere (Task E4) — cool radial glows anchored to the hero
+   and the comparison table, dark theme only, ≤7% alpha per the brand
+   doctrine `home.css` §13 sets. Combined with the shared `.atmo` root
+   (`src/styles/tokens/atmosphere.css`) on each section; the hero also takes
+   `.atmo-grain` — this page's one hero-toned moment.
+   --------------------------------------------------------------------------- */
+
+[data-theme="dark"] .pricing-hero-atmo {
+  --atmo-glow: radial-gradient(46% 65% at 16% -6%, rgba(192, 255, 0, 0.045), transparent 72%);
 }
 
-.pricing-cta-horizon {
-  position: absolute;
-  inset-inline: 0;
-  inset-block-start: 0;
-  block-size: 1px;
-  background: linear-gradient(90deg, transparent 8%, rgba(192, 255, 0, 0.8) 50%, transparent 92%);
-  pointer-events: none;
-}
-
-.pricing-cta-bloom {
-  position: absolute;
-  inset-inline: 0;
-  inset-block-start: 0;
-  block-size: 55%;
-  background: radial-gradient(52% 90% at 50% 0%, rgba(192, 255, 0, 0.14), transparent 72%);
-  pointer-events: none;
+[data-theme="dark"] .pricing-compare-atmo {
+  --atmo-glow: radial-gradient(50% 60% at 50% 10%, rgba(168, 190, 224, 0.05), transparent 72%);
 }

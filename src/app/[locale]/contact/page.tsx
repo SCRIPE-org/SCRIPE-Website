@@ -19,7 +19,13 @@
  * set (see `.env.example`), every validated submission still resolves the
  * honest "not yet connected" state rather than a fabricated success. See
  * that file's header for the full delivery/spam/logging contract.
+ *
+ * Task E4 added this page's first page-scoped stylesheet
+ * (`src/styles/contact.css`, imported here so it ships with this route
+ * only) — before that, every surface on this page ran on Tailwind utilities
+ * alone; the new file hosts only the hero's ground-atmosphere glow rule.
  */
+import "@/styles/contact.css";
 import type { Metadata } from "next";
 import { hasLocale } from "next-intl";
 import { JsonLd } from "@/components/seo/JsonLd";

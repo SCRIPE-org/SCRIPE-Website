@@ -51,34 +51,25 @@
 }
 
 /* ---------------------------------------------------------------------------
-   3. Closing CTA — obsidian panel with the lime "horizon" edge-light, the
-   same brand moment `pricing.css` §3, `platform.css` §4 and `solutions.css`
-   §1 give their own closing bands. Deliberately a single-look brand moment:
-   obsidian in both themes.
+   3. Closing CTA — the obsidian panel + lime "horizon" edge-light brand
+   moment now lives once, shared, in `src/styles/tokens/atmosphere.css`
+   (`.atmo-cta-panel`/`.atmo-cta-horizon`/`.atmo-cta-bloom`/`.atmo-cta-grain`,
+   loaded from `globals.css` on every route) — Task E4 consolidated this out
+   of six page-scoped copies. `ClosingCta.tsx` below composes the shared
+   classes directly.
    --------------------------------------------------------------------------- */
 
-.resources-cta-panel {
-  position: relative;
-  overflow: hidden;
-  background: var(--obsidian);
-  border: 1px solid #26282c;
-  border-radius: var(--radius-xl-base);
-}
+/* ---------------------------------------------------------------------------
+   4. Ground atmosphere (Task E4) — a cool radial glow anchored to the hero,
+   dark theme only, ≤7% alpha per the brand doctrine `home.css` §13 sets.
+   Combined with the shared `.atmo`/`.atmo-grain` roots
+   (`src/styles/tokens/atmosphere.css`) — this page's one hero-toned moment;
+   the four content grids below stay on plain token surfaces, matching this
+   page's own established "the marker stays reserved for hero + FAQ" doctrine
+   (see `GuidesGrid.tsx`'s header) so the glow doesn't spread into scaffolding
+   either.
+   --------------------------------------------------------------------------- */
 
-.resources-cta-horizon {
-  position: absolute;
-  inset-inline: 0;
-  inset-block-start: 0;
-  block-size: 1px;
-  background: linear-gradient(90deg, transparent 8%, rgba(192, 255, 0, 0.8) 50%, transparent 92%);
-  pointer-events: none;
-}
-
-.resources-cta-bloom {
-  position: absolute;
-  inset-inline: 0;
-  inset-block-start: 0;
-  block-size: 55%;
-  background: radial-gradient(52% 90% at 50% 0%, rgba(192, 255, 0, 0.14), transparent 72%);
-  pointer-events: none;
+[data-theme="dark"] .resources-hero-atmo {
+  --atmo-glow: radial-gradient(46% 65% at 18% -6%, rgba(192, 255, 0, 0.045), transparent 72%);
 }

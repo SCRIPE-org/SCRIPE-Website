@@ -11,8 +11,15 @@
  * `accent` prop instead of the brand-wide lime `--accent-text` — the single
  * most visible signal that carries each solution's distinct personality
  * through the shared template (per the task brief's "distinct per-solution
- * personality via accent identity, single coherent template"). A Server
- * Component; `Reveal` is the only client leaf.
+ * personality via accent identity, single coherent template").
+ *
+ * Task E4: the marker now runs in the ground sequence's mono film-grammar
+ * (see `CapabilityHero.tsx`'s header) in the solution's own accent color,
+ * the section sits on a quiet cool ground glow + grain (`.atmo`/
+ * `.atmo-grain`, `.sol-hero-atmo` in `solutions.css` §1b — shared with
+ * `HubHero.tsx`), and the snapshot panel moved from a flat `border` onto
+ * the shared elevation ramp (`.atmo-panel`). A Server Component; `Reveal` is
+ * the only client leaf.
  */
 import type { AccentId, SolutionContent } from "@/content/types";
 import { Reveal } from "@/components/motion/Reveal";
@@ -35,16 +42,16 @@ export interface SolutionHeroProps {
  */
 export function SolutionHero({ content, accent }: SolutionHeroProps) {
   return (
-    <Section className="!pb-[clamp(var(--space-9),7vh,var(--space-11))]">
+    <Section className="atmo atmo-grain sol-hero-atmo !pb-[clamp(var(--space-9),7vh,var(--space-11))]">
       <div className="flex flex-wrap items-center gap-10 lg:gap-14">
         <Reveal className="min-w-0 flex-1 basis-[480px]">
           <p
-            className={`flex items-center gap-3 text-[length:var(--fs-meta)] font-semibold tracking-[0.14em] uppercase [&:lang(ar)]:tracking-normal [&:lang(ar)]:normal-case ${ACCENT_TEXT_CLASS[accent]}`}
+            className={`flex items-center gap-3 font-mono text-[length:var(--fs-meta)] font-medium tracking-[0.22em] uppercase [&:lang(ar)]:tracking-[0.06em] ${ACCENT_TEXT_CLASS[accent]}`}
           >
             <span className={`inline-block h-px w-6 ${ACCENT_DOT_CLASS[accent]}`} aria-hidden="true" />
             {content.eyebrow}
           </p>
-          <h1 className="font-display text-text-primary mt-5 text-[length:var(--fs-display)] leading-[1.06] font-semibold text-balance [font-variation-settings:'wdth'_114] [&:lang(ar)]:[font-variation-settings:normal] [&:lang(ar)]:leading-[1.3]">
+          <h1 className="atmo-title font-display text-text-primary mt-5 text-[length:var(--fs-display)] text-balance">
             {content.title}
           </h1>
           <p className="text-text-secondary mt-5 max-w-[62ch] text-[length:var(--fs-lead)] text-pretty">
@@ -61,7 +68,7 @@ export function SolutionHero({ content, accent }: SolutionHeroProps) {
         </Reveal>
 
         <Reveal delay={120} className="min-w-0 flex-1 basis-72 lg:max-w-[320px]">
-          <div className="border-border-subtle bg-surface-raised grid gap-3 rounded-lg border p-6">
+          <div className="atmo-panel grid gap-3 rounded-lg p-6">
             <span className={`text-[length:var(--fs-meta)] font-semibold ${ACCENT_TEXT_CLASS[accent]}`}>
               {content.snapshot.label}
             </span>

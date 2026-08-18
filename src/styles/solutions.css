@@ -22,37 +22,33 @@
    ============================================================================ */
 
 /* ---------------------------------------------------------------------------
-   1. Closing CTA — obsidian panel with the lime "horizon" edge-light, the
-   same brand moment `home.css` §12 and `platform.css` §4 give their own
-   closing bands. Deliberately a single-look brand moment: obsidian in both
-   themes. Shared by the hub's closing CTA and every solution page's closing
-   CTA (`SolutionCta.tsx` / `HubCta.tsx`).
+   1. Closing CTA — the obsidian panel + lime "horizon" edge-light brand
+   moment now lives once, shared, in `src/styles/tokens/atmosphere.css`
+   (`.atmo-cta-panel`/`.atmo-cta-horizon`/`.atmo-cta-bloom`/`.atmo-cta-grain`,
+   loaded from `globals.css` on every route) — Task E4 consolidated this out
+   of six page-scoped copies. `SolutionCta.tsx`/`HubCta.tsx` compose the
+   shared classes directly.
    --------------------------------------------------------------------------- */
 
-.sol-cta-panel {
-  position: relative;
-  overflow: hidden;
-  background: var(--obsidian);
-  border: 1px solid #26282c;
-  border-radius: var(--radius-xl-base);
+/* ---------------------------------------------------------------------------
+   1b. Ground atmosphere (Task E4) — cool radial glows anchored to each
+   hero (hub and every solution page share this same class, since both open
+   on the identical `Section` shape), dark theme only, ≤7% alpha per the
+   brand doctrine `home.css` §13 sets. Combined with the shared `.atmo` root
+   (`src/styles/tokens/atmosphere.css`); the hero also takes `.atmo-grain` —
+   this page family's one hero-toned moment.
+   --------------------------------------------------------------------------- */
+
+[data-theme="dark"] .sol-hero-atmo {
+  --atmo-glow: radial-gradient(46% 65% at 82% -6%, rgba(168, 190, 224, 0.05), transparent 72%);
 }
 
-.sol-cta-horizon {
-  position: absolute;
-  inset-inline: 0;
-  inset-block-start: 0;
-  block-size: 1px;
-  background: linear-gradient(90deg, transparent 8%, rgba(192, 255, 0, 0.8) 50%, transparent 92%);
-  pointer-events: none;
+[dir="rtl"] [data-theme="dark"] .sol-hero-atmo {
+  --atmo-glow: radial-gradient(46% 65% at 18% -6%, rgba(168, 190, 224, 0.05), transparent 72%);
 }
 
-.sol-cta-bloom {
-  position: absolute;
-  inset-inline: 0;
-  inset-block-start: 0;
-  block-size: 55%;
-  background: radial-gradient(52% 90% at 50% 0%, rgba(192, 255, 0, 0.14), transparent 72%);
-  pointer-events: none;
+[data-theme="dark"] .sol-grid-atmo {
+  --atmo-glow: radial-gradient(52% 56% at 50% 6%, rgba(168, 190, 224, 0.045), transparent 74%);
 }
 
 /* ---------------------------------------------------------------------------

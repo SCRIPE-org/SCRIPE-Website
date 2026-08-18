@@ -9,7 +9,11 @@
  * heading (the same lighter-weight marker
  * `src/components/sections/platform/CapabilityGroup.tsx` uses) — visual
  * variety within one page instead of repeating the same affordance twice in
- * a row. A Server Component; `Reveal` is the only client leaf.
+ * a row.
+ *
+ * Task E4: each column panel moved from a flat `border` onto the shared
+ * elevation ramp (`.atmo-panel`, `src/styles/tokens/atmosphere.css`). A
+ * Server Component; `Reveal` is the only client leaf.
  */
 import type { SolutionsHubContent } from "@/content/types";
 import { Reveal } from "@/components/motion/Reveal";
@@ -31,7 +35,7 @@ export function HubCompare({ content }: HubCompareProps) {
   return (
     <Section id="compare" className="bg-surface-overlay/40 scroll-mt-24">
       <Reveal className="max-w-[760px]">
-        <h2 className="font-display text-text-primary text-[length:var(--fs-display)] leading-[1.06] font-semibold text-balance [font-variation-settings:'wdth'_114] [&:lang(ar)]:[font-variation-settings:normal] [&:lang(ar)]:leading-[1.3]">
+        <h2 className="atmo-title font-display text-text-primary text-[length:var(--fs-display)] text-balance">
           {content.title}
         </h2>
         <p className="text-text-secondary mt-5 max-w-[62ch] text-[length:var(--fs-lead)] text-pretty">
@@ -46,7 +50,7 @@ export function HubCompare({ content }: HubCompareProps) {
       >
         {content.columns.map((column) => (
           <Reveal key={column.href} y={16}>
-            <div className="border-border-subtle bg-surface-raised flex h-full flex-col gap-4 rounded-lg border p-6">
+            <div className="atmo-panel flex h-full flex-col gap-4 rounded-lg p-6">
               <div className="flex items-center gap-2.5">
                 <span
                   className={`inline-block size-2 shrink-0 rounded-[2px] ${ACCENT_DOT_CLASS[column.accent]}`}

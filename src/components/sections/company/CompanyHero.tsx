@@ -13,8 +13,16 @@
  * beneath it. Everything else (marker, CTAs, `Section`/`Reveal` rhythm)
  * stays identical to its sibling interior heroes, so the page still reads as
  * part of the same system. Copy is ported from
- * `backup/scripe-static/company.html`'s page-header section. A Server
- * Component; `Reveal` is the only client leaf.
+ * `backup/scripe-static/company.html`'s page-header section.
+ *
+ * Task E4: the marker now runs in the ground sequence's mono film-grammar
+ * (see `src/components/sections/platform/CapabilityHero.tsx`'s header), the
+ * heading composes the shared `.atmo-title` heavy-axis recipe (its own
+ * page-scoped clamp size and tracking stay — `.atmo-title` only sets
+ * family/variation-axis/leading/letter-spacing, both fully overridable by a
+ * caller's own more specific need), and the section sits on a quiet cool
+ * ground glow + grain (`.atmo`/`.atmo-grain`, `.co-hero-atmo` in
+ * `company.css` §2). A Server Component; `Reveal` is the only client leaf.
  */
 import type { CompanyContent } from "@/content/types";
 import { Reveal } from "@/components/motion/Reveal";
@@ -33,13 +41,13 @@ export interface CompanyHeroProps {
  */
 export function CompanyHero({ content }: CompanyHeroProps) {
   return (
-    <Section className="!pb-[clamp(var(--space-9),7vh,var(--space-11))]">
+    <Section className="atmo atmo-grain co-hero-atmo !pb-[clamp(var(--space-9),7vh,var(--space-11))]">
       <Reveal className="max-w-[960px]">
-        <p className="text-accent-text flex items-center gap-3 text-[length:var(--fs-meta)] font-semibold tracking-[0.14em] uppercase [&:lang(ar)]:tracking-normal [&:lang(ar)]:normal-case">
+        <p className="text-accent-text flex items-center gap-3 font-mono text-[length:var(--fs-meta)] font-medium tracking-[0.22em] uppercase [&:lang(ar)]:tracking-[0.06em]">
           <span className="bg-accent inline-block h-px w-6" aria-hidden="true" />
           {content.label}
         </p>
-        <h1 className="font-display text-text-primary mt-5 text-[length:clamp(2.4rem,1.4rem+3.6vw,4.5rem)] leading-[1.04] font-semibold tracking-[-0.02em] text-balance [font-variation-settings:'wdth'_114] [&:lang(ar)]:[font-variation-settings:normal] [&:lang(ar)]:leading-[1.28] [&:lang(ar)]:tracking-normal">
+        <h1 className="atmo-title font-display text-text-primary mt-5 text-[length:clamp(2.4rem,1.4rem+3.6vw,4.5rem)] text-balance">
           {content.title}
         </h1>
         <p className="text-text-secondary mt-6 max-w-[62ch] text-[length:var(--fs-lead)] text-pretty">

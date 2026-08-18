@@ -36,7 +36,7 @@ export function LegalNotice({ content }: LegalNoticeProps) {
       <Reveal className="max-w-[720px]">
         <div className="flex items-center gap-2.5">
           <span className="bg-accent inline-block size-2.5 rounded-full" aria-hidden="true" />
-          <h2 className="font-display text-text-primary text-[length:var(--fs-h2)] font-semibold text-balance [font-variation-settings:'wdth'_114]">
+          <h2 className="atmo-title font-display text-text-primary text-[length:var(--fs-h2)]">
             {content.title}
           </h2>
         </div>

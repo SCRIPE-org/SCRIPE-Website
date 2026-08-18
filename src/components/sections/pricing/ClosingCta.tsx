@@ -2,11 +2,10 @@
  * ClosingCta — the pricing page's conversion band.
  *
  * A page-scoped sibling of `src/components/sections/platform/ClosingCta.tsx`
- * (same obsidian panel + lime "horizon" edge-light brand moment — see that
- * file's own header for why the class names are kept page-scoped rather
- * than shared — here `.pricing-cta-*` in `src/styles/pricing.css`), with
- * this page's own copy from `backup/scripe-static/pricing.html`'s closing
- * section. A Server Component; `Reveal` is the only client leaf.
+ * (same obsidian panel + lime "horizon" edge-light brand moment, now the
+ * shared `.atmo-cta-*` recipe — `src/styles/tokens/atmosphere.css`, Task E4),
+ * with this page's own copy from `backup/scripe-static/pricing.html`'s
+ * closing section. A Server Component; `Reveal` is the only client leaf.
  */
 import type { PricingContent } from "@/content/types";
 import { BrandMark } from "@/components/chrome/BrandMark";
@@ -28,13 +27,14 @@ export function ClosingCta({ content }: ClosingCtaProps) {
   return (
     <Section>
       <Reveal y={24}>
-        <div className="pricing-cta-panel px-6 py-14 text-center sm:px-10 sm:py-16">
-          <span className="pricing-cta-horizon" aria-hidden="true" />
-          <span className="pricing-cta-bloom" aria-hidden="true" />
+        <div className="atmo-cta-panel px-6 py-14 text-center sm:px-10 sm:py-16">
+          <span className="atmo-cta-horizon" aria-hidden="true" />
+          <span className="atmo-cta-bloom" aria-hidden="true" />
+          <span className="atmo-cta-grain" aria-hidden="true" />
 
           <div className="relative mx-auto flex max-w-[720px] flex-col items-center gap-6">
             <BrandMark size={40} className="text-white" />
-            <h2 className="font-display text-[length:var(--fs-display)] leading-[1.06] font-semibold text-balance text-white [font-variation-settings:'wdth'_114] [&:lang(ar)]:[font-variation-settings:normal] [&:lang(ar)]:leading-[1.3]">
+            <h2 className="atmo-title font-display text-[length:var(--fs-display)] text-balance text-white">
               {content.title}
             </h2>
             <p className="max-w-[52ch] text-[length:var(--fs-lead)] text-pretty text-white/78">

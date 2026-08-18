@@ -5,6 +5,15 @@
  * visually promoted middle card (brand-accent border + "Most chosen" badge),
  * Starter/Growth carry a real SAR figure, Enterprise is always "Custom".
  *
+ * Task E4: every card moved off a flat border + one-off `shadow-[...]` onto
+ * the shared elevation ramp (`.atmo-panel`, `src/styles/tokens/atmosphere.css`).
+ * The promoted Growth card layers `.atmo-panel-deep` (shadow-3) and
+ * `.atmo-panel-accent` (the same lime border, now 1.5px against a
+ * `--atmo-panel-border`/`--atmo-panel-border-width` custom-property override
+ * rather than a Tailwind `border-accent` utility — see `atmo-panel-accent`'s
+ * own comment for why a plain utility override can't win against the
+ * recipe's unlayered `border` shorthand under Tailwind v4's cascade layers).
+ *
  * ## The `data-price-slot` / `data-price-cycle-meta` contract
  *
  * Every price figure and every period-line caption below is rendered
@@ -194,8 +203,8 @@ function PlanCard({ plan, billing }: { plan: PricingPlan; billing: PricingConten
     <div
       className={
         plan.highlight
-          ? "border-accent bg-surface-raised relative flex h-full flex-col gap-6 rounded-lg border-[1.5px] p-7 shadow-[0_24px_60px_-32px_rgba(0,0,0,0.4)]"
-          : "border-border-subtle bg-surface-raised flex h-full flex-col gap-6 rounded-lg border p-7"
+          ? "atmo-panel atmo-panel-deep atmo-panel-accent relative flex h-full flex-col gap-6 rounded-lg p-7"
+          : "atmo-panel flex h-full flex-col gap-6 rounded-lg p-7"
       }
     >
       <div className="grid gap-2.5">

@@ -30,7 +30,7 @@ export function CapabilityGroup({ group }: CapabilityGroupProps) {
       <Reveal className="border-border-subtle border-t pt-10">
         <div className="flex items-center gap-2.5">
           <span className={`inline-block size-2.5 rounded-full ${ACCENT_DOT_CLASS[group.accent]}`} aria-hidden="true" />
-          <h2 className="font-display text-text-primary text-[length:var(--fs-h2)] font-semibold [font-variation-settings:'wdth'_114]">
+          <h2 className="atmo-title font-display text-text-primary text-[length:var(--fs-h2)]">
             <bdi>{group.name}</bdi>
           </h2>
         </div>

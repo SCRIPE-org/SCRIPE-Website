@@ -38,7 +38,7 @@ export function Capabilities({ content, accent }: CapabilitiesProps) {
     <Section className="border-border-subtle border-t">
       <Reveal className="flex items-center gap-2.5">
         <span className={`inline-block size-2.5 rounded-full ${ACCENT_DOT_CLASS[accent]}`} aria-hidden="true" />
-        <h2 className="font-display text-text-primary text-[length:var(--fs-h1)] font-semibold text-balance [font-variation-settings:'wdth'_114]">
+        <h2 className="atmo-title font-display text-text-primary text-[length:var(--fs-h1)]">
           {content.title}
         </h2>
       </Reveal>

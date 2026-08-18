@@ -23,6 +23,11 @@
  * positive-is-jade, attention-is-rust convention `PlatformOverview`'s
  * `TONE_CLASS` already established on the home page.
  *
+ * Task E4: the panel's old one-off `shadow-[...]` moved onto the shared
+ * elevation ramp (`.atmo-panel`, `src/styles/tokens/atmosphere.css`) — the
+ * same edge-highlight + shadow-2 recipe every other raised sub-page surface
+ * now uses, in place of a bespoke box-shadow value.
+ *
  * A Server Component — no hooks, no client JS.
  */
 import type { AccentId, EvidenceTone, ModuleEvidence } from "@/content/types";
@@ -76,7 +81,7 @@ function PanelNote({ note }: { note?: string }) {
  */
 export function CapabilityEvidence({ evidence, accent }: CapabilityEvidenceProps) {
   return (
-    <div className="border-border-subtle bg-surface-raised overflow-hidden rounded-lg border shadow-[0_24px_60px_-32px_rgba(0,0,0,0.4)]">
+    <div className="atmo-panel overflow-hidden rounded-lg">
       <PanelHead title={evidence.title} badge={evidence.badge} accent={accent} />
 
       {evidence.kind === "rows" && (

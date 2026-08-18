@@ -1,0 +1,217 @@
+/* ============================================================================
+   SCRIPE — Shared sub-page atmosphere partial (Task E4)
+
+   Scope: imported ONCE via `src/app/globals.css`, unlike every page-scoped
+   stylesheet under `src/styles/` (platform.css, pricing.css, solutions.css,
+   resources.css, company.css, not-found.css), which ship only with their own
+   route. The ten interior sub-pages (platform, pricing, the solutions hub +
+   four solution pages, resources, company, contact, 404) all draw from this
+   one small shared vocabulary, so it has to be present on every route rather
+   than duplicated per file the way `.rtl-flip`/`.faq-item` are deliberately
+   duplicated elsewhere in this codebase (see `platform.css`'s header for why
+   THAT duplication is the right call there: one-line rules with real drift
+   risk if copied wrong). The opposite was true here: before this task, the
+   closing-CTA "obsidian panel + lime horizon" brand moment was copy-pasted
+   byte-for-byte into six files (`cap-cta-*`, `pricing-cta-*`, `sol-cta-*`,
+   `resources-cta-*`, `co-cta-*`, `nf-hero-*`) — six chances to drift on one
+   design decision, with zero chance any page could import another's file.
+   Loading this partial from `globals.css` (already always-present, exactly
+   like `src/styles/tokens/*.css`) removes that risk instead of managing it.
+
+   Brings the sub-pages into the night-world Task E2/E3 established for the
+   home page — read `src/styles/home.css`'s file header and its §13 "Ground
+   sequence" comment first. This partial deliberately does NOT reuse the
+   home page's numbered `NN / LABEL` slate timecode (`Slate.tsx`): these pages
+   have no flight/ground film to number, so each page's hero gets a plain,
+   unnumbered mono kicker in the same typographic voice instead — the kicker
+   is composed from Tailwind utilities directly in each hero component
+   (`font-mono uppercase tracking-[0.22em]`, `text-accent-text` or the page's
+   own product accent), not a class defined here, so accent color keeps
+   coming from the same per-page `ACCENT_TEXT_CLASS` maps every section
+   already uses (defining color here would fight those utilities under
+   Tailwind v4's cascade-layer ordering — unlayered author CSS always beats a
+   `@layer utilities` rule, so an unlayered `color` here would silently make
+   `text-accent-academy` etc. unable to override it on `SolutionHero`/
+   `CapabilityHero`'s kicker).
+
+   Class inventory:
+   .atmo               ground root: hosts the glow pseudo-layer (::before,
+                        `--atmo-glow`), dark theme only, ≤7% alpha per the
+                        brand doctrine. Combine with a page-owned modifier
+                        class (defined in that page's own stylesheet) that
+                        sets `--atmo-glow` under `[data-theme="dark"]`.
+   .atmo-grain         optional grain add-on (::after) for hero-toned ground
+                        only — combine with `.atmo`, never alone.
+   .atmo-title         section heading voice: the hero statement's extended-
+                        heavy axis (`home.css` §13's `.gs-title` recipe,
+                        mirrored here rather than imported — `home.css` only
+                        loads on `/`). Sets family/variation-axis/leading/
+                        tracking/wrap only; font-size and color stay on the
+                        caller's own Tailwind utilities (sub-page headings
+                        span `--fs-display`/`--fs-h1`/`--fs-h2`, unlike
+                        home's single-size ground titles).
+   .atmo-panel / -deep raised surface: edge-highlight + shadow ramp, mirrors
+                        `home.css`'s `.panel`/`.panel-deep`.
+   .atmo-chip          elevated chip surface, mirrors `home.css`'s `.chip-lit`.
+   .atmo-cta-panel/-horizon/-bloom/-grain   the obsidian "horizon" closing CTA
+                        every sub-page ends on, now elevated onto the shadow-4
+                        ramp + a quiet grain pass (previously flat, six-times
+                        duplicated — see this header's opening paragraph).
+   ============================================================================ */
+
+:root {
+  /* Shared film-grain tile — byte-identical to `home.css`'s `--film-grain`
+     (§13), duplicated rather than imported for the same reason this whole
+     file exists: `home.css` never loads on a sub-page route. */
+  --atmo-grain-tile: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---- Ground atmosphere: glow + optional grain pseudo-layers -------------- */
+
+.atmo {
+  position: relative;
+  isolation: isolate;
+}
+
+.atmo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--atmo-glow, none);
+}
+
+.atmo-grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--atmo-grain-tile);
+  background-size: 160px 160px;
+  mix-blend-mode: overlay;
+  opacity: 0;
+}
+
+[data-theme="dark"] .atmo-grain::after {
+  opacity: 0.05;
+}
+
+/* ---- Section heading voice (mirrors home.css §13's `.gs-title`) ---------- */
+
+.atmo-title {
+  font-family: var(--font-display-base);
+  font-variation-settings:
+    "wdth" 120,
+    "wght" 730;
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+:lang(ar) .atmo-title {
+  font-family: var(--font-display-ar-base);
+  font-variation-settings: normal;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+
+/* ---- Elevated surfaces (mirrors home.css §13's `.panel`/`.chip-lit`) ----- */
+
+.atmo-panel {
+  --atmo-panel-border: var(--border-subtle);
+  --atmo-panel-border-width: 1px;
+  position: relative;
+  background: var(--surface-raised);
+  border: var(--atmo-panel-border-width) solid var(--atmo-panel-border);
+  box-shadow: var(--edge-highlight), var(--shadow-2);
+}
+
+[data-theme="dark"] .atmo-panel {
+  background: linear-gradient(180deg, #1d2024 0%, #17191c 100%);
+  --atmo-panel-border: rgba(255, 255, 255, 0.08);
+}
+
+.atmo-panel-deep {
+  box-shadow: var(--edge-highlight), var(--shadow-3);
+}
+
+/* Accent-bordered variant (e.g. a promoted pricing tier): overrides just the
+   two border custom properties `.atmo-panel` reads, so a caller keeps the
+   same background/shadow recipe while swapping only the border color/width —
+   composes as `class="atmo-panel atmo-panel-accent"`, no inline style. */
+.atmo-panel-accent {
+  --atmo-panel-border: var(--accent);
+  --atmo-panel-border-width: 1.5px;
+}
+
+/* Shadow-only lift: for a surface that already owns its complete border/
+   background treatment (most visibly `Card.tsx`'s `border-t-*` accent-edge
+   contract — its own header explains why that top border is a *signal*,
+   not decoration) and only needs the depth half of the elevation ramp.
+   `.atmo-panel`'s `border`/`background` shorthands would otherwise fight
+   that contract under Tailwind v4's cascade layers (any unlayered
+   declaration here beats a `border-t-accent-*` utility regardless of
+   source order), so this variant deliberately never touches either. */
+.atmo-lift {
+  box-shadow: var(--edge-highlight), var(--shadow-2);
+}
+
+.atmo-lift-deep {
+  box-shadow: var(--edge-highlight), var(--shadow-3);
+}
+
+.atmo-chip {
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--edge-highlight), var(--shadow-1);
+}
+
+[data-theme="dark"] .atmo-chip {
+  background: linear-gradient(180deg, #1c1f23 0%, #16181b 100%);
+  border-color: rgba(255, 255, 255, 0.09);
+}
+
+/* ---- Closing CTA: obsidian panel + lime horizon + shadow-4 + grain ------- */
+
+.atmo-cta-panel {
+  position: relative;
+  overflow: hidden;
+  background: var(--obsidian);
+  border: 1px solid #26282c;
+  border-radius: var(--radius-xl-base);
+  box-shadow: var(--edge-highlight), var(--shadow-4);
+}
+
+.atmo-cta-horizon {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: 1px;
+  background: linear-gradient(90deg, transparent 8%, rgba(192, 255, 0, 0.8) 50%, transparent 92%);
+  pointer-events: none;
+}
+
+.atmo-cta-bloom {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: 55%;
+  background: radial-gradient(52% 90% at 50% 0%, rgba(192, 255, 0, 0.14), transparent 72%);
+  pointer-events: none;
+}
+
+/* The panel is always obsidian in both themes (a documented single-look
+   exception every `ClosingCta.tsx` already carries), so its grain pass runs
+   unconditionally too — no `[data-theme="dark"]` guard needed. */
+.atmo-cta-grain {
+  position: absolute;
+  inset: 0;
+  background-image: var(--atmo-grain-tile);
+  background-size: 160px 160px;
+  mix-blend-mode: overlay;
+  opacity: 0.05;
+  pointer-events: none;
+}

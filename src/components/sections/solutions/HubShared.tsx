@@ -4,7 +4,10 @@
  * platform page) with a bordered checklist panel of what never changes
  * between solutions.
  *
- * Ported from `backup/scripe-static/solutions.html`'s "shared" section. A
+ * Ported from `backup/scripe-static/solutions.html`'s "shared" section.
+ *
+ * Task E4: the checklist panel moved from a flat `border` onto the shared
+ * elevation ramp (`.atmo-panel`, `src/styles/tokens/atmosphere.css`). A
  * Server Component; `Reveal` is the only client leaf.
  */
 import type { SolutionsHubContent } from "@/content/types";
@@ -27,7 +30,7 @@ export function HubShared({ content }: HubSharedProps) {
     <Section className="border-border-subtle border-t">
       <div className="flex flex-wrap items-center gap-10 lg:gap-14">
         <Reveal className="min-w-0 flex-1 basis-[420px]">
-          <h2 className="font-display text-text-primary max-w-[520px] text-[length:var(--fs-display)] leading-[1.06] font-semibold text-balance [font-variation-settings:'wdth'_114] [&:lang(ar)]:[font-variation-settings:normal] [&:lang(ar)]:leading-[1.3]">
+          <h2 className="atmo-title font-display text-text-primary max-w-[520px] text-[length:var(--fs-display)] text-balance">
             {content.title}
           </h2>
           <div className="mt-6">
@@ -38,7 +41,7 @@ export function HubShared({ content }: HubSharedProps) {
         </Reveal>
 
         <Reveal delay={100} y={20} className="min-w-0 flex-1 basis-[420px]">
-          <div className="border-border-subtle bg-surface-raised grid gap-3.5 rounded-lg border p-7">
+          <div className="atmo-panel grid gap-3.5 rounded-lg p-7">
             {content.points.map((point) => (
               <div key={point} className="flex items-start gap-3">
                 <svg

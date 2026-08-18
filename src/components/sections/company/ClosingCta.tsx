@@ -4,12 +4,11 @@
  * A page-scoped sibling of `src/components/sections/resources/ClosingCta.tsx`,
  * `src/components/sections/platform/ClosingCta.tsx` and
  * `src/components/sections/pricing/ClosingCta.tsx` (same obsidian panel +
- * lime "horizon" edge-light brand moment — see those files' own headers for
- * why the class names are kept page-scoped rather than shared — here
- * `.co-cta-*` in `src/styles/company.css`), with this page's own copy and
- * CTAs from `backup/scripe-static/company.html`'s closing section (a demo,
- * and a link into `/pricing` rather than `/contact` twice). A Server
- * Component; `Reveal` is the only client leaf.
+ * lime "horizon" edge-light brand moment, now the shared `.atmo-cta-*`
+ * recipe — `src/styles/tokens/atmosphere.css`, Task E4), with this page's
+ * own copy and CTAs from `backup/scripe-static/company.html`'s closing
+ * section (a demo, and a link into `/pricing` rather than `/contact` twice).
+ * A Server Component; `Reveal` is the only client leaf.
  */
 import type { CompanyContent } from "@/content/types";
 import { BrandMark } from "@/components/chrome/BrandMark";
@@ -31,13 +30,14 @@ export function ClosingCta({ content }: ClosingCtaProps) {
   return (
     <Section>
       <Reveal y={24}>
-        <div className="co-cta-panel px-6 py-14 text-center sm:px-10 sm:py-16">
-          <span className="co-cta-horizon" aria-hidden="true" />
-          <span className="co-cta-bloom" aria-hidden="true" />
+        <div className="atmo-cta-panel px-6 py-14 text-center sm:px-10 sm:py-16">
+          <span className="atmo-cta-horizon" aria-hidden="true" />
+          <span className="atmo-cta-bloom" aria-hidden="true" />
+          <span className="atmo-cta-grain" aria-hidden="true" />
 
           <div className="relative mx-auto flex max-w-[720px] flex-col items-center gap-6">
             <BrandMark size={40} className="text-white" />
-            <h2 className="font-display text-[length:var(--fs-display)] leading-[1.06] font-semibold text-balance text-white [font-variation-settings:'wdth'_114] [&:lang(ar)]:[font-variation-settings:normal] [&:lang(ar)]:leading-[1.3]">
+            <h2 className="atmo-title font-display text-[length:var(--fs-display)] text-balance text-white">
               {content.title}
             </h2>
             <p className="max-w-[52ch] text-[length:var(--fs-lead)] text-pretty text-white/78">

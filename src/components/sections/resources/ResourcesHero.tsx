@@ -9,7 +9,12 @@
  * CTA, matching the legacy static page's own hero, which only ever offered
  * "Talk to sales" (no secondary trial CTA — a resources page is a reading
  * destination, not a conversion page). Copy is ported from
- * `backup/scripe-static/resources.html`'s page-header section. A Server
+ * `backup/scripe-static/resources.html`'s page-header section.
+ *
+ * Task E4: the marker now runs in the ground sequence's mono film-grammar
+ * (see `src/components/sections/platform/CapabilityHero.tsx`'s header) and
+ * the section sits on a quiet cool ground glow + grain (`.atmo`/
+ * `.atmo-grain`, `.resources-hero-atmo` in `resources.css` §4). A Server
  * Component; `Reveal` is the only client leaf.
  */
 import type { ResourcesContent } from "@/content/types";
@@ -29,13 +34,13 @@ export interface ResourcesHeroProps {
  */
 export function ResourcesHero({ content }: ResourcesHeroProps) {
   return (
-    <Section className="!pb-[clamp(var(--space-9),7vh,var(--space-11))]">
+    <Section className="atmo atmo-grain resources-hero-atmo !pb-[clamp(var(--space-9),7vh,var(--space-11))]">
       <Reveal className="max-w-[900px]">
-        <p className="text-accent-text flex items-center gap-3 text-[length:var(--fs-meta)] font-semibold tracking-[0.14em] uppercase [&:lang(ar)]:tracking-normal [&:lang(ar)]:normal-case">
+        <p className="text-accent-text flex items-center gap-3 font-mono text-[length:var(--fs-meta)] font-medium tracking-[0.22em] uppercase [&:lang(ar)]:tracking-[0.06em]">
           <span className="bg-accent inline-block h-px w-6" aria-hidden="true" />
           {content.label}
         </p>
-        <h1 className="font-display text-text-primary mt-5 text-[length:var(--fs-display)] leading-[1.06] font-semibold text-balance [font-variation-settings:'wdth'_114] [&:lang(ar)]:[font-variation-settings:normal] [&:lang(ar)]:leading-[1.3]">
+        <h1 className="atmo-title font-display text-text-primary mt-5 text-[length:var(--fs-display)] text-balance">
           {content.title}
         </h1>
         <p className="text-text-secondary mt-5 max-w-[62ch] text-[length:var(--fs-lead)] text-pretty">

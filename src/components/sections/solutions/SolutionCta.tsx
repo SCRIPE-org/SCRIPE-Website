@@ -5,12 +5,11 @@
  * The same obsidian panel + lime "horizon" edge-light brand moment
  * `src/components/sections/home/ClosingCta.tsx` and
  * `src/components/sections/platform/ClosingCta.tsx` each give their own
- * page (`.sol-cta-panel` in `src/styles/solutions.css`, shared with the
- * hub's own `HubCta.tsx` — see that stylesheet's header for why this is the
- * one area where two routes share one page-scoped stylesheet). Deliberately
- * not accented per solution: the panel is always obsidian in both themes, so
- * its foregrounds are fixed light values rather than theme tokens or the
- * page's own product accent — the same documented single-look exception
+ * page — the shared `.atmo-cta-*` recipe (`src/styles/tokens/atmosphere.css`,
+ * Task E4), used here and by the hub's own `HubCta.tsx`. Deliberately not
+ * accented per solution: the panel is always obsidian in both themes, so its
+ * foregrounds are fixed light values rather than theme tokens or the page's
+ * own product accent — the same documented single-look exception
  * `ClosingCta.tsx` establishes. A Server Component; `Reveal` is the only
  * client leaf.
  */
@@ -34,13 +33,14 @@ export function SolutionCta({ content }: SolutionCtaProps) {
   return (
     <Section>
       <Reveal y={24}>
-        <div className="sol-cta-panel px-6 py-14 text-center sm:px-10 sm:py-16">
-          <span className="sol-cta-horizon" aria-hidden="true" />
-          <span className="sol-cta-bloom" aria-hidden="true" />
+        <div className="atmo-cta-panel px-6 py-14 text-center sm:px-10 sm:py-16">
+          <span className="atmo-cta-horizon" aria-hidden="true" />
+          <span className="atmo-cta-bloom" aria-hidden="true" />
+          <span className="atmo-cta-grain" aria-hidden="true" />
 
           <div className="relative mx-auto flex max-w-[720px] flex-col items-center gap-6">
             <BrandMark size={40} className="text-white" />
-            <h2 className="font-display text-[length:var(--fs-display)] leading-[1.06] font-semibold text-balance text-white [font-variation-settings:'wdth'_114] [&:lang(ar)]:[font-variation-settings:normal] [&:lang(ar)]:leading-[1.3]">
+            <h2 className="atmo-title font-display text-[length:var(--fs-display)] text-balance text-white">
               {content.title}
             </h2>
             <p className="max-w-[52ch] text-[length:var(--fs-lead)] text-pretty text-white/78">

@@ -22,7 +22,11 @@
  * `Capabilities.tsx`/`GuidesGrid.tsx` precedent of a plain accent-dot + `<h2>`
  * for every non-hero section, so the marker isn't repeated into the
  * "eyebrow on every section" scaffolding the design doctrine warns against.
- * A Server Component; `Reveal` is the only client leaf.
+ *
+ * Task E4: the vision panel gains the shared elevation ramp (`.atmo-panel`,
+ * `src/styles/tokens/atmosphere.css`) over `Card`'s own flat border, and the
+ * mission heading composes `.atmo-title`. A Server Component; `Reveal` is
+ * the only client leaf.
  */
 import type { CompanyContent } from "@/content/types";
 import { Reveal } from "@/components/motion/Reveal";
@@ -69,7 +73,7 @@ export function MissionVision({ mission, vision }: MissionVisionProps) {
         <Reveal>
           <div className="flex items-center gap-2.5">
             <span className="bg-accent inline-block size-2.5 rounded-full" aria-hidden="true" />
-            <h2 className="font-display text-text-primary text-[length:var(--fs-h1)] font-semibold text-balance [font-variation-settings:'wdth'_114]">
+            <h2 className="atmo-title font-display text-text-primary text-[length:var(--fs-h1)]">
               {mission.title}
             </h2>
           </div>
@@ -87,7 +91,11 @@ export function MissionVision({ mission, vision }: MissionVisionProps) {
               why every other `<Card>` caller in this codebase only ever adds
               non-conflicting utilities (gap, flex, hover) rather than
               re-declaring a property Card itself already sets. */}
-          <Card className="grid gap-5">
+          <Card className="atmo-panel grid gap-5">
+            {/* Deliberately NOT the mono hero-kicker voice — this file's
+                header explains why neither column repeats CompanyHero's one
+                hero marker; this stays the plain tracked-uppercase card
+                label it always was. */}
             <span className="text-accent-text text-[length:var(--fs-meta)] font-semibold tracking-[0.14em] uppercase [&:lang(ar)]:tracking-normal [&:lang(ar)]:normal-case">
               {vision.label}
             </span>

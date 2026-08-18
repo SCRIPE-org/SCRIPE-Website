@@ -9,7 +9,15 @@
  * page's own richer cards). Each card also gets a subtle accent-tinted
  * hover wash (`.sol-grid-card`, `src/styles/solutions.css` §4) — the same
  * idiom `src/styles/home.css` §10 gives the home page's product-family
- * rows. A Server Component; `Reveal` is the only client leaf.
+ * rows.
+ *
+ * Task E4: the section sits on a quiet centered ground glow (`.atmo`,
+ * `.sol-grid-atmo` in `solutions.css` §1b) and each card gains the shadow
+ * half of the shared elevation ramp (`.atmo-lift` — not the full
+ * `.atmo-panel` recipe, which would fight `Card`'s own `border-t-*`
+ * accent-edge contract; see `atmo-lift`'s own comment in
+ * `src/styles/tokens/atmosphere.css`). A Server Component; `Reveal` is the
+ * only client leaf.
  */
 import type { SolutionsHubContent } from "@/content/types";
 import { Reveal } from "@/components/motion/Reveal";
@@ -31,9 +39,9 @@ export interface HubGridProps {
  */
 export function HubGrid({ content }: HubGridProps) {
   return (
-    <Section id="all" className="scroll-mt-24">
+    <Section id="all" className="atmo sol-grid-atmo scroll-mt-24">
       <Reveal className="max-w-[760px]">
-        <h2 className="font-display text-text-primary text-[length:var(--fs-display)] leading-[1.06] font-semibold text-balance [font-variation-settings:'wdth'_114] [&:lang(ar)]:[font-variation-settings:normal] [&:lang(ar)]:leading-[1.3]">
+        <h2 className="atmo-title font-display text-text-primary text-[length:var(--fs-display)] text-balance">
           {content.title}
         </h2>
         <p className="text-text-secondary mt-5 max-w-[62ch] text-[length:var(--fs-lead)] text-pretty">
@@ -50,7 +58,7 @@ export function HubGrid({ content }: HubGridProps) {
           <Reveal key={item.href} y={20}>
             <Card
               accent={toCardAccent(item.accent)}
-              className="sol-grid-card flex h-full flex-col gap-5"
+              className="atmo-lift sol-grid-card flex h-full flex-col gap-5"
               style={{ "--sol-accent": ACCENT_VAR[item.accent] } as React.CSSProperties}
             >
               <ShapeGlyph accent={item.accent} />

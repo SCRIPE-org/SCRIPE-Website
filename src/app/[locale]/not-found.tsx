@@ -12,6 +12,21 @@
  * (when a route's notFound.tsx is rendered, robots: index false is implicit),
  * and a title override is not required since the layout metadata's template
  * handles all title composition on this page.
+ *
+ * Task E4: the panel now runs on the shared `.atmo-cta-*` obsidian/horizon/
+ * bloom/grain recipe (`src/styles/tokens/atmosphere.css`) instead of its own
+ * page-scoped copy, the status marker runs in the ground sequence's mono
+ * film-grammar, and the title composes `.atmo-title`. This pass also fixed
+ * a real contrast bug the elevation work exposed: the panel has always been
+ * a fixed obsidian ground in BOTH themes (`.nf-hero-panel`'s/now
+ * `.atmo-cta-panel`'s `background: var(--obsidian)` was never
+ * theme-conditional), but the title/message/404-figure foregrounds were
+ * theme tokens (`text-text-primary`/`text-text-secondary`/`var(--accent)`)
+ * that flip to near-black in the light theme — illegible on a ground that
+ * never lightens with it. Every `ClosingCta.tsx` on the site already
+ * documents and applies the correct fix for this exact panel ("because the
+ * panel is always dark, its foregrounds are fixed light values rather than
+ * theme tokens"); this page now follows the same rule.
  */
 import "@/styles/not-found.css";
 import { getLocale } from "next-intl/server";
@@ -42,21 +57,21 @@ export default async function NotFound() {
 
   return (
     <Section>
-      <div className="nf-hero-panel">
-        <div className="nf-hero-horizon" aria-hidden="true" />
-        <div className="nf-hero-bloom" aria-hidden="true" />
+      <div className="atmo-cta-panel">
+        <span className="atmo-cta-horizon" aria-hidden="true" />
+        <span className="atmo-cta-bloom" aria-hidden="true" />
+        <span className="atmo-cta-grain" aria-hidden="true" />
 
         <div className="relative z-10 px-[clamp(var(--space-5),4vw,var(--space-9))] py-[clamp(var(--space-9),8vh,var(--space-11))]">
           <Reveal className="grid gap-6 max-w-[720px]">
-            {/* Status marker + label */}
-            <div className="flex items-center gap-3">
-              <span className="text-accent-text text-[length:var(--fs-meta)] font-semibold tracking-[0.14em] uppercase [&:lang(ar)]:tracking-normal [&:lang(ar)]:normal-case">
-                {content.hero.code}
-              </span>
-              <span className="bg-accent inline-block h-px w-6" aria-hidden="true" />
-              <span className="text-accent-text text-[length:var(--fs-meta)] font-semibold tracking-[0.14em] uppercase [&:lang(ar)]:tracking-normal [&:lang(ar)]:normal-case">
-                {content.hero.label}
-              </span>
+            {/* Status marker + label — the ground sequence's mono
+                film-grammar (see CapabilityHero.tsx's header), fixed light
+                values rather than theme tokens: this panel is always
+                obsidian in both themes. */}
+            <div className="flex items-center gap-3 font-mono text-[length:var(--fs-meta)] font-medium uppercase tracking-[0.22em] text-[var(--lime-400)] [&:lang(ar)]:tracking-[0.06em]">
+              <span>{content.hero.code}</span>
+              <span className="inline-block h-px w-6 bg-[var(--lime-400)]" aria-hidden="true" />
+              <span>{content.hero.label}</span>
             </div>
 
             {/* Large 404 display */}
@@ -65,19 +80,19 @@ export default async function NotFound() {
             </div>
 
             {/* Title */}
-            <h1 className="font-display text-text-primary text-[length:var(--fs-display)] leading-[1.08] font-semibold tracking-[-0.02em] text-balance [font-variation-settings:'wdth'_114] [&:lang(ar)]:[font-variation-settings:normal] [&:lang(ar)]:leading-[1.28] [&:lang(ar)]:tracking-normal">
+            <h1 className="atmo-title font-display text-white text-[length:var(--fs-display)] text-balance">
               {content.hero.title}
             </h1>
 
             {/* Message */}
-            <p className="text-text-secondary text-[length:var(--fs-lead)] text-pretty max-w-[62ch]">
+            <p className="text-white/78 text-[length:var(--fs-lead)] text-pretty max-w-[62ch]">
               {content.hero.subtitle}
             </p>
 
             {/* Link row */}
             <div className="flex flex-wrap gap-3 pt-2">
               {content.links.map((link) => (
-                <Button key={link.href} href={link.href} size="lg">
+                <Button key={link.href} href={link.href} size="lg" className="!bg-[var(--lime-400)]">
                   {link.label}
                 </Button>
               ))}
