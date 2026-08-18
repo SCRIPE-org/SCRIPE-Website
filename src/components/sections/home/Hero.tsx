@@ -5,22 +5,52 @@
  * A Server Component that renders the hero's complete dual-mode DOM (see
  * `src/styles/home.css` for the two-mode contract):
  *
- * - Static frame (default): full-viewport campus plate under a night grade,
- *   `<h1>` wordmark + tagline + both CTAs centered, and the five chapters as
- *   a flowing "flight plan" strip below the stage. This is the no-JS,
- *   reduced-motion and pre-hydration experience — full content, no motion
- *   dependencies.
+ * - Static frame (default): full-viewport background plate under a night
+ *   grade, `<h1>` wordmark + tagline + both CTAs centered, and the five
+ *   chapters as a flowing "flight plan" strip below the stage. This is the
+ *   no-JS, reduced-motion and pre-hydration experience — a single flattened
+ *   image layer, full content, no motion/parallax dependencies.
  * - Armed mode: `HeroDirector` (the only client leaf) arms the cinematic
  *   flight after `loadGsap()` resolves — the section becomes a tall scroll
- *   track, chapters become scrubbed camera beats, and the flight-plan strip
- *   hides because the same information now plays as the flight itself.
+ *   track, chapters become scrubbed camera beats, the mid/foreground plates
+ *   and the finale plate reveal, and the flight-plan strip hides because
+ *   the same information now plays as the flight itself.
  *
- * Plate architecture: the photograph is a layered "plate" inside a camera
- * rig (`.hero-rig`). Swapping the incumbent single plate for the elevated
- * multi-plate composition later means adding `<Image>` layers inside
- * `.hero-rig` and extending `CAMERA_PATH` in `HeroDirector.tsx` — a
- * content/asset change, not a rewrite. Camera coordinates are physical and
- * the plate never mirrors in RTL.
+ * Plate architecture (four plates, `public/media/hero/plate-*.png`):
+ * - `plate-background` (`.hero-rig > .hero-plate`) — the base environment,
+ *   always visible, driven by `CAMERA_PATH` at depth ×1.0. The only plate
+ *   shown in static/no-JS/reduced-motion mode.
+ * - `plate-midground` (`.hero-plate-mid`, armed-only) — stadium+pool cutout
+ *   (alpha PNG), its own depth ×1.15 tween.
+ * - `plate-foreground` (`.hero-plate-fg`, armed-only) — bokeh floodlight
+ *   mast + tree canopy corners on a transparent center (alpha PNG), its own
+ *   depth ×1.4 tween. Purely decorative: `aria-hidden` + pointer-events
+ *   none, layered in front of everything (including the type layer) like a
+ *   lens element in the rig.
+ * - `plate-finale` (`.hero-plate-finale`, armed-only) — the nadir
+ *   "operational picture" shot, crossfades in via opacity across scrub
+ *   0.76→0.86 as the destination beat's background; static (no
+ *   `CAMERA_PATH` tween) so it reads as a deliberate cut, not a
+ *   continuation of the pan.
+ *
+ * The mid/foreground/finale plates are DOM SIBLINGS of `.hero-rig` (not
+ * nested children of it): each gets its own independent, self-contained
+ * transform-only GSAP tween computing an absolute depth-scaled path
+ * (`HeroDirector`'s `flyPath` helper) rather than an additional transform
+ * layered on top of the rig's own (which would require dividing out the
+ * parent's contribution at every keyframe to hit the target depth — more
+ * fragile for no visual difference). Z-order back to front: background <
+ * mid < finale < night-grade/signal accents < type (intro/finale text +
+ * CTAs) < corner beats < foreground bokeh (topmost).
+ *
+ * Resolution note: the delivered plates are 1915×821 — below the
+ * 3440×1476 (21:9, 2×) target the rig was designed for. `CAMERA_PATH`'s
+ * peak scale is capped at 1.28 (down from a pre-asset placeholder of 1.33)
+ * to keep the worst-case upscale ratio in check on common desktop
+ * viewports; see the cap rationale in `HeroDirector.tsx`. Plates are
+ * drop-in replaceable at higher resolution later — re-export the same
+ * four filenames into `public/media/hero/` and lift the scale cap back
+ * toward 1.33 if the new source supports it.
  *
  * Accessibility contract for the armed flight (controller ruling):
  * - The `<h1>`, the finale block and the CTA row are informative — they are
@@ -62,11 +92,13 @@ export function Hero({ content }: HeroProps) {
   return (
     <section className="hero" data-hero-root>
       <div className="hero-stage">
-        {/* Camera rig: transform-driven plate container. */}
+        {/* Camera rig: transform-driven base plate container. Always visible
+            (static and armed) — the single flattened layer under no-JS/
+            reduced-motion. */}
         <div className="hero-rig" data-hero-rig>
           <div className="hero-plate">
             <Image
-              src="/media/campus.jpg"
+              src="/media/hero/plate-background.png"
               alt={content.plateAlt}
               fill
               priority
@@ -74,6 +106,20 @@ export function Hero({ content }: HeroProps) {
               className="object-cover"
             />
           </div>
+        </div>
+
+        {/* Parallax mid layer (armed-only): stadium + pool cutout, its own
+            depth ×1.15 tween (HeroDirector's `flyPath`). Sibling of
+            `.hero-rig`, not nested inside it — see the file header. */}
+        <div className="hero-plate-mid" data-hero-plate-mid aria-hidden="true">
+          <Image src="/media/hero/plate-midground.png" alt="" fill sizes="100vw" className="object-cover" />
+        </div>
+
+        {/* Finale plate (armed-only): the nadir "operational picture" shot,
+            crossfades in via opacity 0.76→0.86 as the destination beat's
+            background. Always below the type layer. */}
+        <div className="hero-plate-finale" data-hero-plate-finale aria-hidden="true">
+          <Image src="/media/hero/plate-finale.png" alt="" fill sizes="100vw" className="object-cover" />
         </div>
 
         {/* Night grade + brand signal accents. */}
@@ -155,6 +201,15 @@ export function Hero({ content }: HeroProps) {
             <path d="M12 5v14" />
             <path d="m19 12-7 7-7-7" />
           </svg>
+        </div>
+
+        {/* Foreground bokeh overlay (armed-only): floodlight mast + tree
+            canopy corners on a transparent center, its own depth ×1.4 tween.
+            Topmost layer — sits in front of everything, including the type
+            layer, like a lens element on the rig. Purely decorative and
+            inert: aria-hidden, no pointer events, never blocks interaction. */}
+        <div className="hero-plate-fg" data-hero-plate-fg aria-hidden="true">
+          <Image src="/media/hero/plate-foreground.png" alt="" fill sizes="100vw" className="object-cover" />
         </div>
       </div>
 

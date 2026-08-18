@@ -9,9 +9,10 @@
    The hero renders as ONE server-rendered DOM with two CSS modes:
 
    - Static frame (default; also the no-JS, reduced-motion and pre-hydration
-     state): a full-viewport composed frame — campus plate, night grade,
-     wordmark + tagline + CTAs centered — followed by the "flight plan" strip
-     (the five chapters as normal flowing content). Nothing is hidden that a
+     state): a full-viewport composed frame — the background plate only
+     (single flattened layer, no parallax), night grade, wordmark + tagline
+     + CTAs centered — followed by the "flight plan" strip (the five
+     chapters as normal flowing content). Nothing is hidden that a
      scriptless reader needs; the CSS entrance is keyframe-driven (plays
      without JS) and all travel distances multiply `--motion-travel`, so
      reduced-motion degrades to pure fades by token, not by a second code
@@ -21,11 +22,22 @@
      resolves — i.e. never on the server, never under reduced motion): the
      section becomes a tall scroll track, the stage pins via `position:
      sticky`, the flight-plan strip hides, and the per-chapter beat layers +
-     progress rail + scanline become visible for the GSAP-scrubbed camera
-     flight. GSAP owns all armed-mode movement inline; this file only owns
-     visibility and layout of the two modes.
+     midground/foreground/finale plates + progress rail + scanline become
+     visible for the GSAP-scrubbed camera flight. GSAP owns all armed-mode
+     movement inline; this file only owns visibility and layout of the two
+     modes (plus each plate layer's REST transform — see §2 — which GSAP's
+     first render reads as its tween start value).
 
-   The plate photograph never mirrors in RTL (camera coordinates are
+   Plate layers (`public/media/hero/plate-*.png`, four total): background
+   (`.hero-plate`, always visible) < midground (`.hero-plate-mid`) <
+   finale (`.hero-plate-finale`) < night-grade/signal accents < type
+   (`.hero-center`, intro/finale text + CTAs) < corner beats
+   (`.hero-beat`) < foreground bokeh (`.hero-plate-fg`, topmost). Mid/
+   finale/foreground are DOM siblings of `.hero-rig`, not nested inside
+   it (see Hero.tsx's file header) — each carries its OWN static REST
+   transform below and its own GSAP tween (`HeroDirector`'s `flyPath`).
+
+   The plate photographs never mirror in RTL (camera coordinates are
    physical); text layers use logical properties throughout.
    ============================================================================ */
 
@@ -62,15 +74,26 @@
 }
 
 /* ---------------------------------------------------------------------------
-   2. Plate (the camera subject) + grade
+   2. Plate layers (the camera subject) + grade
+
+   Four plates total (`public/media/hero/plate-*.png`). The background
+   plate is always rendered (static + armed); midground/finale/foreground
+   are armed-only and independently transformed — see the file header and
+   `HeroDirector.tsx`'s `flyPath`. Every plate's static `transform: scale()`
+   below MUST equal `1 + (CAMERA_PATH[0].scale - 1) * depth` for that
+   layer's depth factor (1 / DEPTH_MID / DEPTH_NEAR): GSAP's first scrubbed
+   render captures whatever the live computed transform is as the tween's
+   start value, so this is the actual source of truth for progress-0, not
+   just a placeholder.
    --------------------------------------------------------------------------- */
 
 .hero-rig {
   position: absolute;
   inset: 0;
-  /* Slight overscan so drift/pan never reveals a plate edge. GSAP overrides
-     this transform inline in armed mode. */
-  transform: scale(1.06);
+  /* Slight overscan so drift/pan never reveals a plate edge. Must match
+     CAMERA_PATH[0].scale (depth ×1.0) — see the scale-cap decision in
+     HeroDirector.tsx. GSAP overrides this transform inline in armed mode. */
+  transform: scale(1.05);
   transform-origin: 50% 42%;
   will-change: transform;
 }
@@ -80,8 +103,60 @@
   inset: 0;
 }
 
-/* Night grade, layer 1: cools the golden-hour plate toward the obsidian
-   brand world. */
+/* Parallax mid layer (armed-only): stadium + pool cutout (alpha PNG),
+   depth ×1.15 of the base rig — see HeroDirector's DEPTH_MID. */
+.hero-plate-mid {
+  display: none;
+  position: absolute;
+  inset: 0;
+  /* 1 + (1.05 - 1) * 1.15 = 1.0575, rounded. */
+  transform: scale(1.058);
+  transform-origin: 50% 42%;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.hero[data-armed] .hero-plate-mid {
+  display: block;
+}
+
+/* Finale plate (armed-only): the nadir "operational picture" shot,
+   crossfades via opacity 0.76→0.86 (HeroDirector) — no rig motion, it is a
+   deliberate cut to a different framing, not a continuation of the pan.
+   Always below the type layer. */
+.hero-plate-finale {
+  display: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.hero[data-armed] .hero-plate-finale {
+  display: block;
+}
+
+/* Foreground bokeh overlay (armed-only): floodlight mast + tree canopy
+   corners on a transparent center, depth ×1.4 — see HeroDirector's
+   DEPTH_NEAR. Topmost plate layer (see the file header's z-order); purely
+   decorative and inert (aria-hidden in markup, no pointer events here). */
+.hero-plate-fg {
+  display: none;
+  position: absolute;
+  inset: 0;
+  /* 1 + (1.05 - 1) * 1.4 = 1.07. */
+  transform: scale(1.07);
+  transform-origin: 50% 42%;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.hero[data-armed] .hero-plate-fg {
+  display: block;
+}
+
+/* Night grade, layer 1: cools the plate toward the obsidian brand world. */
 .hero-tint {
   position: absolute;
   inset: 0;
