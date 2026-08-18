@@ -103,6 +103,22 @@ export interface PricingCurrencyValue {
    *  only path to a number" rule: SAR is always a legal target, and nothing
    *  else the backend didn't actually offer ever becomes one. */
   setCurrency: (code: string) => void;
+  /** True when `LivePrices`' most recent conversion pass for `activeCurrency`
+   *  failed to format at least one price slot (its `safeFormatPrice` guard —
+   *  see `convert.ts` — returned `null` for that slot; that slot's baked SAR
+   *  figure was left untouched rather than half-written). `CurrencyNote`
+   *  reads this to hide its "Converted from SAR" disclosure while true —
+   *  showing that claim would be misleading when at least one figure on the
+   *  page is still its unconverted baked value. Starts `false`; only
+   *  `LivePrices` ever sets it, via {@link reportConversionResult}, once
+   *  per conversion pass — a fresh pass that fully succeeds sets it back to
+   *  `false`, so this never gets stuck `true` after a working currency is
+   *  chosen. */
+  conversionFailed: boolean;
+  /** Reports whether `LivePrices`' most recently completed conversion pass
+   *  had at least one slot fail. Not meant for any caller other than
+   *  `LivePrices`. */
+  reportConversionResult: (failed: boolean) => void;
 }
 
 const PricingCurrencyContext = createContext<PricingCurrencyValue | null>(null);
@@ -167,37 +183,60 @@ export function PricingCurrencyProvider({ children }: PricingCurrencyProviderPro
   const [status, setStatus] = useState<PricingLoadStatus>(INITIAL_STATUS);
   const [context, setContext] = useState<GeoPricingContext | null>(null);
   const [activeCurrency, setActiveCurrencyState] = useState(INITIAL_CURRENCY);
+  const [conversionFailed, setConversionFailed] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
 
-    fetchPricingContext(controller.signal).then((result) => {
-      // The Provider unmounted (its own cleanup already fired `abort()`)
-      // before this resolved — `fetchPricingContext` resolves `null` on an
-      // aborted signal rather than rejecting, so this guard is what actually
-      // stops a stale resolution from writing state into an unmounted tree.
+    /** Shared "this fetch attempt produced no usable context" landing spot —
+     *  used both by a resolved `null` and by `.catch` below, so a rejection
+     *  (which `fetchPricingContext`'s own contract says should never happen,
+     *  but this `.catch` is the requested defense-in-depth backstop for that
+     *  contract regardless) lands in exactly the same state a documented
+     *  `null` resolution would. */
+    function markUnavailable(): void {
       if (controller.signal.aborted) return;
+      setStatus("unavailable");
+    }
 
-      if (result === null) {
-        setStatus("unavailable");
-        return;
-      }
+    fetchPricingContext(controller.signal)
+      .then((result) => {
+        // The Provider unmounted (its own cleanup already fired `abort()`)
+        // before this resolved — `fetchPricingContext` resolves `null` on an
+        // aborted signal rather than rejecting, so this guard is what
+        // actually stops a stale resolution from writing state into an
+        // unmounted tree.
+        if (controller.signal.aborted) return;
 
-      const validCodes = new Set(result.supportedCurrencies.map((currency) => currency.code));
-      const stored = readStoredCurrency();
-      const initialCurrency =
-        stored && (stored === "SAR" || validCodes.has(stored))
-          ? stored
-          : validCodes.has(result.recommendedCurrency)
-            ? result.recommendedCurrency
-            : "SAR";
+        if (result === null) {
+          markUnavailable();
+          return;
+        }
 
-      setContext(result);
-      setActiveCurrencyState(initialCurrency);
-      setStatus("ready");
-    });
+        const validCodes = new Set(result.supportedCurrencies.map((currency) => currency.code));
+        // Uppercased before comparison: a stored override written before
+        // this file's ingest-time uppercase normalization existed (or
+        // typed via a dev tool) shouldn't silently stop matching a
+        // now-uppercase `validCodes` entry over a case difference alone.
+        const stored = readStoredCurrency()?.toUpperCase() ?? null;
+        const initialCurrency =
+          stored && (stored === "SAR" || validCodes.has(stored))
+            ? stored
+            : validCodes.has(result.recommendedCurrency)
+              ? result.recommendedCurrency
+              : "SAR";
+
+        setContext(result);
+        setActiveCurrencyState(initialCurrency);
+        setStatus("ready");
+      })
+      .catch(markUnavailable);
 
     return () => controller.abort();
+  }, []);
+
+  const reportConversionResult = useCallback((failed: boolean) => {
+    setConversionFailed(failed);
   }, []);
 
   const setCurrency = useCallback(
@@ -211,8 +250,8 @@ export function PricingCurrencyProvider({ children }: PricingCurrencyProviderPro
   );
 
   const value = useMemo<PricingCurrencyValue>(
-    () => ({ status, context, activeCurrency, setCurrency }),
-    [status, context, activeCurrency, setCurrency],
+    () => ({ status, context, activeCurrency, setCurrency, conversionFailed, reportConversionResult }),
+    [status, context, activeCurrency, setCurrency, conversionFailed, reportConversionResult],
   );
 
   return <PricingCurrencyContext.Provider value={value}>{children}</PricingCurrencyContext.Provider>;

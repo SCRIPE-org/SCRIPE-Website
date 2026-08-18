@@ -25,7 +25,11 @@
  *
  * `aria-hidden` follows `visibility` exactly: a screen reader has no reason
  * to ever announce a disclosure about currency conversion while SAR (i.e.
- * the baked, unconverted figures) is what's actually showing.
+ * the baked, unconverted figures) is what's actually showing — which now
+ * includes `conversionFailed` (see `PricingCurrencyProvider.tsx`'s own doc
+ * comment on that field): if `LivePrices.tsx`'s most recent conversion pass
+ * failed to write at least one price slot, this claims nothing was
+ * converted rather than asserting a conversion that didn't fully happen.
  */
 import { useTranslations } from "next-intl";
 import { cx } from "@/components/ui/cx";
@@ -37,9 +41,9 @@ import { usePricingCurrency } from "./PricingCurrencyProvider";
  */
 export function CurrencyNote() {
   const t = useTranslations();
-  const { status, activeCurrency } = usePricingCurrency();
+  const { status, activeCurrency, conversionFailed } = usePricingCurrency();
 
-  const showNote = status === "ready" && activeCurrency !== "SAR";
+  const showNote = status === "ready" && activeCurrency !== "SAR" && !conversionFailed;
 
   return (
     <p

@@ -11,10 +11,19 @@
  * Western digits — even for the `"ar"` locale, where `Intl.NumberFormat`
  * defaults to Arabic-Indic digits unless explicitly pinned to the `latn`
  * numbering system — plus narrow currency symbols.
+ *
+ * The `safeFormatPrice` block at the end covers the after-review hardening
+ * fix (`fix: harden currency validation and formatting fallback`):
+ * `formatPrice` genuinely throws `RangeError` for a malformed currency code
+ * (`"US-DOLLAR"`, verified against real `Intl.NumberFormat` behavior, not
+ * assumed) — these tests both pin that throw exists AND prove
+ * `safeFormatPrice`'s guard converts it to `null` instead of letting it
+ * escape, which is the property `LivePrices.tsx` depends on to leave a
+ * baked SAR figure untouched rather than crash the pricing page.
  */
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { convertFromSar, formatPrice } from "./convert";
+import { convertFromSar, formatPrice, safeFormatPrice } from "./convert";
 
 test("convertFromSar: SAR to SAR is an exact identity (Starter monthly, 990)", () => {
   assert.equal(convertFromSar(990, 3.75, 3.75), 990);
@@ -84,4 +93,21 @@ test("formatPrice: SAR has no narrow glyph in ICU, so it renders the ISO code as
 test("formatPrice: drops decimal places (maximumFractionDigits: 0)", () => {
   const formatted = formatPrice(970, "SAR", "en");
   assert.equal(formatted.includes("."), false, `expected no decimal point in "${formatted}"`);
+});
+
+test("formatPrice: throws RangeError for a malformed (not-3-letter) currency code — the real crash this task hardened against", () => {
+  assert.throws(() => formatPrice(990, "US-DOLLAR", "en"), RangeError);
+});
+
+test("safeFormatPrice: guards formatPrice's throw — returns null instead of letting a malformed code escape", () => {
+  assert.doesNotThrow(() => safeFormatPrice(990, "US-DOLLAR", "en"));
+  assert.equal(safeFormatPrice(990, "US-DOLLAR", "en"), null);
+});
+
+test("safeFormatPrice: also guards an empty-string currency code", () => {
+  assert.equal(safeFormatPrice(990, "", "en"), null);
+});
+
+test("safeFormatPrice: returns formatPrice's exact output for a well-formed code (the guard is transparent on the happy path)", () => {
+  assert.equal(safeFormatPrice(990, "USD", "en"), formatPrice(990, "USD", "en"));
 });

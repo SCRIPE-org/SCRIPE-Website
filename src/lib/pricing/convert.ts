@@ -125,3 +125,34 @@ export function formatPrice(amount: number, currency: string, locale: string): s
     maximumFractionDigits: 0,
   }).format(amount);
 }
+
+/**
+ * Defense-in-depth wrapper around {@link formatPrice} — the guard
+ * `LivePrices.tsx` calls instead of `formatPrice` directly.
+ *
+ * `Intl.NumberFormat` throws a `RangeError` when `currency` isn't a
+ * well-formed 3-letter code shape (`"US-DOLLAR"` throws; `""` throws — see
+ * `pricing-context.ts`'s header for the exact spec rule and the verified
+ * throw/no-throw cases). `pricing-context.ts`'s `isValidCurrency` already
+ * rejects that shape at the network-response boundary — the layer that
+ * should make this unreachable in practice — but `src/app` has no error
+ * boundary, so a currency code reaching `formatPrice` any other way (a
+ * future call site, an ICU behavior change, a future field added to
+ * `PricingContext` this validation doesn't yet cover) would otherwise crash
+ * the whole pricing page rather than degrade to the baked SAR figures. This
+ * function is the second, independent layer: it converts that throw into
+ * `null` instead of letting it propagate, so ITS caller only ever has a
+ * value to check, never an exception to catch.
+ *
+ * @param amount - See {@link formatPrice}.
+ * @param currency - See {@link formatPrice}.
+ * @param locale - See {@link formatPrice}.
+ * @returns The formatted string, or `null` if `formatPrice` threw.
+ */
+export function safeFormatPrice(amount: number, currency: string, locale: string): string | null {
+  try {
+    return formatPrice(amount, currency, locale);
+  } catch {
+    return null;
+  }
+}

@@ -67,10 +67,30 @@
  * `PlanCards.tsx` always rendered — this component never puts the page into
  * a visibly different state than "do nothing" until it has a fully validated
  * conversion to apply.
+ *
+ * ============================================================================
+ * PER-SLOT FORMATTING GUARD — defense in depth, layer 2 of 2
+ * ============================================================================
+ * `pricing-context.ts`'s `isValidCurrency` (layer 1) already rejects any
+ * currency code that isn't a well-formed 3-letter shape before it can ever
+ * reach this component — that should make a `formatPrice` throw
+ * unreachable here in practice. `src/app` has no error boundary, though, so
+ * this component doesn't call `formatPrice` directly: it calls
+ * `convert.ts`'s `safeFormatPrice`, which converts any throw into `null`
+ * instead of letting it escape. A `null` result for one slot leaves THAT
+ * slot's baked SAR figure exactly as server-rendered (the DOM write is
+ * simply skipped for it — the baked SAR truth is this component's fallback
+ * of last resort) rather than writing a garbled or partial string, and
+ * marks the whole pass as failed via `reportConversionResult(true)` so
+ * `CurrencyNote` hides its "Converted from SAR" disclosure rather than
+ * claiming a conversion happened when at least one figure on the page is
+ * still unconverted. A pass where every slot formats successfully reports
+ * `false`, so a later currency that DOES work fully un-hides the note again
+ * — this never gets stuck suppressed.
  */
 import { useEffect } from "react";
 import { useLocale } from "next-intl";
-import { convertFromSar, formatPrice } from "@/lib/pricing/convert";
+import { convertFromSar, safeFormatPrice } from "@/lib/pricing/convert";
 import { usePricingCurrency } from "./PricingCurrencyProvider";
 
 /** One convertible price slot: the exact `data-price-slot` attribute value
@@ -104,31 +124,49 @@ export interface LivePricesProps {
  */
 export function LivePrices({ slots }: LivePricesProps) {
   const locale = useLocale();
-  const { status, context, activeCurrency } = usePricingCurrency();
+  const { status, context, activeCurrency, reportConversionResult } = usePricingCurrency();
 
   useEffect(() => {
     if (status !== "ready" || !context) return;
     // The baked SAR figures already sitting in the DOM ARE the SAR truth —
-    // nothing to convert or write.
+    // nothing to convert or write. (`reportConversionResult` is deliberately
+    // NOT called here: `CurrencyNote`'s own render condition already
+    // requires `activeCurrency !== "SAR"` before it would show anything, so
+    // a stale `conversionFailed` value from a previous currency can't
+    // matter while SAR is active.)
     if (activeCurrency === "SAR") return;
 
     const sarRate = context.supportedCurrencies.find((currency) => currency.code === "SAR")?.rateFromUsd;
     const targetRate = context.supportedCurrencies.find((currency) => currency.code === activeCurrency)?.rateFromUsd;
     // A context that doesn't carry a SAR rate, or doesn't actually carry the
     // active currency's own rate, is malformed for this feature's purposes —
-    // leave the baked SAR figures standing rather than guess a conversion.
-    if (sarRate === undefined || targetRate === undefined) return;
+    // leave the baked SAR figures standing rather than guess a conversion,
+    // and report the pass as failed so the currency-conversion disclosure
+    // doesn't claim a conversion that didn't happen.
+    if (sarRate === undefined || targetRate === undefined) {
+      reportConversionResult(true);
+      return;
+    }
 
+    let anyFailure = false;
     for (const { slot, baseSar } of slots) {
       const el = document.querySelector<HTMLElement>(`[data-price-slot="${slot}"]`);
       if (!el) continue;
       const converted = convertFromSar(baseSar, sarRate, targetRate);
+      const formatted = safeFormatPrice(converted, activeCurrency, locale);
+      if (formatted === null) {
+        // See this file's "Per-slot formatting guard" header section — the
+        // baked SAR figure already in this node is left exactly as is.
+        anyFailure = true;
+        continue;
+      }
       // Idempotent by construction: re-running this effect with the same
       // (status, context, activeCurrency, locale) always computes the same
       // string and assigns it again — a no-op write, not a visible change.
-      el.textContent = formatPrice(converted, activeCurrency, locale);
+      el.textContent = formatted;
     }
-  }, [status, context, activeCurrency, slots, locale]);
+    reportConversionResult(anyFailure);
+  }, [status, context, activeCurrency, slots, locale, reportConversionResult]);
 
   return null;
 }
