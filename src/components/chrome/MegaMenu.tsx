@@ -222,7 +222,7 @@ export function MegaMenu() {
         onBlur={(event) => {
           if (!panelRef.current?.contains(event.relatedTarget as Node | null)) scheduleClose();
         }}
-        className="absolute inset-inline-start-0 top-full z-[var(--z-megamenu)] mt-2 w-[min(640px,90vw)] rounded-lg border border-border-subtle bg-surface-overlay p-5 shadow-[0_8px_24px_rgb(0,0,0,0.18)]"
+        className="absolute start-0 top-full z-[var(--z-megamenu)] mt-2 w-[min(640px,90vw)] rounded-lg border border-border-subtle bg-surface-overlay p-5 shadow-[0_8px_24px_rgb(0,0,0,0.18)]"
       >
         <div className="grid gap-1 sm:grid-cols-2">
           {SOLUTIONS.map((item, index) => (

@@ -33,7 +33,7 @@ export async function NavBar() {
   const t = await getTranslations();
 
   return (
-    <header className="border-border-subtle bg-surface-page/85 sticky inset-inline-0 top-0 z-[var(--z-nav)] border-b backdrop-blur-md">
+    <header className="border-border-subtle bg-surface-page/85 sticky start-0 end-0 top-0 z-[var(--z-nav)] border-b backdrop-blur-md">
       {/* First focusable element on every page: visually hidden until it
           receives keyboard focus, then it's the first thing announced. */}
       <a

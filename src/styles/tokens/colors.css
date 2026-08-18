@@ -52,6 +52,7 @@
   --surface-overlay: #eaebec;
   --text-primary: #101214;
   --text-secondary: #54585c;
+  --text-tertiary: #676a6f;
   --text-muted: #797d82;
   /* fill role: brand lime tuned so ink stays comfortably legible on top */
   --accent: var(--lime-600);
@@ -75,6 +76,7 @@
   --surface-overlay: var(--charcoal);
   --text-primary: #f2f3f2;
   --text-secondary: #a7abaf;
+  --text-tertiary: #999da2;
   --text-muted: var(--fog);
   /* fill role: full-brightness flagship lime — plenty of headroom on obsidian */
   --accent: var(--lime-400);
