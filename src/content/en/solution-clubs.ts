@@ -32,6 +32,8 @@ export const solutionClubsContent: SolutionContent = {
       "Teams, members, the competition calendar, attendance, payments and coaches on one connected record — so the 5pm question is answered before anyone asks it.",
     primaryCta: "Book a demo",
     secondaryCta: "See pricing",
+    imageAlt:
+      "A floodlit pitch after rain at night — empty dugout benches, a tactics board leaning against them, and studded boot prints along the wet touchline",
     snapshot: {
       label: "What this looks like",
       stats: [

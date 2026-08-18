@@ -160,7 +160,14 @@ export interface HomeContent {
     };
     /** Brand support line rendered under the statement headline. */
     tagline: string;
-    /** Alt text for the campus plate photograph. */
+    /** Accessible name for the campus plate photograph, rendered as
+     *  `aria-label` on the plate's `role="img"` element (the plate is a CSS
+     *  `background-image`, not an `<img>` — see `Hero.tsx`'s header for why
+     *  the theme-adaptive film requires that). Deliberately describes the
+     *  campus WITHOUT naming a time of day: Task G3 made the hero swap
+     *  between a night and a golden-hour film on `data-theme`, and this
+     *  string is server-rendered, so it cannot know which of the two a given
+     *  reader is being shown. */
     plateAlt: string;
     /** Progress-rail label for the intro beat. */
     railIntro: string;
@@ -562,6 +569,15 @@ export interface SolutionContent {
     primaryCta: string;
     /** Secondary CTA label (see pricing). */
     secondaryCta: string;
+    /** Alt text for the framed campus photograph above the snapshot panel.
+     *  OPTIONAL because the set is incomplete: three of the four solution
+     *  pages have a delivered photograph, and multi-sport organizations does
+     *  not (`docs/asset-briefs/delivered-images-catalog-2026-08-19.md` §2 —
+     *  P12 was never delivered). A page without this key renders its hero
+     *  exactly as before, snapshot panel alone; adding the key plus the
+     *  file's entry in `SOLUTION_HERO_IMAGE` is the whole integration when
+     *  the owner's round-2 drop lands. */
+    imageAlt?: string;
     /** The "what this looks like" mini evidence panel beside the hero copy. */
     snapshot: {
       /** Panel label (e.g. "What this looks like"). */
@@ -896,6 +912,10 @@ export interface PricingContent {
      *  removal — there is no self-service trial (see the FAQ's
      *  `is-there-a-self-service-trial` answer). */
     secondaryCta?: string;
+    /** Alt text for the wide framed photograph under the hero copy — four
+     *  separately lit facility hubs across one dark city, the page's
+     *  per-branch pricing argument made before the copy makes it. */
+    imageAlt: string;
   };
   /** Billing-cycle toggle copy, shared by every amount-priced plan card. */
   billing: {
@@ -1208,6 +1228,10 @@ export interface CompanyContent {
     primaryCta: string;
     /** Secondary CTA label (explore the platform). */
     secondaryCta: string;
+    /** Alt text for the framed campus photograph beside the statement. The
+     *  file itself is fixed in `CompanyHero.tsx` (one page, one photograph);
+     *  only the description translates. */
+    imageAlt: string;
   };
   /** Mission section (`#mission`) — why SCRIPE exists and who it is built
    *  for, paired in the rendered layout with `vision` below. */

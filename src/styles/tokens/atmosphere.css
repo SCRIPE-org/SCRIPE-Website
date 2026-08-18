@@ -35,11 +35,15 @@
    `CapabilityHero`'s kicker).
 
    LIGHT ART DIRECTION (Task E5) — "cinema screen in a lit room": the
-   fixed-obsidian surfaces (home hero stage, every `.atmo-cta-panel` end
-   card) are night film in BOTH themes; `.night-zone` below re-pins the
+   film surfaces (home hero stage, every `.atmo-cta-panel` end card) keep
+   the FILM's own grade in BOTH themes; `.night-zone` below re-pins the
    semantic tokens inside those regions to their dark-theme values so
    buttons, accent marks and text render the film's own grade regardless of
-   the toggle. Everything else becomes the daylight studio: `--atmo-glow`
+   the toggle. (Task G3 made the hero's PHOTOGRAPH theme-adaptive — night
+   plate in dark, golden-hour plate in light — without changing that: the
+   day cut is white type under a warm ND grad, still a film, so its controls
+   still come from the film's palette. The end cards remain obsidian in both
+   themes.) Everything else becomes the daylight studio: `--atmo-glow`
    is no longer dark-only — each page's stylesheet now authors a light
    recipe too (soft shading pools + brand-warm key lights on paper, ≤6%
    alpha), declared on the bare modifier class so the existing
@@ -68,6 +72,10 @@
    .atmo-panel / -deep raised surface: edge-highlight + shadow ramp, mirrors
                         `home.css`'s `.panel`/`.panel-deep`.
    .atmo-chip          elevated chip surface, mirrors `home.css`'s `.chip-lit`.
+   .plate-frame        framed campus photograph — theme-aware mat + edge +
+                        crop marks, with `-window`, `-img` and `-marks`
+                        children. Authored by `src/components/ui/PlatePhoto.tsx`;
+                        never hand-composed.
    .atmo-cta-panel/-horizon/-bloom/-grain   the obsidian "horizon" closing CTA
                         every sub-page ends on, now elevated onto the shadow-4
                         ramp + a quiet grain pass (previously flat, six-times
@@ -239,6 +247,88 @@
 [data-theme="dark"] .atmo-chip {
   background: linear-gradient(180deg, #1c1f23 0%, #16181b 100%);
   border-color: rgba(255, 255, 255, 0.09);
+}
+
+/* ---- Framed campus photographs (Task G3) --------------------------------
+   The frame half of `src/components/ui/PlatePhoto.tsx` — read that file's
+   header first; it explains why every sub-page photograph is ONE asset in a
+   theme-aware frame rather than a night copy and a day copy.
+
+   Geometry is theme-invariant (same mat width, same radii, same crop-mark
+   insets in both themes) so the toggle can never reflow a page. Only the
+   frame's MATERIAL changes: dark gets an edge — hairline, inner top light,
+   deep shadow — so a near-black photograph separates from a near-black page;
+   light gets a paper mat and the studio shadow ramp so the same photograph
+   reads as a print laid on the page instead of a hole cut in it.
+
+   Lives here rather than in a page stylesheet because four different routes
+   (company, two solution pages, pricing) each ship their own CSS file and
+   none can import another's — the exact duplication risk this partial exists
+   to remove (see the file header). */
+
+.plate-frame {
+  --plate-mat: clamp(8px, 0.9vw, 12px);
+  margin: 0;
+  padding: var(--plate-mat);
+  border-radius: var(--radius-xl-base);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--edge-highlight), var(--shadow-3);
+}
+
+[data-theme="dark"] .plate-frame {
+  background: linear-gradient(180deg, #1d2024 0%, #17191c 100%);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.plate-frame-window {
+  position: relative;
+  overflow: hidden;
+  /* The mat's own inner radius: the outer radius less the mat width, so the
+     two curves stay concentric instead of the photo's corner cutting inside
+     the frame's. */
+  border-radius: calc(var(--radius-xl-base) - var(--plate-mat));
+  /* A near-black bed under the photograph, so a decoding image never flashes
+     the light theme's white mat through the window. */
+  background: var(--obsidian);
+}
+
+.plate-frame-img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+/* Crop marks: the hero stage's `.hero-corners` device (home.css §3) at print
+   scale, inset INSIDE the window so the lime always lands on the (dark)
+   photograph rather than on a mat whose colour changes with the theme. */
+.plate-frame-marks {
+  position: absolute;
+  inset: clamp(10px, 1.4vw, 16px);
+  pointer-events: none;
+}
+
+.plate-frame-marks::before,
+.plate-frame-marks::after {
+  content: "";
+  position: absolute;
+  inline-size: 16px;
+  block-size: 16px;
+  opacity: 0.62;
+}
+
+.plate-frame-marks::before {
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  border-block-start: 1px solid var(--lime-400);
+  border-inline-start: 1px solid var(--lime-400);
+}
+
+.plate-frame-marks::after {
+  inset-block-end: 0;
+  inset-inline-end: 0;
+  border-block-end: 1px solid var(--lime-400);
+  border-inline-end: 1px solid var(--lime-400);
 }
 
 /* ---- Closing CTA: obsidian panel + lime horizon + shadow-4 + grain ------- */

@@ -30,6 +30,8 @@ export const solutionVenuesContent: SolutionContent = {
       "Courts, fields and pools with real availability, one-off and recurring reservations, pricing rules, payments and the utilization numbers that decide the next season.",
     primaryCta: "Book a demo",
     secondaryCta: "See pricing",
+    imageAlt:
+      "Four padel courts seen from directly above at night — one lit with two players mid-rally, the other three dark but fully marked out",
     snapshot: {
       label: "What this looks like",
       stats: [

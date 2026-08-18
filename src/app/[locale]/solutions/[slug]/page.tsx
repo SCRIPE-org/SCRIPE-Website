@@ -117,7 +117,7 @@ export default async function SolutionPage({
         ])}
       />
 
-      <SolutionHero content={content.hero} accent={entry.accent} />
+      <SolutionHero content={content.hero} accent={entry.accent} slug={entry.slug} />
       <PainPoints content={content.painPoints} accent={entry.accent} />
       <Capabilities content={content.capabilities} accent={entry.accent} />
       <Outcomes content={content.outcomes} accent={entry.accent} />

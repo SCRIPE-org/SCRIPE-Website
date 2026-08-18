@@ -61,6 +61,8 @@ export const pricingContent: PricingContent = {
     subtitle:
       "Three plans, billed monthly or yearly. Every plan is confirmed with your operations team before signing — indicative figures below.",
     primaryCta: "Book a Demo",
+    imageAlt:
+      "Night aerial of a city with four separate sports facilities lit up across it — each a stadium, pool or court cluster of its own",
   },
   billing: {
     ariaLabel: "Billing period",

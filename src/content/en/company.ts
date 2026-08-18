@@ -46,6 +46,8 @@ export const companyContent: CompanyContent = {
       "SCRIPE exists for the part of sport nobody photographs — the timetable, the cover request, the term payment, the attendance sheet.",
     primaryCta: "Book a Demo",
     secondaryCta: "Explore the platform",
+    imageAlt:
+      "A darkened operations room at night, one desk lamp lit and the chair empty, overlooking a floodlit sports campus through the window",
   },
   mission: {
     label: "Mission",

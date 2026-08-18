@@ -11,10 +11,22 @@
  * (see `CapabilityHero.tsx`'s header) and the section sits on a quiet cool
  * ground glow + grain (`.atmo`/`.atmo-grain`, `.pricing-hero-atmo` in
  * `pricing.css` §4). A Server Component; `Reveal` is the only client leaf.
+ *
+ * Task G3: a framed photograph joins the copy — four separately lit facility
+ * hubs scattered across one dark city. It runs as a FULL-WIDTH strip under
+ * the copy rather than in a right-hand column, which is a deliberate
+ * departure from the portrait prints on `/company` and the solution pages.
+ * The frame is 21:9 and its entire argument is that there are four of them:
+ * any crop tight enough to sit beside a text column throws two hubs away and
+ * with them the reason the picture is on a pricing page at all. A wide strip
+ * is also the honest reading of the shot's own scale — it is a high-altitude
+ * aerial, and shrinking it to 340px would make four city-blocks of detail
+ * unreadable. The image argues for per-branch pricing before the copy does.
  */
 import type { PricingContent } from "@/content/types";
 import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/Button";
+import { PlatePhoto } from "@/components/ui/PlatePhoto";
 import { Section } from "@/components/ui/Section";
 
 export interface PricingHeroProps {
@@ -54,6 +66,22 @@ export function PricingHero({ content }: PricingHeroProps) {
             </Button>
           ) : null}
         </div>
+      </Reveal>
+
+      {/* Clamped to the copy's own 900px measure, not the section's full
+          width. At container width the 21:9 frame stood 556px tall and
+          pushed the plan cards — the page's actual job — to y≈1322, more
+          than a viewport down. Sharing the copy's measure keeps the four
+          hubs individually legible, reads as one left-aligned column with
+          the paragraph above it, and buys back ~170px before the plans. */}
+      <Reveal delay={120} className="mt-[clamp(var(--space-8),5vh,var(--space-10))] max-w-[900px]">
+        <PlatePhoto
+          src="/media/pricing/city-hubs.webp"
+          alt={content.imageAlt}
+          width={1915}
+          height={821}
+          sizes="(min-width: 60rem) 900px, 92vw"
+        />
       </Reveal>
     </Section>
   );

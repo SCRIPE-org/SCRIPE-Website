@@ -29,6 +29,8 @@ export const solutionAcademiesContent: SolutionContent = {
       "Programs, athletes, guardians, coaches, attendance, subscriptions and payments in one rhythm — so development evidence survives the season it was collected in.",
     primaryCta: "Book a demo",
     secondaryCta: "See pricing",
+    imageAlt:
+      "A training ground at misty dawn — cones, ladders and hurdles laid out in exact rows across the grass, sunrise breaking behind the treeline",
     snapshot: {
       label: "What this looks like",
       stats: [

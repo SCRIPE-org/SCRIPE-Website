@@ -20,18 +20,51 @@
  * `HubHero.tsx`), and the snapshot panel moved from a flat `border` onto
  * the shared elevation ramp (`.atmo-panel`). A Server Component; `Reveal` is
  * the only client leaf.
+ *
+ * Task G3: the outer column becomes a stack — a framed campus photograph
+ * above the snapshot panel, sharing its width. The two halves say the same
+ * thing in the two registers this page has to work in: what the solution
+ * LOOKS like, then what it MEASURES. It also gives the snapshot panel, which
+ * previously floated alone in an otherwise empty column, something to be
+ * attached to.
+ *
+ * `SOLUTION_HERO_IMAGE` maps a slug to its photograph. It is keyed here, not
+ * in the locale content files, because a file path is not translated copy —
+ * only the alt text is, and that lives on `content.imageAlt`. Both are
+ * optional in lockstep: `/solutions/multi-sports-organizations` has no
+ * delivered photograph yet (catalog §2, prompt P12 undelivered), so its
+ * hero renders exactly as it did before — panel alone, no gap, no
+ * placeholder. Dropping the file in and adding one line to each of the two
+ * maps is the whole integration when it arrives.
  */
 import type { AccentId, SolutionContent } from "@/content/types";
 import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/Button";
+import { PlatePhoto } from "@/components/ui/PlatePhoto";
 import { Section } from "@/components/ui/Section";
 import { ACCENT_DOT_CLASS, ACCENT_TEXT_CLASS } from "./accents";
+import type { SolutionSlug } from "./registry";
+
+/**
+ * Per-slug hero photograph. Every master is a 4:5 portrait built by
+ * `scripts/build-media-assets.mjs` so the four solution pages read as one
+ * set of prints rather than four unrelated crops. `Partial` on purpose —
+ * `multi-sports-organizations` has no delivered photograph yet, and the type
+ * should say so rather than let a missing key look accidental.
+ */
+const SOLUTION_HERO_IMAGE: Partial<Record<SolutionSlug, { src: string; width: number; height: number }>> = {
+  "sports-clubs": { src: "/media/solutions/clubs-sideline.webp", width: 971, height: 1214 },
+  "sports-academies": { src: "/media/solutions/academies-dawn.webp", width: 1122, height: 1402 },
+  "sports-venues": { src: "/media/solutions/venues-courts.webp", width: 1122, height: 1402 },
+};
 
 export interface SolutionHeroProps {
   /** The hero slice of the solution page's content. */
   content: SolutionContent["hero"];
   /** Product-world accent identity for this solution. */
   accent: AccentId;
+  /** The solution page's route slug, used to look up its photograph. */
+  slug: SolutionSlug;
 }
 
 /**
@@ -40,7 +73,9 @@ export interface SolutionHeroProps {
  *
  * @param props - See {@link SolutionHeroProps}.
  */
-export function SolutionHero({ content, accent }: SolutionHeroProps) {
+export function SolutionHero({ content, accent, slug }: SolutionHeroProps) {
+  const image = SOLUTION_HERO_IMAGE[slug];
+
   return (
     <Section className="atmo atmo-grain sol-hero-atmo !pb-[clamp(var(--space-9),7vh,var(--space-11))]">
       <div className="flex flex-wrap items-center gap-10 lg:gap-14">
@@ -67,7 +102,17 @@ export function SolutionHero({ content, accent }: SolutionHeroProps) {
           </div>
         </Reveal>
 
-        <Reveal delay={120} className="min-w-0 flex-1 basis-72 lg:max-w-[320px]">
+        <Reveal delay={120} className="grid min-w-0 flex-1 basis-72 gap-4 lg:max-w-[380px]">
+          {image && content.imageAlt ? (
+            <PlatePhoto
+              src={image.src}
+              alt={content.imageAlt}
+              width={image.width}
+              height={image.height}
+              sizes="(min-width: 64rem) 380px, (min-width: 40rem) 40vw, 90vw"
+              priority
+            />
+          ) : null}
           <div className="atmo-panel grid gap-3 rounded-lg p-6">
             <span className={`text-[length:var(--fs-meta)] font-semibold ${ACCENT_TEXT_CLASS[accent]}`}>
               {content.snapshot.label}
