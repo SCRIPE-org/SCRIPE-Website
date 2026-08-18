@@ -33,11 +33,15 @@ export const homeContent: HomeContent = {
     breadcrumbHome: "Home",
   },
   hero: {
-    wordmark: "SCRIPE",
-    tagline: "The Operating System for Modern Sports Organizations",
+    headline: {
+      top: "Every pitch, pool & court.",
+      pre: "Run as ",
+      accent: "one",
+      post: ".",
+    },
+    tagline: "SCRIPE — The Operating System for Modern Sports Organizations",
     plateAlt:
       "Aerial view of a sports campus at night — floodlit stadium, glowing pool and training pitches connected by a lit walkway",
-    scrollHint: "Scroll to fly over",
     railIntro: "Intro",
     chapters: [
       {

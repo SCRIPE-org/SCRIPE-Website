@@ -10,9 +10,9 @@
 
    - Static frame (default; also the no-JS, reduced-motion and pre-hydration
      state): a full-viewport composed frame — the background plate only
-     (single flattened layer, no parallax), night grade, wordmark + tagline
-     + CTAs centered — followed by the "flight plan" strip (the five
-     chapters as normal flowing content). Nothing is hidden that a
+     (single flattened layer, no parallax), night grade, statement headline
+     + tagline + CTAs centered — followed by the "flight plan" strip (the
+     five chapters as normal flowing content). Nothing is hidden that a
      scriptless reader needs; the CSS entrance is keyframe-driven (plays
      without JS) and all travel distances multiply `--motion-travel`, so
      reduced-motion degrades to pure fades by token, not by a second code
@@ -21,12 +21,33 @@
    - Armed mode (`[data-armed]`, set by HeroDirector only after `loadGsap()`
      resolves — i.e. never on the server, never under reduced motion): the
      section becomes a tall scroll track, the stage pins via `position:
-     sticky`, the flight-plan strip hides, and the per-chapter beat layers +
-     midground/foreground/finale plates + progress rail + scanline become
-     visible for the GSAP-scrubbed camera flight. GSAP owns all armed-mode
-     movement inline; this file only owns visibility and layout of the two
-     modes (plus each plate layer's REST transform — see §2 — which GSAP's
-     first render reads as its tween start value).
+     sticky` (with `perspective` for the camera's rotateX tilt), the
+     flight-plan strip hides, and the per-chapter beat layers + midground/
+     foreground/finale plates + progress rail + scanline become visible for
+     the GSAP-scrubbed camera flight. GSAP owns all armed-mode movement
+     inline; this file only owns visibility and layout of the two modes
+     (plus each plate layer's REST transform — see §2 — which GSAP's first
+     render reads as its tween start value).
+
+   HEADLINE SYSTEM (Task E2): the `<h1>` is a two-line statement set in
+   Archivo's width-axis extremes — line 1 condensed-light (wdth 80 / wght
+   320, tracked uppercase), line 2 extended-heavy (wdth 122 / wght 790,
+   tight uppercase) with ONE lime keyword. The width contrast between the
+   two lines is the page's typographic signature; everything else on the
+   stage stays quiet around it. Arabic has no wdth axis in Noto Kufi, so
+   `:lang(ar)` swaps the same structure onto a weight-only contrast.
+
+   BEAT / RAIL DESIGN LANGUAGE (Task E2): chapters 1–4 are cinematic
+   lower-thirds — outlined oversized chapter number (lime text-stroke),
+   1px lime rule, mono meta stamp (`--hero-mono`), then title + subtitle.
+   The rail is a designed object: hairline track, mono two-digit stamps,
+   glowing lime dot on the active tick. The scroll cue is a wordless thin
+   line + chevron drift (drift gated on `prefers-reduced-motion`).
+
+   GRADE (Task E2): cooling tint (multiply, LIGHT — the plates carry their
+   own night look) < legibility vignette/scrims < lime horizon bloom <
+   film grain (masks plate upscale at the camera's close passes) < crop
+   corners. Text contrast stays AA via local scrims + text-shadows.
 
    Plate layers (`public/media/hero/plate-*.png`, four total): background
    (`.hero-plate`, always visible) < midground (`.hero-plate-mid`) <
@@ -49,6 +70,9 @@
   /* Pull the stage under the translucent sticky NavBar (72px tall) so the
      plate runs truly full-bleed behind the blurred nav surface. */
   margin-block-start: -72px;
+  /* Mono stack for the film-annotation stamps (beat meta, rail numbers).
+     System monos only — no font payload. */
+  --hero-mono: ui-monospace, "Cascadia Mono", Consolas, "Liberation Mono", monospace;
 }
 
 .hero[data-armed] {
@@ -71,6 +95,10 @@
   top: 0;
   height: 100svh;
   min-height: 0;
+  /* Camera tilt: CAMERA_PATH's rotateX keyframes (max 2.6°) foreshorten
+     against this perspective. Armed-only — the static frame never tilts.
+     Coverage impact of the tilt is audited in HeroDirector's header. */
+  perspective: 1500px;
 }
 
 /* ---------------------------------------------------------------------------
@@ -90,10 +118,10 @@
 .hero-rig {
   position: absolute;
   inset: 0;
-  /* Slight overscan so drift/pan never reveals a plate edge. Must match
-     CAMERA_PATH[0].scale (depth ×1.0) — see the scale-cap decision in
-     HeroDirector.tsx. GSAP overrides this transform inline in armed mode. */
-  transform: scale(1.05);
+  /* Rest frame overscan. Must match CAMERA_PATH[0].scale (depth ×1.0) —
+     see the camera-math audit in HeroDirector.tsx. GSAP overrides this
+     transform inline in armed mode. */
+  transform: scale(1.14);
   transform-origin: 50% 42%;
   will-change: transform;
 }
@@ -104,13 +132,13 @@
 }
 
 /* Parallax mid layer (armed-only): stadium + pool cutout (alpha PNG),
-   depth ×1.15 of the base rig — see HeroDirector's DEPTH_MID. */
+   depth ×1.10 of the base rig — see HeroDirector's DEPTH_MID. */
 .hero-plate-mid {
   display: none;
   position: absolute;
   inset: 0;
-  /* 1 + (1.05 - 1) * 1.15 = 1.0575, rounded. */
-  transform: scale(1.058);
+  /* 1 + (1.14 - 1) * 1.10 = 1.154. */
+  transform: scale(1.154);
   transform-origin: 50% 42%;
   pointer-events: none;
   will-change: transform;
@@ -138,15 +166,15 @@
 }
 
 /* Foreground bokeh overlay (armed-only): floodlight mast + tree canopy
-   corners on a transparent center, depth ×1.4 — see HeroDirector's
+   corners on a transparent center, depth ×1.85 — see HeroDirector's
    DEPTH_NEAR. Topmost plate layer (see the file header's z-order); purely
    decorative and inert (aria-hidden in markup, no pointer events here). */
 .hero-plate-fg {
   display: none;
   position: absolute;
   inset: 0;
-  /* 1 + (1.05 - 1) * 1.4 = 1.07. */
-  transform: scale(1.07);
+  /* 1 + (1.14 - 1) * 1.85 = 1.259. */
+  transform: scale(1.259);
   transform-origin: 50% 42%;
   pointer-events: none;
   will-change: transform;
@@ -156,32 +184,59 @@
   display: block;
 }
 
-/* Night grade, layer 1: cools the plate toward the obsidian brand world. */
+/* Night grade, layer 1: cools the plate toward the obsidian brand world.
+   Kept LIGHT (E2): the plates carry their own night grade — a heavy
+   multiply here is what made the old hero read flat. */
 .hero-tint {
   position: absolute;
   inset: 0;
   background: #0e1522;
   mix-blend-mode: multiply;
-  opacity: 0.42;
+  opacity: 0.22;
   pointer-events: none;
 }
 
-/* Night grade, layer 2: legibility scrims + the hand-off fade into the page
-   surface at the stage's bottom edge (theme-aware via the token). */
+/* Night grade, layer 2: corner vignette with a CLEAR center (the plate is
+   the hero), legibility scrims top/bottom, and the hand-off fade into the
+   page surface at the stage's bottom edge (theme-aware via the token). */
 .hero-grade {
   position: absolute;
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(120% 90% at 50% 32%, transparent 42%, rgba(4, 9, 17, 0.52) 100%),
+    radial-gradient(115% 90% at 50% 36%, transparent 44%, rgba(4, 9, 17, 0.38) 76%, rgba(4, 9, 17, 0.74) 100%),
     linear-gradient(
       180deg,
-      rgba(4, 9, 17, 0.6) 0%,
-      rgba(4, 9, 17, 0.18) 24%,
-      rgba(4, 9, 17, 0.08) 46%,
-      rgba(4, 9, 17, 0.52) 74%,
+      rgba(4, 9, 17, 0.62) 0%,
+      rgba(4, 9, 17, 0.18) 17%,
+      rgba(4, 9, 17, 0.02) 42%,
+      rgba(4, 9, 17, 0.4) 74%,
       var(--surface-page) 100%
     );
+}
+
+/* Lime horizon bloom: the brand accent as atmosphere — a faint signal-lime
+   glow rising from the stage's bottom edge (the campus walkway's own light
+   temperature). Screen blend keeps it luminous, never muddy. */
+.hero-bloom {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(56% 34% at 50% 103%, rgba(192, 255, 0, 0.14), transparent 72%);
+  mix-blend-mode: screen;
+}
+
+/* Film grain: masks the plate's upscale softness at the camera's close
+   passes (peak scale 1.52 on a 1915px source) and gives the frame a
+   photochemical texture. Static tile — never animated. */
+.hero-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+  mix-blend-mode: overlay;
+  opacity: 0.07;
 }
 
 /* ---------------------------------------------------------------------------
@@ -237,9 +292,9 @@
 }
 
 /* ---------------------------------------------------------------------------
-   4. Center column — intro (h1) ⇄ finale swap zone + the shared CTA row.
-   Both blocks occupy the same grid cell so the CTA row never shifts when
-   GSAP crossfades intro → finale in armed mode.
+   4. Center column — intro (statement h1 + tagline) ⇄ finale swap zone +
+   the shared CTA row. Both blocks occupy the same grid cell so the CTA row
+   never shifts when GSAP crossfades intro → finale in armed mode.
    --------------------------------------------------------------------------- */
 
 .hero-center {
@@ -262,36 +317,85 @@
   grid-area: 1 / 1;
 }
 
-.hero-intro {
+/* THE STATEMENT — two lines of Archivo at opposite ends of the wdth axis.
+   Line 1: condensed-light, tracked. Line 2: extended-heavy, tight, huge,
+   with the single lime keyword. This is the page's signature; see the
+   header. */
+.hero-statement {
   margin: 0;
+  display: grid;
+  gap: clamp(10px, 1.8vh, 18px);
+  justify-items: center;
 }
 
-.hero-wordmark {
+.hero-statement-top {
   display: block;
   font-family: var(--font-display-base);
   font-variation-settings:
-    "wdth" 114,
-    "wght" 640;
-  font-size: var(--fs-cinema);
-  line-height: 0.96;
-  letter-spacing: 0.04em;
-  color: var(--clean-white);
+    "wdth" 80,
+    "wght" 320;
+  font-size: clamp(1.25rem, 0.75rem + 1.9vw, 2.5rem);
+  line-height: 1.1;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.93);
   text-shadow:
-    0 2px 40px rgba(4, 9, 17, 0.55),
-    0 1px 3px rgba(4, 9, 17, 0.35);
+    0 2px 40px rgba(4, 9, 17, 0.6),
+    0 1px 3px rgba(4, 9, 17, 0.4);
+}
+
+.hero-statement-main {
+  display: block;
+  font-family: var(--font-display-base);
+  font-variation-settings:
+    "wdth" 122,
+    "wght" 790;
+  font-size: clamp(2.5rem, 1.1rem + 6.7vw, 7.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+  color: var(--clean-white);
+  text-wrap: balance;
+  text-shadow:
+    0 2px 48px rgba(4, 9, 17, 0.65),
+    0 1px 3px rgba(4, 9, 17, 0.4);
+}
+
+.hero-statement-accent {
+  font-style: normal;
+  color: var(--lime-400);
+  text-shadow:
+    0 0 38px rgba(192, 255, 0, 0.45),
+    0 1px 3px rgba(4, 9, 17, 0.4);
+}
+
+/* Arabic: Noto Kufi has no wdth axis — the same two-line structure runs on
+   weight contrast alone, with Arabic-proof leading and no tracking. */
+:lang(ar) .hero-statement-top {
+  font-family: var(--font-display-ar-base);
+  font-variation-settings: normal;
+  font-weight: 400;
+  font-size: clamp(1.15rem, 0.75rem + 1.6vw, 2.1rem);
+  letter-spacing: 0;
+  line-height: 1.6;
+}
+
+:lang(ar) .hero-statement-main {
+  font-family: var(--font-display-ar-base);
+  font-variation-settings: normal;
+  font-weight: 700;
+  font-size: clamp(2rem, 0.9rem + 5vw, 5.4rem);
+  letter-spacing: 0;
+  line-height: 1.35;
 }
 
 .hero-tagline {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  margin-block-start: clamp(18px, 3vh, 28px);
+  margin: clamp(18px, 3vh, 30px) 0 0;
   font-family: var(--font-body-base);
   font-weight: 400;
-  font-size: var(--fs-lead);
-  letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.82);
+  font-size: var(--fs-body);
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.8);
   text-shadow:
     0 2px 40px rgba(4, 9, 17, 0.55),
     0 1px 3px rgba(4, 9, 17, 0.35);
@@ -302,19 +406,12 @@
   letter-spacing: 0;
 }
 
-.hero-tagline::before,
-.hero-tagline::after {
-  content: "";
-  flex: 0 1 clamp(28px, 6vw, 86px);
-  height: 1px;
-  background: rgba(255, 255, 255, 0.32);
-}
-
-/* Finale beat (armed-only): the destination chapter, centered like the
-   intro it echoes. Hidden by OPACITY only (never `visibility`): the finale
-   carries the closing headline — informative content that must stay in the
-   accessibility tree for the whole flight. GSAP drives plain `opacity` on
-   it for the same reason (see HeroDirector.tsx). */
+/* Finale beat (armed-only): the destination chapter as a real closing
+   statement — lime rule, mono stamp, extended-heavy title. Hidden by
+   OPACITY only (never `visibility`): the finale carries the closing
+   headline — informative content that must stay in the accessibility tree
+   for the whole flight. GSAP drives plain `opacity` on it for the same
+   reason (see HeroDirector.tsx). */
 .hero-finale {
   display: none;
   opacity: 0;
@@ -324,7 +421,42 @@
 }
 
 .hero[data-armed] .hero-finale {
-  display: block;
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+}
+
+.hero-finale-rule {
+  inline-size: 56px;
+  block-size: 1px;
+  background: var(--lime-400);
+  box-shadow: 0 0 12px rgba(192, 255, 0, 0.55);
+}
+
+.hero-finale-title {
+  margin: 0;
+  font-family: var(--font-display-base);
+  font-variation-settings:
+    "wdth" 120,
+    "wght" 760;
+  font-size: clamp(2.2rem, 1.3rem + 3.2vw, 4.4rem);
+  line-height: 1;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+  color: var(--clean-white);
+  text-wrap: balance;
+  text-shadow:
+    0 2px 48px rgba(4, 9, 17, 0.65),
+    0 1px 3px rgba(4, 9, 17, 0.4);
+}
+
+:lang(ar) .hero-finale-title {
+  font-family: var(--font-display-ar-base);
+  font-variation-settings: normal;
+  font-weight: 700;
+  font-size: clamp(2rem, 1.2rem + 2.8vw, 4rem);
+  letter-spacing: 0;
+  line-height: 1.35;
 }
 
 /* Keyboard safety net: GSAP fades the CTA row with plain `opacity` (never
@@ -358,16 +490,20 @@
 }
 
 .hero-enter-2 {
-  animation-delay: 180ms;
+  animation-delay: 160ms;
 }
 
 .hero-enter-3 {
-  animation-delay: 320ms;
+  animation-delay: 340ms;
+}
+
+.hero-enter-4 {
+  animation-delay: 480ms;
 }
 
 /* ---------------------------------------------------------------------------
-   5. Corner beats (armed-only) — chapters 1–4 caption in from the block-end
-   inline-start corner while the camera flies.
+   5. Corner beats (armed-only) — chapters 1–4 as cinematic lower-thirds:
+   outlined chapter number | lime rule | mono stamp + title + subtitle.
    --------------------------------------------------------------------------- */
 
 .hero-beat {
@@ -376,83 +512,103 @@
   position: absolute;
   inset-inline-start: clamp(24px, 6vw, 96px);
   inset-block-end: clamp(64px, 11vh, 128px);
-  max-inline-size: min(680px, 82vw);
+  max-inline-size: min(720px, 84vw);
   pointer-events: none;
   will-change: transform, opacity;
 }
 
 .hero[data-armed] .hero-beat {
-  display: block;
+  display: flex;
+  align-items: stretch;
+  gap: clamp(16px, 2vw, 26px);
+}
+
+/* The outlined chapter number — a film-slate annotation, not a heading.
+   Latin digits in both locales (matches the board-times precedent). */
+.hero-beat-no {
+  font-family: var(--font-display-base);
+  font-variation-settings:
+    "wdth" 125,
+    "wght" 740;
+  font-size: clamp(3.6rem, 2.4rem + 3.8vw, 6.6rem);
+  line-height: 0.8;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(192, 255, 0, 0.9);
+  text-shadow: none;
+  align-self: flex-end;
+  transform: translateY(0.045em);
+}
+
+/* Browsers without text-stroke get a quiet solid stamp instead. */
+@supports not (-webkit-text-stroke: 1px red) {
+  .hero-beat-no {
+    color: rgba(192, 255, 0, 0.4);
+  }
+}
+
+.hero-beat-body {
+  border-inline-start: 1px solid rgba(192, 255, 0, 0.55);
+  padding-inline-start: clamp(16px, 2vw, 26px);
+  display: grid;
+  gap: 10px;
+  align-content: end;
 }
 
 .hero-stamp {
+  margin: 0;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  font-family: var(--font-body-base);
+  font-family: var(--hero-mono);
   font-size: var(--fs-meta);
-  font-weight: 600;
-  letter-spacing: 0.14em;
+  font-weight: 500;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--lime-400);
-}
-
-:lang(ar) .hero-stamp {
-  font-family: var(--font-body-ar-base);
-  letter-spacing: 0;
-}
-
-.hero-stamp::before {
-  content: "";
-  inline-size: 26px;
-  block-size: 1px;
-  background: var(--lime-400);
+  /* The finale stamp sits over the plate's own lime walkway — keep it
+     separable from same-hue pixels underneath. */
+  text-shadow: 0 1px 6px rgba(4, 9, 17, 0.8);
 }
 
 .hero-beat-title {
-  margin: 14px 0 0;
+  margin: 0;
   font-family: var(--font-display-base);
   font-variation-settings:
-    "wdth" 114,
-    "wght" 620;
+    "wdth" 116,
+    "wght" 700;
   font-size: var(--fs-display);
-  line-height: 1.04;
+  line-height: 1;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
   color: var(--clean-white);
   text-wrap: balance;
   text-shadow:
-    0 2px 40px rgba(4, 9, 17, 0.55),
-    0 1px 3px rgba(4, 9, 17, 0.35);
+    0 2px 40px rgba(4, 9, 17, 0.6),
+    0 1px 3px rgba(4, 9, 17, 0.4);
 }
 
 :lang(ar) .hero-beat-title {
   font-family: var(--font-display-ar-base);
   font-variation-settings: normal;
+  font-weight: 700;
   line-height: 1.3;
+  letter-spacing: 0;
 }
 
 .hero-beat-subtitle {
-  margin: 14px 0 0;
+  margin: 0;
   font-size: var(--fs-lead);
   color: rgba(255, 255, 255, 0.82);
-  max-inline-size: 56ch;
+  max-inline-size: 46ch;
   text-wrap: pretty;
   text-shadow:
-    0 2px 40px rgba(4, 9, 17, 0.55),
-    0 1px 3px rgba(4, 9, 17, 0.35);
-}
-
-/* Finale reuses the beat type ramp but centered. */
-.hero-finale .hero-beat-title,
-.hero-finale .hero-beat-subtitle {
-  margin-inline: auto;
-}
-
-.hero-finale .hero-stamp::before {
-  display: none;
+    0 2px 40px rgba(4, 9, 17, 0.6),
+    0 1px 3px rgba(4, 9, 17, 0.4);
 }
 
 /* ---------------------------------------------------------------------------
-   6. Progress rail (armed-only, wide viewports) — the flight's chapter list.
+   6. Progress rail (armed-only, wide viewports) — the flight's chapter
+   list as a designed object: hairline track, mono stamps, glowing active
+   dot.
    --------------------------------------------------------------------------- */
 
 .hero-rail {
@@ -462,8 +618,18 @@
   inset-block-start: 50%;
   transform: translateY(-50%);
   flex-direction: column;
-  gap: 18px;
+  gap: 22px;
   pointer-events: none;
+}
+
+/* The track: a hairline running through the dot column. */
+.hero-rail::before {
+  content: "";
+  position: absolute;
+  inset-block: -14px;
+  inset-inline-end: 3px;
+  inline-size: 1px;
+  background: rgba(255, 255, 255, 0.16);
 }
 
 @media (min-width: 64rem) {
@@ -473,6 +639,7 @@
 }
 
 .hero-tick {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -483,7 +650,7 @@
   font-size: var(--fs-meta);
   letter-spacing: 0.08em;
   color: var(--clean-white);
-  opacity: 0.4;
+  opacity: 0.45;
   transition: opacity var(--motion-standard) var(--ease-standard);
   white-space: nowrap;
 }
@@ -492,16 +659,29 @@
   letter-spacing: 0;
 }
 
+/* Latin digits in both locales (board-times precedent). */
+.hero-tick-no {
+  font-family: var(--hero-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  color: var(--clean-white);
+  opacity: 0.4;
+  transition:
+    opacity var(--motion-standard) var(--ease-standard),
+    color var(--motion-standard) linear;
+}
+
 .hero-tick-dot {
   inline-size: 7px;
   block-size: 7px;
   border-radius: 50%;
   box-sizing: border-box;
   border: 1px solid rgba(255, 255, 255, 0.45);
-  background: transparent;
+  background: var(--obsidian);
   transition:
     background var(--motion-standard) linear,
     border-color var(--motion-standard) linear,
+    box-shadow var(--motion-standard) linear,
     transform var(--motion-standard) var(--ease-standard);
 }
 
@@ -509,37 +689,95 @@
   opacity: 1;
 }
 
+.hero-tick[data-active] .hero-tick-no {
+  opacity: 1;
+  color: var(--lime-400);
+}
+
 .hero-tick[data-active] .hero-tick-dot {
   background: var(--lime-400);
   border-color: var(--lime-400);
+  box-shadow: 0 0 10px 1px rgba(192, 255, 0, 0.55);
   transform: scale(1.25);
 }
 
 /* ---------------------------------------------------------------------------
-   7. Scroll hint — static affordance, faded out by GSAP once flight begins.
+   7. Scroll cue — wordless: a thin line with a drifting lime pulse + a
+   chevron. Static affordance, faded out by GSAP once flight begins; the
+   drift only plays for users who allow motion.
    --------------------------------------------------------------------------- */
 
 .hero-hint {
   position: absolute;
   inset-inline: 0;
-  inset-block-end: 18px;
+  inset-block-end: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   pointer-events: none;
-  color: rgba(185, 196, 210, 0.9);
+  color: rgba(255, 255, 255, 0.72);
 }
 
-.hero-hint-label {
-  font-size: var(--fs-meta);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  white-space: nowrap;
+.hero-hint-line {
+  position: relative;
+  inline-size: 1px;
+  block-size: 46px;
+  background: rgba(255, 255, 255, 0.36);
+  overflow: hidden;
 }
 
-:lang(ar) .hero-hint-label {
-  letter-spacing: 0;
+.hero-hint-line::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: 14px;
+  background: var(--lime-400);
+  opacity: 0;
+}
+
+.hero-hint-chevron {
+  display: block;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-hint-line::after {
+    animation: hero-cue-drift 2.4s var(--ease-standard) infinite;
+  }
+
+  .hero-hint-chevron {
+    animation: hero-cue-nod 2.4s var(--ease-standard) infinite;
+  }
+}
+
+@keyframes hero-cue-drift {
+  0% {
+    transform: translateY(-14px);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.9;
+  }
+  70% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(46px);
+    opacity: 0;
+  }
+}
+
+@keyframes hero-cue-nod {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.55;
+  }
+  55% {
+    transform: translateY(4px);
+    opacity: 1;
+  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -570,9 +808,10 @@
 }
 
 .hero-plan-rail {
+  font-family: var(--hero-mono);
   font-size: var(--fs-meta);
-  font-weight: 600;
-  letter-spacing: 0.14em;
+  font-weight: 500;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--accent-text);
 }

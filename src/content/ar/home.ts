@@ -31,10 +31,14 @@ export const homeContent: HomeContent = {
     breadcrumbHome: "الرئيسية",
   },
   hero: {
-    wordmark: "SCRIPE",
-    tagline: "نظام تشغيل المنظمات الرياضية الحديثة",
+    headline: {
+      top: "كل الملاعب والميادين والمسابح،",
+      pre: "تعمل كمنظومةٍ ",
+      accent: "واحدة",
+      post: ".",
+    },
+    tagline: "SCRIPE — نظام تشغيل المنظمات الرياضية الحديثة",
     plateAlt: "منظر جوي لمجمع رياضي ليلاً — ملعب مضاء بالأنوار ومسبح متوهج وملاعب تدريب يصلها ممشى مضاء",
-    scrollHint: "مرّر للتحليق فوق المكان",
     railIntro: "المقدمة",
     chapters: [
       {

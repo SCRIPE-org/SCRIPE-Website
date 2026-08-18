@@ -6,7 +6,7 @@
  * `src/styles/home.css` for the two-mode contract):
  *
  * - Static frame (default): full-viewport background plate under a night
- *   grade, `<h1>` wordmark + tagline + both CTAs centered, and the five
+ *   grade, the statement `<h1>` + tagline + both CTAs centered, and the five
  *   chapters as a flowing "flight plan" strip below the stage. This is the
  *   no-JS, reduced-motion and pre-hydration experience — a single flattened
  *   image layer, full content, no motion/parallax dependencies.
@@ -16,17 +16,27 @@
  *   and the finale plate reveal, and the flight-plan strip hides because
  *   the same information now plays as the flight itself.
  *
+ * HEADLINE SYSTEM (Task E2): the `<h1>` is a two-line value-proposition
+ * statement, not the wordmark (the wordmark lives in the nav only). Line 1
+ * (`headline.top`) sets in condensed-light Archivo; line 2
+ * (`headline.pre|accent|post`) sets in extended-heavy Archivo with ONE
+ * lime-accented keyword — the width-axis contrast between the two lines is
+ * the typographic signature. Content keeps the accent as its own field so
+ * each locale places it wherever its grammar puts it. Arabic renders the
+ * same structure in Noto Kufi (no wdth axis — weight contrast only; see
+ * `:lang(ar)` rules in home.css).
+ *
  * Plate architecture (four plates, `public/media/hero/plate-*.png`):
  * - `plate-background` (`.hero-rig > .hero-plate`) — the base environment,
  *   always visible, driven by `CAMERA_PATH` at depth ×1.0. The only plate
  *   shown in static/no-JS/reduced-motion mode.
  * - `plate-midground` (`.hero-plate-mid`, armed-only) — stadium+pool cutout
- *   (alpha PNG), its own depth ×1.15 tween.
+ *   (alpha PNG), its own depth ×DEPTH_MID tween.
  * - `plate-foreground` (`.hero-plate-fg`, armed-only) — bokeh floodlight
  *   mast + tree canopy corners on a transparent center (alpha PNG), its own
- *   depth ×1.4 tween. Purely decorative: `aria-hidden` + pointer-events
- *   none, layered in front of everything (including the type layer) like a
- *   lens element in the rig.
+ *   depth ×DEPTH_NEAR tween. Purely decorative: `aria-hidden` +
+ *   pointer-events none, layered in front of everything (including the type
+ *   layer) like a lens element in the rig.
  * - `plate-finale` (`.hero-plate-finale`, armed-only) — the nadir
  *   "operational picture" shot, crossfades in via opacity across scrub
  *   0.76→0.86 as the destination beat's background; static (no
@@ -37,20 +47,17 @@
  * nested children of it): each gets its own independent, self-contained
  * transform-only GSAP tween computing an absolute depth-scaled path
  * (`HeroDirector`'s `flyPath` helper) rather than an additional transform
- * layered on top of the rig's own (which would require dividing out the
- * parent's contribution at every keyframe to hit the target depth — more
- * fragile for no visual difference). Z-order back to front: background <
+ * layered on top of the rig's own. Z-order back to front: background <
  * mid < finale < night-grade/signal accents < type (intro/finale text +
  * CTAs) < corner beats < foreground bokeh (topmost).
  *
- * Resolution note: the delivered plates are 1915×821 — below the
- * 3440×1476 (21:9, 2×) target the rig was designed for. `CAMERA_PATH`'s
- * peak scale is capped at 1.28 (down from a pre-asset placeholder of 1.33)
- * to keep the worst-case upscale ratio in check on common desktop
- * viewports; see the cap rationale in `HeroDirector.tsx`. Plates are
- * drop-in replaceable at higher resolution later — re-export the same
- * four filenames into `public/media/hero/` and lift the scale cap back
- * toward 1.33 if the new source supports it.
+ * BEAT DESIGN LANGUAGE (Task E2): chapters 1–4 render as cinematic
+ * lower-thirds — an outlined oversized chapter number (lime text-stroke), a
+ * 1px lime rule, a mono-spaced meta stamp (`01 / CLUBS`), then the chapter
+ * title + subtitle. The rail is a designed object: a hairline track with
+ * mono two-digit stamps (00 = intro) and a glowing lime dot on the active
+ * tick. The scroll cue is a thin line + chevron drift (no words), gated by
+ * `prefers-reduced-motion` in CSS.
  *
  * Accessibility contract for the armed flight (controller ruling):
  * - The `<h1>`, the finale block and the CTA row are informative — they are
@@ -109,7 +116,7 @@ export function Hero({ content }: HeroProps) {
         </div>
 
         {/* Parallax mid layer (armed-only): stadium + pool cutout, its own
-            depth ×1.15 tween (HeroDirector's `flyPath`). Sibling of
+            depth ×DEPTH_MID tween (HeroDirector's `flyPath`). Sibling of
             `.hero-rig`, not nested inside it — see the file header. */}
         <div className="hero-plate-mid" data-hero-plate-mid aria-hidden="true">
           <Image src="/media/hero/plate-midground.png" alt="" fill sizes="100vw" className="object-cover" />
@@ -122,31 +129,41 @@ export function Hero({ content }: HeroProps) {
           <Image src="/media/hero/plate-finale.png" alt="" fill sizes="100vw" className="object-cover" />
         </div>
 
-        {/* Night grade + brand signal accents. */}
+        {/* Night grade + brand atmosphere. Order: cooling tint < legibility
+            grade < lime horizon bloom < film grain (masks plate upscale
+            during the flight's close passes) < crop-mark corners. */}
         <div className="hero-tint" aria-hidden="true" />
         <div className="hero-grade" aria-hidden="true" />
+        <div className="hero-bloom" aria-hidden="true" />
+        <div className="hero-grain" aria-hidden="true" />
         <div className="hero-corners" aria-hidden="true" />
         <span className="hero-scanline" data-hero-scanline aria-hidden="true" />
 
         {/* Center column: intro ⇄ finale swap zone + the shared CTA row. */}
         <div className="hero-center">
           <div className="hero-swap">
-            <h1 className="hero-intro" data-hero-intro>
-              <span className="hero-wordmark hero-enter">
-                <bdi>{content.wordmark}</bdi>
-              </span>
-              <span className="hero-tagline hero-enter hero-enter-2">{content.tagline}</span>
-            </h1>
+            <div className="hero-intro" data-hero-intro>
+              <h1 className="hero-statement">
+                <span className="hero-statement-top hero-enter">{content.headline.top}</span>
+                <span className="hero-statement-main hero-enter hero-enter-2">
+                  {content.headline.pre}
+                  <em className="hero-statement-accent">{content.headline.accent}</em>
+                  {content.headline.post}
+                </span>
+              </h1>
+              <p className="hero-tagline hero-enter hero-enter-3">{content.tagline}</p>
+            </div>
             <div className="hero-finale" data-hero-finale>
+              <span className="hero-finale-rule" aria-hidden="true" />
               <p className="hero-stamp">
-                {stamp(content.chapters.length - 1)} · {finale.rail}
+                {stamp(content.chapters.length - 1)}&nbsp;/&nbsp;{finale.rail}
               </p>
-              <p className="hero-beat-title">{finale.title}</p>
+              <p className="hero-finale-title">{finale.title}</p>
               <p className="hero-beat-subtitle">{finale.subtitle}</p>
             </div>
           </div>
 
-          <div className="hero-enter hero-enter-3 flex flex-wrap items-center justify-center gap-3" data-hero-ctas>
+          <div className="hero-enter hero-enter-4 flex flex-wrap items-center justify-center gap-3" data-hero-ctas>
             <Button href="/contact" size="lg">
               {content.primaryCta}
             </Button>
@@ -161,36 +178,44 @@ export function Hero({ content }: HeroProps) {
           </div>
         </div>
 
-        {/* Corner beats: chapters 1–4 of the flight (armed mode only).
-            aria-hidden: decorative narration — the same chapters are exposed
-            to AT via the flight-plan strip (static) and the sections below
-            (armed); see the file header's accessibility contract. */}
+        {/* Corner beats: chapters 1–4 as cinematic lower-thirds (armed mode
+            only) — outlined chapter number, lime rule, mono meta stamp,
+            title, subtitle. aria-hidden: decorative narration — the same
+            chapters are exposed to AT via the flight-plan strip (static) and
+            the sections below (armed); see the file header. */}
         {corners.map((chapter, index) => (
           <div className="hero-beat" data-hero-beat aria-hidden="true" key={chapter.rail}>
-            <p className="hero-stamp">
-              {stamp(index)} · {chapter.rail}
-            </p>
-            <p className="hero-beat-title">{chapter.title}</p>
-            <p className="hero-beat-subtitle">{chapter.subtitle}</p>
+            <span className="hero-beat-no">{stamp(index)}</span>
+            <div className="hero-beat-body">
+              <p className="hero-stamp">
+                {stamp(index)}&nbsp;/&nbsp;{chapter.rail}
+              </p>
+              <p className="hero-beat-title">{chapter.title}</p>
+              <p className="hero-beat-subtitle">{chapter.subtitle}</p>
+            </div>
           </div>
         ))}
 
-        {/* Progress rail: intro + all chapters (armed mode, wide viewports). */}
+        {/* Progress rail: intro (00) + all chapters (armed mode, wide
+            viewports) — hairline track, mono stamps, lime active dot. */}
         <div className="hero-rail" aria-hidden="true">
-          {[content.railIntro, ...content.chapters.map((chapter) => chapter.rail)].map((label) => (
+          {[content.railIntro, ...content.chapters.map((chapter) => chapter.rail)].map((label, index) => (
             <div className="hero-tick" data-hero-tick key={label}>
               <span className="hero-tick-label">{label}</span>
+              <span className="hero-tick-no">{String(index).padStart(2, "0")}</span>
               <span className="hero-tick-dot" />
             </div>
           ))}
         </div>
 
-        {/* Scroll affordance. */}
+        {/* Scroll cue: thin line + chevron drift — wordless, decorative,
+            drift gated by prefers-reduced-motion in home.css. */}
         <div className="hero-hint" data-hero-hint aria-hidden="true">
-          <span className="hero-hint-label">{content.scrollHint}</span>
+          <span className="hero-hint-line" />
           <svg
-            width="18"
-            height="18"
+            className="hero-hint-chevron"
+            width="12"
+            height="12"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -198,15 +223,14 @@ export function Hero({ content }: HeroProps) {
             strokeLinecap="round"
             strokeLinejoin="round"
           >
-            <path d="M12 5v14" />
-            <path d="m19 12-7 7-7-7" />
+            <path d="m5 10 7 7 7-7" />
           </svg>
         </div>
 
         {/* Foreground bokeh overlay (armed-only): floodlight mast + tree
-            canopy corners on a transparent center, its own depth ×1.4 tween.
-            Topmost layer — sits in front of everything, including the type
-            layer, like a lens element on the rig. Purely decorative and
+            canopy corners on a transparent center, its own depth ×DEPTH_NEAR
+            tween. Topmost layer — sits in front of everything, including the
+            type layer, like a lens element on the rig. Purely decorative and
             inert: aria-hidden, no pointer events, never blocks interaction. */}
         <div className="hero-plate-fg" data-hero-plate-fg aria-hidden="true">
           <Image src="/media/hero/plate-foreground.png" alt="" fill sizes="100vw" className="object-cover" />
@@ -218,7 +242,7 @@ export function Hero({ content }: HeroProps) {
         {content.chapters.map((chapter, index) => (
           <div className="hero-plan-item" key={chapter.rail}>
             <p className="hero-plan-rail">
-              {stamp(index)} · {chapter.rail}
+              {stamp(index)}&nbsp;/&nbsp;{chapter.rail}
             </p>
             <h2 className="hero-plan-title">{chapter.title}</h2>
             <p className="hero-plan-subtitle">{chapter.subtitle}</p>

@@ -142,14 +142,26 @@ export interface HomeContent {
   };
   /** Scroll-scrubbed camera hero over the campus environment. */
   hero: {
-    /** The SCRIPE wordmark (always Latin). */
-    wordmark: string;
-    /** Brand tagline rendered inside the `<h1>` under the wordmark. */
+    /**
+     * The two-line statement headline (the `<h1>`). Line 1 is `top`; line 2
+     * is `pre` + `accent` + `post`, where `accent` is the single
+     * lime-accented keyword ("one"/"واحدة"). Kept as four fields so each
+     * locale places the accent word wherever its own grammar puts it.
+     */
+    headline: {
+      /** First headline line (the concrete triplet). */
+      top: string;
+      /** Second line, before the accent word (may end with a space). */
+      pre: string;
+      /** The single accented keyword. */
+      accent: string;
+      /** Second line, after the accent word (usually the period). */
+      post: string;
+    };
+    /** Brand support line rendered under the statement headline. */
     tagline: string;
     /** Alt text for the campus plate photograph. */
     plateAlt: string;
-    /** Scroll-affordance hint under the stage. */
-    scrollHint: string;
     /** Progress-rail label for the intro beat. */
     railIntro: string;
     /** The five camera chapters, in flight order. The last chapter is the
