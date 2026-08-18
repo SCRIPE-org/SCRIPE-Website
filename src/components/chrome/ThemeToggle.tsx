@@ -10,6 +10,14 @@ import { useEffect, useState } from "react";
  * light mode — it always writes an explicit `"dark"` / `"light"` value to
  * storage, so once used the choice sticks and OS preference never overrides
  * it (in either direction).
+ *
+ * What the toggle actually switches (Task E5, "cinema screen in a lit
+ * room"): the world AROUND the film. The home hero stage and every
+ * closing-CTA end card are fixed night surfaces in both themes
+ * (`.night-zone`, `src/styles/tokens/atmosphere.css`); flipping to light
+ * turns the nav, sections and sub-pages into the daylight studio (tinted
+ * paper, white cards, studio shadows, obsidian-chip CTAs — see
+ * `colors.css`'s header) while the film itself never regrades.
  */
 const STORAGE_KEY = "scripe-theme";
 
@@ -21,7 +29,7 @@ function applyTheme(theme: Theme) {
   root.style.colorScheme = theme;
   window.localStorage.setItem(STORAGE_KEY, theme);
   const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute("content", theme === "dark" ? "#0B0B0E" : "#F1F2F2");
+  if (meta) meta.setAttribute("content", theme === "dark" ? "#0B0B0E" : "#F4F5F1");
 }
 
 export function ThemeToggle() {

@@ -8,7 +8,10 @@
  * flow height, so `<main>` never needs a manual top-offset to compensate,
  * and sticks to the viewport top once the page scrolls past it. The surface
  * is a translucent, blurred page-color panel over whatever scrolls beneath
- * it rather than a fully opaque bar.
+ * it rather than a fully opaque bar. In light theme the `site-nav` class
+ * (styled in `globals.css`, Task E5) upgrades that surface to the designed
+ * "lit room" chrome — frosted white glass, ink hairline, floating shadow —
+ * while the dark bar stays exactly as composed here.
  *
  * Renders `MobileNav` for viewports below `lg`, passing it already-rendered
  * `LocaleSwitch`/`ThemeToggle` instances so both controls are composed once,
@@ -33,7 +36,7 @@ export async function NavBar() {
   const t = await getTranslations();
 
   return (
-    <header className="border-border-subtle bg-surface-page/85 sticky start-0 end-0 top-0 z-[var(--z-nav)] border-b backdrop-blur-md">
+    <header className="site-nav border-border-subtle bg-surface-page/85 sticky start-0 end-0 top-0 z-[var(--z-nav)] border-b backdrop-blur-md">
       {/* First focusable element on every page: visually hidden until it
           receives keyboard focus, then it's the first thing announced. */}
       <a

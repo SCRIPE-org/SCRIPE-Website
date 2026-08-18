@@ -28,7 +28,7 @@ export function HubCta({ content }: HubCtaProps) {
   return (
     <Section>
       <Reveal y={24}>
-        <div className="atmo-cta-panel px-6 py-14 text-center sm:px-10 sm:py-16">
+        <div className="atmo-cta-panel night-zone px-6 py-14 text-center sm:px-10 sm:py-16">
           <span className="atmo-cta-horizon" aria-hidden="true" />
           <span className="atmo-cta-bloom" aria-hidden="true" />
           <span className="atmo-cta-grain" aria-hidden="true" />
@@ -43,7 +43,7 @@ export function HubCta({ content }: HubCtaProps) {
             </p>
 
             <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
-              <Button href="/contact" size="lg" className="!bg-[var(--lime-400)]">
+              <Button href="/contact" size="lg">
                 {content.primaryCta}
               </Button>
               <Button

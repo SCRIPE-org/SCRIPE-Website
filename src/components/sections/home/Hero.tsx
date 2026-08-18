@@ -98,7 +98,12 @@ export function Hero({ content }: HeroProps) {
 
   return (
     <section className="hero" data-hero-root>
-      <div className="hero-stage">
+      {/* `night-zone` (Task E5): the stage is the night film in BOTH themes —
+          the token re-pin keeps the CTA lime-400-on-ink and every accent
+          full-brightness when the page around the film is in light mode.
+          Deliberately on the stage only, never on `.hero` itself: the
+          flight-plan strip below belongs to the lit room. */}
+      <div className="hero-stage night-zone">
         {/* Camera rig: transform-driven base plate container. Always visible
             (static and armed) — the single flattened layer under no-JS/
             reduced-motion. */}

@@ -100,14 +100,24 @@
    --------------------------------------------------------------------------- */
 
 /* ---------------------------------------------------------------------------
-   5. Ground atmosphere (Task E4) — cool radial glows anchored to this page's
-   two dark-toned moments (the hero and the dashboard payoff strip), dark
-   theme only, ≤7% alpha per the brand doctrine `home.css` §13 sets. Combined
+   5. Ground atmosphere (Task E4; light recipes Task E5) — radial glows
+   anchored to this page's two anchor moments (the hero and the dashboard
+   payoff strip). Dark: cool glows ≤7% alpha per the brand doctrine
+   `home.css` §13 sets. Light: the same geometry as daylight-studio shading
+   pools on paper (≤6% alpha), declared on the bare class so the
+   `[data-theme="dark"]` rules keep winning in dark on specificity. Combined
    with the shared `.atmo` root (`src/styles/tokens/atmosphere.css`) on each
    section; the hero also takes `.atmo-grain` — the page's one hero-toned
-   moment, echoing the home hero's own grain rather than spreading it across
-   every content section on the page.
+   moment (dark only; grain never prints on paper).
    --------------------------------------------------------------------------- */
+
+.cap-hero-atmo {
+  --atmo-glow: radial-gradient(46% 65% at 18% -6%, rgba(83, 71, 196, 0.055), transparent 72%);
+}
+
+.cap-dashboard-atmo {
+  --atmo-glow: radial-gradient(48% 60% at 50% 20%, rgba(70, 84, 105, 0.05), transparent 72%);
+}
 
 [data-theme="dark"] .cap-hero-atmo {
   --atmo-glow: radial-gradient(46% 65% at 18% -6%, rgba(139, 133, 232, 0.06), transparent 72%);

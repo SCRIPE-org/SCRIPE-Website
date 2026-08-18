@@ -73,12 +73,22 @@
    --------------------------------------------------------------------------- */
 
 /* ---------------------------------------------------------------------------
-   4. Ground atmosphere (Task E4) — cool radial glows anchored to the hero
-   and the comparison table, dark theme only, ≤7% alpha per the brand
-   doctrine `home.css` §13 sets. Combined with the shared `.atmo` root
-   (`src/styles/tokens/atmosphere.css`) on each section; the hero also takes
-   `.atmo-grain` — this page's one hero-toned moment.
+   4. Ground atmosphere (Task E4; light recipes Task E5) — glows anchored to
+   the hero and the comparison table. Dark: cool/lime glows ≤7% alpha per
+   the brand doctrine `home.css` §13 sets. Light: the same geometry as
+   daylight shading — a brand-warm olive key light on the hero, a cool pool
+   on the table — on the bare class so dark keeps winning on specificity.
+   Combined with the shared `.atmo` root (`src/styles/tokens/atmosphere.css`)
+   on each section; the hero also takes `.atmo-grain` (dark only).
    --------------------------------------------------------------------------- */
+
+.pricing-hero-atmo {
+  --atmo-glow: radial-gradient(46% 65% at 16% -6%, rgba(110, 143, 0, 0.06), transparent 72%);
+}
+
+.pricing-compare-atmo {
+  --atmo-glow: radial-gradient(50% 60% at 50% 10%, rgba(70, 84, 105, 0.05), transparent 72%);
+}
 
 [data-theme="dark"] .pricing-hero-atmo {
   --atmo-glow: radial-gradient(46% 65% at 16% -6%, rgba(192, 255, 0, 0.045), transparent 72%);

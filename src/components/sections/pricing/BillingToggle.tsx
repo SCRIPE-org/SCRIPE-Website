@@ -88,7 +88,7 @@ export function BillingToggle({ content }: BillingToggleProps) {
         onClick={() => select("monthly")}
         className={cx(
           tabClass,
-          cycle === "monthly" ? "bg-accent text-accent-ink" : "text-text-secondary hover:text-text-primary",
+          cycle === "monthly" ? "bg-cta text-cta-ink" : "text-text-secondary hover:text-text-primary",
         )}
       >
         {content.monthlyLabel}
@@ -100,14 +100,14 @@ export function BillingToggle({ content }: BillingToggleProps) {
         className={cx(
           tabClass,
           "inline-flex items-center gap-2",
-          cycle === "yearly" ? "bg-accent text-accent-ink" : "text-text-secondary hover:text-text-primary",
+          cycle === "yearly" ? "bg-cta text-cta-ink" : "text-text-secondary hover:text-text-primary",
         )}
       >
         {content.yearlyLabel}
         <span
           className={cx(
             "text-[length:var(--fs-meta)]",
-            cycle === "yearly" ? "text-accent-ink/70" : "text-accent-text",
+            cycle === "yearly" ? "text-cta-ink/70" : "text-accent-text",
           )}
         >
           {content.yearlySavingsBadge}

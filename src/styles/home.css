@@ -64,11 +64,14 @@
    GROUND SEQUENCE (Task E3, §13+): the sections below the flight continue
    the same film — mono slate stamps carry the hero rail's timecode forward
    (hero flies 00–05; the ground runs 06 TRUSTED → 11 BRANCHES; the closing
-   band is the unnumbered end card with the hero's crop corners), obsidian
-   grounds get authored atmosphere (per-section radial glows + the hero's
-   film-grain tile, dark theme only — the light theme keeps flat token
-   surfaces until Task E5 decides its fate), and every artifact sits on the
-   elevation token ramp (`src/styles/tokens/elevation.css`). Depth doctrine:
+   band is the unnumbered end card with the hero's crop corners), grounds
+   get authored atmosphere in BOTH themes (per-section radial glows + the
+   hero's film-grain tile in dark; grain-free daylight-studio shading pools
+   and lifted white bands in light — Task E5), and every artifact sits on
+   the elevation token ramp (`src/styles/tokens/elevation.css`). The hero
+   stage itself is theme-invariant night film (`.night-zone`, see
+   `atmosphere.css`): light mode transforms the world AROUND the film, never
+   the film. Depth doctrine:
    `box-shadow: var(--edge-highlight), var(--shadow-N)` — the inner top
    light always first. 3D presence (the operations board's rest tilt, card
    hover tilts) is authored in physical degrees flipped per direction via
@@ -211,8 +214,12 @@
 }
 
 /* Night grade, layer 2: corner vignette with a CLEAR center (the plate is
-   the hero), legibility scrims top/bottom, and the hand-off fade into the
-   page surface at the stage's bottom edge (theme-aware via the token). */
+   the hero), legibility scrims top/bottom, and the hand-off fade at the
+   stage's bottom edge. The fade target is FIXED obsidian, not the themed
+   page surface (Task E5): the stage is the night film in both themes — in
+   dark the two values are identical (page IS obsidian), and in light a
+   themed fade was exactly the white fog that washed the film out. The
+   light page begins where the film's frame ends, on a clean cut. */
 .hero-grade {
   position: absolute;
   inset: 0;
@@ -225,7 +232,7 @@
       rgba(4, 9, 17, 0.18) 17%,
       rgba(4, 9, 17, 0.02) 42%,
       rgba(4, 9, 17, 0.4) 74%,
-      var(--surface-page) 100%
+      var(--obsidian) 100%
     );
 }
 
@@ -1041,7 +1048,7 @@
    SEQUENCE note for the doctrine. Class inventory:
 
    .gs            section root: hosts the two atmosphere layers
-   .gs-*          per-section atmosphere recipes (dark theme only)
+   .gs-*          per-section atmosphere recipes (authored per theme)
    .slate         the film-slate section marker (mono timecode + rule)
    .gs-title      section heading in the hero's extended-heavy voice
    .panel         raised artifact surface (layered border + edge light)
@@ -1089,16 +1096,64 @@
   opacity: var(--gs-grain, 0);
 }
 
-/* Per-section atmosphere (dark theme only — the light theme stays on flat
-   token surfaces until Task E5 decides it). Brand rule: the mono slate
+/* Per-section atmosphere, authored per theme. Brand rule: the mono slate
    stamp (`.slate-stamp`, lime) runs on every section as wayfinding chrome
    — the film timecode — and doesn't count against the budget below.
    Separately, each section spends at most ONE lime moment on its actual
    CONTENT (a glow, wash, rail or chip that dramatizes what the section is
    about — see the per-section notes below). These atmosphere glows stay
-   cool/neutral so they never compete with that one content moment. */
+   cool/neutral so they never compete with that one content moment.
+
+   LIGHT (Task E5, "daylight studio"): same doctrine, inverted materials —
+   on paper, atmosphere is soft SHADING pools (ink at ≤5% alpha), lifted
+   near-white ground bands where dark used raised white washes, and one
+   brand-warm olive key light per section at most. No grain: film grain
+   belongs to the night; on paper it reads as dirt. The light recipes sit on
+   the bare `.gs-*` class at (0,1,0) so the `[data-theme="dark"]` rules
+   below keep winning in dark purely on specificity. */
 [data-theme="dark"] .gs {
   --gs-grain: 0.05;
+}
+
+/* trusted: the screen's shadow falling into the lit room — the hand-off
+   from the fixed night stage above. Wide and soft so the film's clean
+   bottom cut stays crisp and the shading never reads as smearing. */
+.gs-trusted {
+  --gs-atmo: radial-gradient(62% 90% at 50% -26%, rgba(16, 18, 20, 0.045), transparent 72%);
+}
+
+/* product: lifted white band (the ledger desk under studio light) + a
+   brand-warm key light on the heading corner. */
+.gs-product {
+  --gs-atmo:
+    radial-gradient(38% 52% at 14% 8%, rgba(110, 143, 0, 0.055), transparent 70%),
+    linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.55) 9%, rgba(255, 255, 255, 0.55) 91%, transparent 100%);
+}
+
+/* platform: the operations room by day — pencil schedule-grid lines + a
+   cool indigo pool behind the board column. */
+.gs-platform {
+  --gs-atmo:
+    radial-gradient(44% 60% at 78% 34%, rgba(83, 71, 196, 0.06), transparent 70%),
+    repeating-linear-gradient(90deg, rgba(16, 18, 20, 0.03) 0 1px, transparent 1px 96px),
+    repeating-linear-gradient(0deg, rgba(16, 18, 20, 0.026) 0 1px, transparent 1px 96px);
+}
+
+/* solutions: quiet cool wash pooling behind the four shapes. */
+.gs-solutions {
+  --gs-atmo: radial-gradient(56% 60% at 50% 8%, rgba(70, 84, 105, 0.055), transparent 74%);
+}
+
+/* automation: second lifted band; a cool pool where the chain begins. */
+.gs-automation {
+  --gs-atmo:
+    radial-gradient(34% 46% at 12% 30%, rgba(70, 84, 105, 0.05), transparent 70%),
+    linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.55) 9%, rgba(255, 255, 255, 0.55) 91%, transparent 100%);
+}
+
+/* branches: convergence shading pooling at the diagram's center. */
+.gs-branches {
+  --gs-atmo: radial-gradient(40% 52% at 50% 58%, rgba(70, 84, 105, 0.055), transparent 72%);
 }
 
 /* trusted: the hero hand-off — cool overhead light falling from the stage. */
@@ -1551,6 +1606,13 @@
   block-size: 70%;
   background: radial-gradient(70% 90% at 0% 0%, rgba(168, 190, 224, 0.06), transparent 72%);
   pointer-events: none;
+}
+
+/* Light theme (Task E5): the 6% white-blue wash above is authored for the
+   dark desk and vanishes on a white panel — the daylight studio needs a
+   shading key instead. Scoped so dark keeps the rule above untouched. */
+html:not([data-theme="dark"]) .auto-panel::before {
+  background: radial-gradient(70% 90% at 0% 0%, rgba(70, 84, 105, 0.08), transparent 72%);
 }
 
 /* Step roundel: a lit instrument, not a flat outline. */

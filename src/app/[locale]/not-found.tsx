@@ -57,7 +57,7 @@ export default async function NotFound() {
 
   return (
     <Section>
-      <div className="atmo-cta-panel">
+      <div className="atmo-cta-panel night-zone">
         <span className="atmo-cta-horizon" aria-hidden="true" />
         <span className="atmo-cta-bloom" aria-hidden="true" />
         <span className="atmo-cta-grain" aria-hidden="true" />
@@ -92,7 +92,7 @@ export default async function NotFound() {
             {/* Link row */}
             <div className="flex flex-wrap gap-3 pt-2">
               {content.links.map((link) => (
-                <Button key={link.href} href={link.href} size="lg" className="!bg-[var(--lime-400)]">
+                <Button key={link.href} href={link.href} size="lg">
                   {link.label}
                 </Button>
               ))}

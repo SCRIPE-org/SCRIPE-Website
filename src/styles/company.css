@@ -21,11 +21,19 @@
    --------------------------------------------------------------------------- */
 
 /* ---------------------------------------------------------------------------
-   2. Ground atmosphere (Task E4) — a cool radial glow anchored to the hero,
-   dark theme only, ≤7% alpha per the brand doctrine `home.css` §13 sets.
+   2. Ground atmosphere (Task E4) — a cool radial glow anchored to the hero —
+   dark: a cool/lime glow ≤7% alpha per the brand doctrine `home.css` §13
+   sets; light (Task E5): the daylight recipe declared on the bare class
+   below, which dark outranks on specificity.
    Combined with the shared `.atmo`/`.atmo-grain` roots
    (`src/styles/tokens/atmosphere.css`) — this page's one hero-toned moment.
    --------------------------------------------------------------------------- */
+
+/* Light (Task E5): the same geometry as a cool daylight shading pool on
+   paper — bare class, so the dark rule below keeps winning in dark. */
+.co-hero-atmo {
+  --atmo-glow: radial-gradient(48% 68% at 50% -10%, rgba(70, 84, 105, 0.05), transparent 74%);
+}
 
 [data-theme="dark"] .co-hero-atmo {
   --atmo-glow: radial-gradient(48% 68% at 50% -10%, rgba(168, 190, 224, 0.05), transparent 74%);

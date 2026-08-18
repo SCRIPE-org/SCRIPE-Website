@@ -34,12 +34,27 @@
    `text-accent-academy` etc. unable to override it on `SolutionHero`/
    `CapabilityHero`'s kicker).
 
+   LIGHT ART DIRECTION (Task E5) — "cinema screen in a lit room": the
+   fixed-obsidian surfaces (home hero stage, every `.atmo-cta-panel` end
+   card) are night film in BOTH themes; `.night-zone` below re-pins the
+   semantic tokens inside those regions to their dark-theme values so
+   buttons, accent marks and text render the film's own grade regardless of
+   the toggle. Everything else becomes the daylight studio: `--atmo-glow`
+   is no longer dark-only — each page's stylesheet now authors a light
+   recipe too (soft shading pools + brand-warm key lights on paper, ≤6%
+   alpha), declared on the bare modifier class so the existing
+   `[data-theme="dark"]` rules keep winning in dark on specificity.
+
    Class inventory:
+   .night-zone         fixed-dark chrome region: re-pins semantic tokens to
+                        their dark-theme values (a no-op in dark). Put it on
+                        any surface that stays night in both themes.
    .atmo               ground root: hosts the glow pseudo-layer (::before,
-                        `--atmo-glow`), dark theme only, ≤7% alpha per the
-                        brand doctrine. Combine with a page-owned modifier
+                        `--atmo-glow`). Combine with a page-owned modifier
                         class (defined in that page's own stylesheet) that
-                        sets `--atmo-glow` under `[data-theme="dark"]`.
+                        sets `--atmo-glow` — bare class for the light
+                        recipe, under `[data-theme="dark"]` for the dark
+                        one (≤7% alpha per the brand doctrine).
    .atmo-grain         optional grain add-on (::after) for hero-toned ground
                         only — combine with `.atmo`, never alone.
    .atmo-title         section heading voice: the hero statement's extended-
@@ -64,6 +79,46 @@
      (§13), duplicated rather than imported for the same reason this whole
      file exists: `home.css` never loads on a sub-page route. */
   --atmo-grain-tile: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---- Night zone: fixed-dark chrome region (Task E5) ---------------------- */
+
+/* The "cinema screen in a lit room" pattern: regions that stay night film
+   in both themes (the home hero stage, every closing-CTA obsidian panel)
+   carry this class so the semantic tokens THEY contain resolve to the dark
+   palette even when the page around them is in light mode. Every value
+   below is copied from `[data-theme="dark"]` in colors.css — in dark theme
+   this class is therefore a provable no-op (identical values win nothing),
+   and in light theme it is what keeps a `Button` inside the film rendering
+   the film's own lime-400-on-ink grade instead of the lit room's inverted
+   obsidian chip. Custom properties resolve at the consuming element, and
+   the closest ancestor's value wins — so this beats the `:root` light
+   palette by inheritance distance, not specificity. Shadows are
+   deliberately NOT pinned: the shadow a night panel casts belongs to the
+   room around it, not to the film. `--edge-highlight` IS pinned — it draws
+   ON the panel's own dark surface, where the light theme's bright inner
+   line would read as a wrong, harsh rim. */
+.night-zone {
+  color-scheme: dark;
+  --surface-page: var(--obsidian);
+  --surface-raised: var(--carbon);
+  --surface-overlay: var(--charcoal);
+  --text-primary: #f2f3f2;
+  --text-secondary: #a7abaf;
+  --text-tertiary: #999da2;
+  --text-muted: var(--fog);
+  --accent: var(--lime-400);
+  --accent-ink: var(--obsidian);
+  --accent-text: var(--lime-400);
+  --cta-surface: var(--lime-400);
+  --cta-ink: var(--obsidian);
+  --border-subtle: #26282c;
+  --border-strong: #666a70;
+  --accent-academy: var(--teal-400);
+  --accent-venue: var(--jade-400);
+  --accent-fi: var(--indigo-400);
+  --accent-club: var(--rust-400);
+  --edge-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.07);
 }
 
 /* ---- Ground atmosphere: glow + optional grain pseudo-layers -------------- */

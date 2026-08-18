@@ -11,9 +11,15 @@
  * Colors, radius, and motion all come from Fusion tokens (`src/styles/tokens`)
  * via the semantic Tailwind utilities wired in `src/app/globals.css`, so both
  * themes are correct by construction: nothing here hardcodes a hex value or
- * branches on a `dark:` variant. `primary` deliberately pairs `bg-accent`
- * with `text-accent-ink` (never `text-white`) — on lime, ink is the only
- * foreground color that stays legible in both themes.
+ * branches on a `dark:` variant. `primary` pairs `bg-cta` with
+ * `text-cta-ink` — the dedicated conversion-fill tokens (Task E5): in dark
+ * that resolves to the classic full-brightness lime fill with an ink label;
+ * in light it inverts to an obsidian chip with a signal-lime label (a piece
+ * of the night film in the lit room — see `colors.css`'s header), because a
+ * large daylight-olive fill is the one place the dimmed light `--accent`
+ * reads muddy instead of branded. Inside a `.night-zone` (hero stage,
+ * closing-CTA panels) the same tokens re-pin to the dark pairing, so the
+ * film's own CTA never changes with the toggle.
  */
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from "react";
 import { Link } from "@/i18n/navigation";
@@ -65,7 +71,7 @@ const BASE_CLASSES =
 // scales relative to whatever the current theme's accent already is, so it
 // stays correct in both themes without a second authored color.
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
-  primary: "bg-accent text-accent-ink hover:opacity-90 active:opacity-80",
+  primary: "bg-cta text-cta-ink hover:opacity-90 active:opacity-80",
   ghost: "bg-transparent text-text-primary hover:bg-surface-overlay active:bg-surface-overlay",
   outline:
     "bg-transparent text-text-primary border border-border-strong hover:bg-surface-overlay active:bg-surface-overlay",

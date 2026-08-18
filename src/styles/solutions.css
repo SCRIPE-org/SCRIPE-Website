@@ -31,13 +31,30 @@
    --------------------------------------------------------------------------- */
 
 /* ---------------------------------------------------------------------------
-   1b. Ground atmosphere (Task E4) — cool radial glows anchored to each
-   hero (hub and every solution page share this same class, since both open
-   on the identical `Section` shape), dark theme only, ≤7% alpha per the
-   brand doctrine `home.css` §13 sets. Combined with the shared `.atmo` root
-   (`src/styles/tokens/atmosphere.css`); the hero also takes `.atmo-grain` —
-   this page family's one hero-toned moment.
+   1b. Ground atmosphere (Task E4; light recipes Task E5) — radial glows
+   anchored to each hero (hub and every solution page share this same class,
+   since both open on the identical `Section` shape). Dark: cool glows ≤7%
+   alpha per the brand doctrine `home.css` §13 sets. Light: the same
+   geometry as daylight shading pools on the bare class. ORDER MATTERS for
+   the RTL pair: `[dir="rtl"] .sol-hero-atmo` (0,2,0) ties the dark LTR rule
+   on specificity, so the light rules must precede every dark rule for the
+   dark ones to win their tie in dark+RTL (the dedicated dark RTL rule at
+   (0,3,0) then beats both). Combined with the shared `.atmo` root
+   (`src/styles/tokens/atmosphere.css`); the hero also takes `.atmo-grain`
+   (dark only).
    --------------------------------------------------------------------------- */
+
+.sol-hero-atmo {
+  --atmo-glow: radial-gradient(46% 65% at 82% -6%, rgba(70, 84, 105, 0.05), transparent 72%);
+}
+
+[dir="rtl"] .sol-hero-atmo {
+  --atmo-glow: radial-gradient(46% 65% at 18% -6%, rgba(70, 84, 105, 0.05), transparent 72%);
+}
+
+.sol-grid-atmo {
+  --atmo-glow: radial-gradient(52% 56% at 50% 6%, rgba(70, 84, 105, 0.045), transparent 74%);
+}
 
 [data-theme="dark"] .sol-hero-atmo {
   --atmo-glow: radial-gradient(46% 65% at 82% -6%, rgba(168, 190, 224, 0.05), transparent 72%);

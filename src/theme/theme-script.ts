@@ -14,7 +14,7 @@ var e=document.documentElement;
 e.setAttribute("data-theme",dark?"dark":"light");
 e.style.colorScheme=dark?"dark":"light";
 var m=document.querySelector('meta[name="theme-color"]');
-if(m)m.setAttribute("content",dark?"#0B0B0E":"#F1F2F2");
+if(m)m.setAttribute("content",dark?"#0B0B0E":"#F4F5F1");
 }catch(e){}})();`;
 
 /**

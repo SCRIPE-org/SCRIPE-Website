@@ -4,6 +4,25 @@
    Light = :root (default). Dark = [data-theme="dark"]. Both palettes are
    written out explicitly — no color-mix inversion tricks deriving one theme
    from the other. On lime fills, the foreground is always ink, never white.
+
+   LIGHT ART DIRECTION (Task E5) — "cinema screen in a lit room". The light
+   theme is NOT an inverted dark: the hero film and every closing-CTA end
+   card stay fixed night surfaces in both themes (see `.night-zone` in
+   `src/styles/tokens/atmosphere.css`), and the light palette designs the
+   daylight studio AROUND that film:
+   - Paper carries a breath of the pitch: the light neutrals are tinted a
+     few points toward the brand lime's own green-warm hue (never generic
+     cream) — page #f4f5f1, overlay #eaece5, borders to match. Raised
+     surfaces stay clean white so cards lift off the tinted ground.
+   - Lime has two daylight stops: `--accent` (lime-600) is the LINE/MARK
+     role — hairline rules, dots, rail fills, borders — where the dimmed
+     "signal at noon" olive still reads as the brand. `--accent-text`
+     (lime-700) is the only lime allowed as running text on paper (AA).
+   - Conversion fills never use daylight olive: `--cta-surface`/`--cta-ink`
+     invert to obsidian + full-brightness lime — the primary button is a
+     small piece of the night film carried into the lit room. In dark the
+     same tokens resolve to the classic lime-400 fill + ink, so `Button`
+     renders byte-identically to the pre-E5 dark theme.
    ============================================================================ */
 
 :root {
@@ -47,21 +66,28 @@
 
   /* ── semantic: LIGHT (default) ── */
   color-scheme: light;
-  --surface-page: var(--soft-white);
+  /* daylight studio paper: tinted toward the brand hue, not generic warm */
+  --surface-page: #f4f5f1;
   --surface-raised: var(--clean-white);
-  --surface-overlay: #eaebec;
+  --surface-overlay: #eaece5;
   --text-primary: #101214;
   --text-secondary: #54585c;
   --text-tertiary: #676a6f;
   --text-muted: #797d82;
-  /* fill role: brand lime tuned so ink stays comfortably legible on top */
+  /* line/mark role: brand lime dimmed for daylight — hairlines, dots, rail
+     fills, borders, and small fills that carry ink on top */
   --accent: var(--lime-600);
   --accent-ink: var(--obsidian);
   /* text role: lime used AS a foreground color needs its own, darker stop —
      raw lime-400/600 on a near-white page fails contrast as running text */
   --accent-text: var(--lime-700);
-  --border-subtle: #dcdedf;
-  --border-strong: #8e9294;
+  /* conversion fill role: the primary CTA is a piece of the night film in
+     the lit room — obsidian chip, full-brightness signal-lime label. Never
+     daylight olive (a large olive fill reads muddy, not brand). */
+  --cta-surface: var(--obsidian);
+  --cta-ink: var(--lime-400);
+  --border-subtle: #dcded6;
+  --border-strong: #8b9088;
   --focus-ring: var(--azure-500);
   --accent-academy: var(--teal-600);
   --accent-venue: var(--jade-600);
@@ -83,6 +109,10 @@
   --accent-ink: var(--obsidian);
   /* text role: near-black page gives bright lime all the contrast it needs */
   --accent-text: var(--lime-400);
+  /* conversion fill role: same values as the classic dark primary button —
+     lime-400 fill, ink label (the light theme inverts these; see header) */
+  --cta-surface: var(--lime-400);
+  --cta-ink: var(--obsidian);
   --border-subtle: #26282c;
   --border-strong: #666a70;
   --focus-ring: var(--azure-500);

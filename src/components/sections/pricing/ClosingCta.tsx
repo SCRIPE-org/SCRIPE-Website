@@ -27,7 +27,7 @@ export function ClosingCta({ content }: ClosingCtaProps) {
   return (
     <Section>
       <Reveal y={24}>
-        <div className="atmo-cta-panel px-6 py-14 text-center sm:px-10 sm:py-16">
+        <div className="atmo-cta-panel night-zone px-6 py-14 text-center sm:px-10 sm:py-16">
           <span className="atmo-cta-horizon" aria-hidden="true" />
           <span className="atmo-cta-bloom" aria-hidden="true" />
           <span className="atmo-cta-grain" aria-hidden="true" />
@@ -42,10 +42,10 @@ export function ClosingCta({ content }: ClosingCtaProps) {
             </p>
 
             <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
-              {/* Fixed lime-on-ink pairing: the panel is obsidian in both
-                  themes, so the dark theme's full-brightness lime is always
-                  the right fill here. */}
-              <Button href="/contact" size="lg" className="!bg-[var(--lime-400)]">
+              {/* The panel's `night-zone` class (Task E5) re-pins the CTA
+                  tokens to the dark pairing — lime fill, ink label — in both
+                  themes; no per-button override needed. */}
+              <Button href="/contact" size="lg">
                 {content.primaryCta}
               </Button>
               <Button

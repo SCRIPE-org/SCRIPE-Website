@@ -20,6 +20,10 @@
   --color-accent: var(--accent);
   --color-accent-ink: var(--accent-ink);
   --color-accent-text: var(--accent-text);
+  /* conversion-fill pair (Task E5): dark = lime-400 fill + ink label; light
+     = obsidian fill + lime-400 label — see colors.css header */
+  --color-cta: var(--cta-surface);
+  --color-cta-ink: var(--cta-ink);
   --color-border-subtle: var(--border-subtle);
   --color-border-strong: var(--border-strong);
   --color-focus-ring: var(--focus-ring);
@@ -54,6 +58,21 @@ body {
 :focus-visible {
   outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
+}
+
+/* Light-theme nav (Task E5): the lit room's chrome, designed rather than
+   default-white — a frosted daylight glass over whatever scrolls beneath
+   (including the fixed night film of the home hero), with a soft ink
+   hairline and a diffuse floating shadow instead of the token border that
+   suits opaque light surfaces. Scoped so the dark theme's translucent
+   obsidian bar stays byte-identical; unlayered author CSS, so it wins over
+   the header's Tailwind utilities regardless of source order. */
+html:not([data-theme="dark"]) .site-nav {
+  background: color-mix(in srgb, var(--clean-white) 72%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter: blur(16px) saturate(160%);
+  border-block-end-color: rgba(16, 18, 20, 0.08);
+  box-shadow: 0 14px 36px -28px rgba(16, 18, 20, 0.4);
 }
 
 ::selection {
