@@ -491,6 +491,16 @@ export async function submitLead(prev: unknown, formData: FormData): Promise<{ s
 
 ## Phase 6 — QA & Launch
 
+### Task 22.5: Deprecation & convention sweep (added 2026-08-18, user directive)
+
+**Files:** any file using a deprecated API; report-driven.
+
+- [ ] **Step 1: Research-verified migration for `setRequestLocale`** — deprecated (TS6385) in installed next-intl; official successor is Next 16 `next/root-params` (`await rootParams()` / generated `lang()`). Use the controller-provided research findings; do not guess API shapes.
+- [ ] **Step 2: Sweep for ALL deprecation warnings**: run `npm run typecheck` with deprecation reporting (tsc reports TS6385/TS6387 via editor; grep `@deprecated` usages: `grep -rn "setRequestLocale\|@deprecated" src/ --include=*.ts*`), plus `npm run build` output warnings, plus `npx next lint` deprecation rules. Inventory every hit in the report.
+- [ ] **Step 3: Migrate each deprecated usage** to the current API per research; architecture rules intact (RSC-first, static prerender must survive — verify build output unchanged route-wise).
+- [ ] **Step 4: Convention violation scan**: physical left/right outside sanctioned blocks, hardcoded hex outside token files (except documented single-look moments), undefined Tailwind tokens (classes that compile to nothing), duplicated `.rtl-flip` definitions. Fix or ledger each with justification.
+- [ ] **Step 5: Gate + commit** (`refactor: migrate deprecated apis and sweep conventions`).
+
 ### Task 23: Bundle + budget audit
 
 - [ ] **Step 1: `npm run build`; record per-route First Load JS. Gate: marketing routes ≤ ~100KB gzip. If over: hunt stray `"use client"`, dynamic-import GSAP-consuming sections, verify motion stays LazyMotion `m`.**
