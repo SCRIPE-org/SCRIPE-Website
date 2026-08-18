@@ -147,6 +147,18 @@
   --atmo-panel-border-width: 1.5px;
 }
 
+/* Dark-theme re-assertion: `[data-theme="dark"] .atmo-panel` above is a
+   2-class selector (0,2,0) and would otherwise beat this file's own
+   `.atmo-panel-accent` (0,1,0) purely on specificity, silently clobbering
+   `--atmo-panel-border` back to the 8%-white hairline on every accent panel
+   in dark theme regardless of source order. Keep this rule AFTER the dark
+   `.atmo-panel` rule (source order is the tiebreaker once both rules are the
+   same specificity as each other's target) and never fold `-accent`'s
+   border back into a plain `.atmo-panel-accent` rule above it. */
+[data-theme="dark"] .atmo-panel-accent {
+  --atmo-panel-border: var(--accent);
+}
+
 /* Shadow-only lift: for a surface that already owns its complete border/
    background treatment (most visibly `Card.tsx`'s `border-t-*` accent-edge
    contract — its own header explains why that top border is a *signal*,
