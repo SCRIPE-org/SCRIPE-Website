@@ -42,6 +42,7 @@ import {
   type MouseEvent as ReactMouseEvent,
   type ReactNode,
 } from "react";
+import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/Button";
@@ -159,111 +160,113 @@ export function MobileNav({ localeSwitch, themeToggle }: MobileNavProps) {
         )}
       </button>
 
-      {open && (
-        <div
-          ref={sheetRef}
-          id={panelId}
-          role="dialog"
-          aria-modal="true"
-          aria-label={t("nav.siteNav")}
-          onClick={onSheetClick}
-          className="bg-surface-page fixed start-0 end-0 top-[72px] bottom-0 z-[var(--z-overlay)] overflow-y-auto"
-        >
-          {/* Close control INSIDE the dialog boundary — see the file header
-              for why the header's own hamburger/X toggle doesn't satisfy
-              this for assistive technology. Visually hidden until focused,
-              same convention as NavBar.tsx's skip-to-content link, so
-              sighted users see no duplicate of the header's X. */}
-          <button
-            type="button"
-            onClick={() => setOpen(false)}
-            aria-label={t("nav.closeMenu")}
-            className="bg-surface-raised text-text-primary sr-only rounded-full border border-border-subtle focus:not-sr-only focus:absolute focus:start-4 focus:top-4 focus:z-[var(--z-toast)] focus:inline-flex focus:size-11 focus:items-center focus:justify-center"
+      {open &&
+        createPortal(
+          <div
+            ref={sheetRef}
+            id={panelId}
+            role="dialog"
+            aria-modal="true"
+            aria-label={t("nav.siteNav")}
+            onClick={onSheetClick}
+            className="bg-surface-page fixed start-0 end-0 top-[72px] bottom-0 z-[var(--z-overlay)] overflow-y-auto"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
-            </svg>
-          </button>
+            {/* Close control INSIDE the dialog boundary — see the file header
+                for why the header's own hamburger/X toggle doesn't satisfy
+                this for assistive technology. Visually hidden until focused,
+                same convention as NavBar.tsx's skip-to-content link, so
+                sighted users see no duplicate of the header's X. */}
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              aria-label={t("nav.closeMenu")}
+              className="bg-surface-raised text-text-primary sr-only rounded-full border border-border-subtle focus:not-sr-only focus:absolute focus:start-4 focus:top-4 focus:z-[var(--z-toast)] focus:inline-flex focus:size-11 focus:items-center focus:justify-center"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+              </svg>
+            </button>
 
-          <nav aria-label={t("nav.primary")} className="flex flex-col px-6 py-2">
-            {PRIMARY_NAV.map((item) =>
-              item.hasMenu ? (
-                <div key={item.key} className="border-border-subtle border-b">
-                  <button
-                    type="button"
-                    aria-expanded={solutionsOpen}
-                    aria-controls={`${panelId}-solutions`}
-                    onClick={() => setSolutionsOpen((v) => !v)}
-                    className="text-text-primary flex min-h-14 w-full items-center justify-between gap-3 text-[length:var(--fs-lead)] font-semibold"
-                  >
-                    <span>{t(item.labelKey)}</span>
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      aria-hidden="true"
-                      className={cx("shrink-0 transition-transform duration-[var(--motion-quick)]", solutionsOpen && "rotate-180")}
+            <nav aria-label={t("nav.primary")} className="flex flex-col px-6 py-2">
+              {PRIMARY_NAV.map((item) =>
+                item.hasMenu ? (
+                  <div key={item.key} className="border-border-subtle border-b">
+                    <button
+                      type="button"
+                      aria-expanded={solutionsOpen}
+                      aria-controls={`${panelId}-solutions`}
+                      onClick={() => setSolutionsOpen((v) => !v)}
+                      className="text-text-primary flex min-h-14 w-full items-center justify-between gap-3 text-[length:var(--fs-lead)] font-semibold"
                     >
-                      <path d="m6 9 6 6 6-6" />
-                    </svg>
-                  </button>
-                  {solutionsOpen && (
-                    <div id={`${panelId}-solutions`} className="grid gap-1 pb-4">
-                      {SOLUTIONS.map((solution) => (
-                        <Link
-                          key={solution.key}
-                          href={solution.href}
-                          className="text-text-secondary flex min-h-11 items-center gap-3 ps-4 text-[length:var(--fs-small)]"
-                        >
-                          <span aria-hidden="true" className={cx("size-1.5 shrink-0 rounded-[2px]", ACCENT_DOT_CLASS[solution.accent])} />
-                          {t(solution.labelKey)}
+                      <span>{t(item.labelKey)}</span>
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                        className={cx("shrink-0 transition-transform duration-[var(--motion-quick)]", solutionsOpen && "rotate-180")}
+                      >
+                        <path d="m6 9 6 6 6-6" />
+                      </svg>
+                    </button>
+                    {solutionsOpen && (
+                      <div id={`${panelId}-solutions`} className="grid gap-1 pb-4">
+                        {SOLUTIONS.map((solution) => (
+                          <Link
+                            key={solution.key}
+                            href={solution.href}
+                            className="text-text-secondary flex min-h-11 items-center gap-3 ps-4 text-[length:var(--fs-small)]"
+                          >
+                            <span aria-hidden="true" className={cx("size-1.5 shrink-0 rounded-[2px]", ACCENT_DOT_CLASS[solution.accent])} />
+                            {t(solution.labelKey)}
+                          </Link>
+                        ))}
+                        <Link href={item.href} className="text-accent-text flex min-h-11 items-center gap-3 ps-4 text-[length:var(--fs-small)] font-semibold">
+                          {t("nav.allSolutions")}
                         </Link>
-                      ))}
-                      <Link href={item.href} className="text-accent-text flex min-h-11 items-center gap-3 ps-4 text-[length:var(--fs-small)] font-semibold">
-                        {t("nav.allSolutions")}
-                      </Link>
-                    </div>
-                  )}
-                </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <Link
+                    key={item.key}
+                    href={item.href}
+                    className="border-border-subtle text-text-primary flex min-h-14 items-center text-[length:var(--fs-lead)] font-semibold"
+                  >
+                    {t(item.labelKey)}
+                  </Link>
+                ),
+              )}
+            </nav>
+
+            <div className="border-border-subtle flex items-center gap-4 border-b px-6 py-6">
+              {localeSwitch}
+              {themeToggle}
+            </div>
+
+            <div className="grid gap-4 px-6 py-7">
+              <Button href={PRIMARY_CTA.href} size="lg" className="justify-center">
+                {t(PRIMARY_CTA.labelKey)}
+              </Button>
+              {SIGN_IN_CTA.external ? (
+                <a href={SIGN_IN_CTA.href} className="text-text-secondary text-center text-[length:var(--fs-small)] font-medium">
+                  {t(SIGN_IN_CTA.labelKey)}
+                </a>
               ) : (
-                <Link
-                  key={item.key}
-                  href={item.href}
-                  className="border-border-subtle text-text-primary flex min-h-14 items-center text-[length:var(--fs-lead)] font-semibold"
-                >
-                  {t(item.labelKey)}
+                <Link href={SIGN_IN_CTA.href} className="text-text-secondary text-center text-[length:var(--fs-small)] font-medium">
+                  {t(SIGN_IN_CTA.labelKey)}
                 </Link>
-              ),
-            )}
-          </nav>
-
-          <div className="border-border-subtle flex items-center gap-4 border-b px-6 py-6">
-            {localeSwitch}
-            {themeToggle}
-          </div>
-
-          <div className="grid gap-4 px-6 py-7">
-            <Button href={PRIMARY_CTA.href} size="lg" className="justify-center">
-              {t(PRIMARY_CTA.labelKey)}
-            </Button>
-            {SIGN_IN_CTA.external ? (
-              <a href={SIGN_IN_CTA.href} className="text-text-secondary text-center text-[length:var(--fs-small)] font-medium">
-                {t(SIGN_IN_CTA.labelKey)}
-              </a>
-            ) : (
-              <Link href={SIGN_IN_CTA.href} className="text-text-secondary text-center text-[length:var(--fs-small)] font-medium">
-                {t(SIGN_IN_CTA.labelKey)}
-              </Link>
-            )}
-          </div>
-        </div>
-      )}
+              )}
+            </div>
+          </div>,
+          document.body,
+        )}
     </div>
   );
 }

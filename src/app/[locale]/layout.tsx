@@ -4,6 +4,7 @@ import { fontClassesFor } from "@/fonts";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
+import Script from "next/script";
 import { Footer } from "@/components/chrome/Footer";
 import { NavBar } from "@/components/chrome/NavBar";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -76,8 +77,14 @@ export default async function LocaleLayout({
       suppressHydrationWarning
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
-        <script dangerouslySetInnerHTML={{ __html: NO_JS_SCRIPT }} />
+        {/* next/script beforeInteractive, not a raw <script> tag: this layout
+            is also the render boundary for notFound(), and a plain inline
+            script here was empirically inert on that path (present in the
+            served HTML but never executed) while working on every normal
+            route — beforeInteractive is Next's own guaranteed-execution
+            mechanism and closes that gap. */}
+        <Script id="theme-init" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+        <Script id="no-js-init" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: NO_JS_SCRIPT }} />
         <meta name="theme-color" content="#0B0B0E" />
       </head>
       <body>
