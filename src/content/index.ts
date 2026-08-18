@@ -8,7 +8,9 @@
  */
 import type { Locale, PageId } from "./types";
 import { homeContent as homeEn } from "./en/home";
+import { platformContent as platformEn } from "./en/platform";
 import { homeContent as homeAr } from "./ar/home";
+import { platformContent as platformAr } from "./ar/platform";
 
 /**
  * Maps each registered page to its content for every locale.
@@ -19,6 +21,7 @@ import { homeContent as homeAr } from "./ar/home";
  */
 export const CONTENT_REGISTRY: Partial<Record<PageId, Record<Locale, unknown>>> = {
   home: { en: homeEn, ar: homeAr },
+  platform: { en: platformEn, ar: platformAr },
 };
 
 /**

@@ -1,0 +1,122 @@
+/* ============================================================================
+   SCRIPE — Platform page styles (capability catalog + closing CTA)
+
+   Scope: imported by `src/app/[locale]/platform/page.tsx` only — everything
+   in here is platform-page-specific. Shared choreography (the `.rv` reveal
+   system) stays in `src/styles/motion-utilities.css`; tokens stay in
+   `src/styles/tokens/`. Class names here are deliberately independent of
+   `src/styles/home.css`'s (`.cap-*` vs. `.hero-*`/`.cta-*`/`.pf-*`/`.auto-*`)
+   even where the visual result is the same brand moment (the closing CTA
+   panel) — both files are plain global CSS loaded per-route, not CSS
+   modules, so distinct prefixes are the only thing that rules out a class
+   collision if both stylesheets are ever present in the same document during
+   a client-side navigation.
+   ============================================================================ */
+
+/* ---------------------------------------------------------------------------
+   1. In-page anchor offsets — every capability group and module row is a
+   scroll target (deep-linkable, and the target of the sticky subnav's
+   links), so each needs scroll-margin clearing BOTH sticky bars: the site
+   NavBar (72px) and this page's own CapabilitySubnav (~52px), plus a little
+   breathing room so a jumped-to heading never touches the subnav's hairline.
+   --------------------------------------------------------------------------- */
+
+.cap-anchor {
+  scroll-margin-block-start: 140px;
+}
+
+/* Smooth in-page scrolling for the subnav's anchor links (and any other
+   fragment jump on this page) — reduced-motion gated per the motion
+   doctrine; the instant default jump is the reduced-motion state, not a
+   second code path. `:has()` is supported everywhere this site targets;
+   browsers without it simply keep the instant jump, which is still fully
+   functional. */
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.cap-anchor) {
+    scroll-behavior: smooth;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   2. Subnav scroll track — hides the horizontal scrollbar on narrow
+   viewports where the five family links don't all fit; the row is still
+   fully scrollable by touch/trackpad/keyboard, only the browser's own
+   scrollbar chrome is suppressed.
+   --------------------------------------------------------------------------- */
+
+.cap-subnav-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.cap-subnav-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---------------------------------------------------------------------------
+   3. Meter fills (Attendance, Analytics evidence panels) — the bar grows
+   in from its inline-start edge as the panel scrolls through the viewport,
+   the same CSS scroll-driven technique `src/styles/home.css` §11 gives the
+   automation chain's connecting rail. Progressive enhancement only: browsers
+   without `animation-timeline: view()` (or with reduced motion requested)
+   simply render the bar at its final width immediately, which is already a
+   complete, correct result — never a hidden or broken state.
+   --------------------------------------------------------------------------- */
+
+.cap-meter-fill {
+  transform-origin: 0% 50%;
+}
+
+[dir="rtl"] .cap-meter-fill {
+  transform-origin: 100% 50%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .cap-meter-fill {
+      transform: scaleX(0);
+      animation: cap-meter-fill linear both;
+      animation-timeline: view();
+      animation-range: entry 30% cover 60%;
+    }
+  }
+}
+
+@keyframes cap-meter-fill {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   4. Closing CTA — obsidian panel with the lime "horizon" edge-light, the
+   same brand moment `src/styles/home.css` §12 gives the home page's own
+   closing band. Deliberately a single-look brand moment: obsidian in both
+   themes.
+   --------------------------------------------------------------------------- */
+
+.cap-cta-panel {
+  position: relative;
+  overflow: hidden;
+  background: var(--obsidian);
+  border: 1px solid #26282c;
+  border-radius: var(--radius-xl-base);
+}
+
+.cap-cta-horizon {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: 1px;
+  background: linear-gradient(90deg, transparent 8%, rgba(192, 255, 0, 0.8) 50%, transparent 92%);
+  pointer-events: none;
+}
+
+.cap-cta-bloom {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: 55%;
+  background: radial-gradient(52% 90% at 50% 0%, rgba(192, 255, 0, 0.14), transparent 72%);
+  pointer-events: none;
+}
