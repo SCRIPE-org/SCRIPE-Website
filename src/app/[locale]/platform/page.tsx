@@ -15,7 +15,6 @@
 import "@/styles/platform.css";
 import type { Metadata } from "next";
 import { hasLocale } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { CapabilityGroup } from "@/components/sections/platform/CapabilityGroup";
 import { CapabilityHero } from "@/components/sections/platform/CapabilityHero";
@@ -65,7 +64,6 @@ export async function generateMetadata({
  */
 export default async function Platform({ params }: { params: Promise<{ locale: string }> }) {
   const locale = await resolveLocale(params);
-  setRequestLocale(locale);
 
   const content = getContent<PlatformContent>("platform", locale);
   const origin = siteUrl();

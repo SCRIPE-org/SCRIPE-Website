@@ -23,7 +23,6 @@
 import "@/styles/resources.css";
 import type { Metadata } from "next";
 import { hasLocale } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ArticlesGrid } from "@/components/sections/resources/ArticlesGrid";
 import { ClosingCta } from "@/components/sections/resources/ClosingCta";
@@ -73,7 +72,6 @@ export async function generateMetadata({
  */
 export default async function Resources({ params }: { params: Promise<{ locale: string }> }) {
   const locale = await resolveLocale(params);
-  setRequestLocale(locale);
 
   const content = getContent<ResourcesContent>("resources", locale);
   const origin = siteUrl();

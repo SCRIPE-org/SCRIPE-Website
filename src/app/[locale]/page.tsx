@@ -15,7 +15,6 @@
 import "@/styles/home.css";
 import type { Metadata } from "next";
 import { hasLocale } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { AutomationStory } from "@/components/sections/home/AutomationStory";
 import { BranchesStory } from "@/components/sections/home/BranchesStory";
@@ -71,7 +70,6 @@ export async function generateMetadata({
  */
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const locale = await resolveLocale(params);
-  setRequestLocale(locale);
 
   const content = getContent<HomeContent>("home", locale);
   const origin = siteUrl();

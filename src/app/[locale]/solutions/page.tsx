@@ -14,7 +14,6 @@
 import "@/styles/solutions.css";
 import type { Metadata } from "next";
 import { hasLocale } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { HubCompare } from "@/components/sections/solutions/HubCompare";
 import { HubCta } from "@/components/sections/solutions/HubCta";
@@ -63,7 +62,6 @@ export async function generateMetadata({
  */
 export default async function SolutionsHub({ params }: { params: Promise<{ locale: string }> }) {
   const locale = await resolveLocale(params);
-  setRequestLocale(locale);
 
   const content = getContent<SolutionsHubContent>("solutions", locale);
   const origin = siteUrl();

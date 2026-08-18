@@ -25,7 +25,6 @@
 import "@/styles/solutions.css";
 import type { Metadata } from "next";
 import { hasLocale } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Capabilities } from "@/components/sections/solutions/Capabilities";
@@ -101,7 +100,6 @@ export default async function SolutionPage({
   if (!isSolutionSlug(slug)) notFound();
 
   const locale = await resolveLocale(params);
-  setRequestLocale(locale);
 
   const entry = SOLUTION_REGISTRY[slug];
   const content = getContent<SolutionContent>(entry.pageId, locale);

@@ -42,7 +42,6 @@
 import "@/styles/pricing.css";
 import type { Metadata } from "next";
 import { hasLocale } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ClosingCta } from "@/components/sections/pricing/ClosingCta";
 import { ComparisonTable } from "@/components/sections/pricing/ComparisonTable";
@@ -115,7 +114,6 @@ function priceSlotsFromPlans(plans: PricingContent["plans"]): PriceSlot[] {
  */
 export default async function Pricing({ params }: { params: Promise<{ locale: string }> }) {
   const locale = await resolveLocale(params);
-  setRequestLocale(locale);
 
   const content = getContent<PricingContent>("pricing", locale);
   const origin = siteUrl();

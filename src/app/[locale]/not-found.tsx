@@ -28,11 +28,13 @@ import { routing, type Locale } from "@/i18n/routing";
  * users back.
  *
  * The locale is read from the request context via getLocale() — next-intl
- * automatically provides this after the [locale] segment has validated and
- * set the locale via setRequestLocale() in the layout.
+ * resolves this through `src/i18n/request.ts`'s per-request config, which
+ * reads the matched `[locale]` segment via `next/root-params` (see that
+ * file's header). No per-page or per-layout call is needed for this to be
+ * available here.
  */
 export default async function NotFound() {
-  // Get the locale that was set in the layout's request context
+  // Get the locale from next-intl's per-request config (see i18n/request.ts)
   const localeString = await getLocale();
   const locale = localeString as Locale;
 

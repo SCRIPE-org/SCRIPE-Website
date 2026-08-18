@@ -22,7 +22,6 @@
  */
 import type { Metadata } from "next";
 import { hasLocale } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ContactExpect } from "@/components/sections/contact/ContactExpect";
 import { ContactForm } from "@/components/sections/contact/ContactForm";
@@ -69,7 +68,6 @@ export async function generateMetadata({
  */
 export default async function Contact({ params }: { params: Promise<{ locale: string }> }) {
   const locale = await resolveLocale(params);
-  setRequestLocale(locale);
 
   const content = getContent<ContactContent>("contact", locale);
   const origin = siteUrl();
