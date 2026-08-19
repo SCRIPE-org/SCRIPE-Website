@@ -42,8 +42,24 @@
  *    load and never swaps. Either way nothing re-lays out, in either locale.
  *    The cost is real and is accepted knowingly: a cold visit on a genuinely
  *    slow link renders headings in the metric-adjusted fallback for that
- *    visit. Both faces are subsetted and preloaded specifically to keep that
- *    window narrow, and a repeat visit serves from cache well inside it.
+ *    visit. Both faces are subsetted to keep that window narrow, and a repeat
+ *    visit serves from cache well inside it.
+ *
+ *    That cost is NOT symmetric between the locales, and the asymmetry is
+ *    stated here rather than glossed: `archivo` is preloaded, so its ~100ms
+ *    `optional` window starts at HTML parse and it usually wins. `notoKufi`
+ *    carries `preload: false` (point 1 — it must not cost English pages, which
+ *    never reference it), so on an Arabic page its window starts only once the
+ *    CSS has been parsed and the font is found to be needed. An Arabic reader
+ *    on a cold, slow connection is therefore materially more likely to get the
+ *    fallback for that visit than an English one. The alternative — preloading
+ *    it — would put a wasted Arabic font download on every English page, which
+ *    is a certain cost to every visitor in exchange for a probabilistic gain
+ *    for some; the current split is the better trade, but it IS a trade, and
+ *    Arabic is the side paying for it. Arabic text stays visible throughout
+ *    either way: `--font-display-ar-base` falls through to Archivo and then to
+ *    the system stack. Worth revisiting if Arabic ever gets its own entry
+ *    point, where a locale-scoped preload becomes possible without taxing `en`.
  *
  *    The BODY faces (`inter`, `notoSans`) deliberately keep `swap`: running
  *    text in a fallback is a far larger legibility cost than a heading in

@@ -275,7 +275,11 @@ export function ContactForm({ content }: ContactFormProps) {
    *  DEFAULTS. A native form reset restores each control to its default, so
    *  React's own reset now restores what was typed instead of clearing it.
    *  The inputs stay uncontrolled throughout: `defaultValue` only writes the
-   *  attribute, never the live value, so nothing interferes with typing. */
+   *  attribute, never the live value, so nothing interferes with typing.
+   *
+   *  This map covers all SIX fields, but the `defaultValue` prop alone only
+   *  carries five of them — the org-type `<select>` needs
+   *  {@link syncSelectDefault} as well. See that function for why. */
   const [retained, setRetained] = useState<Record<string, string>>({});
 
   const nameRef = useRef<HTMLInputElement>(null);
@@ -283,6 +287,7 @@ export function ContactForm({ content }: ContactFormProps) {
   const organizationRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
   const messageRef = useRef<HTMLTextAreaElement>(null);
+  const typeRef = useRef<HTMLSelectElement>(null);
   const panelHeadingRef = useRef<HTMLHeadingElement>(null);
   const noticeHeadingRef = useRef<HTMLHeadingElement>(null);
 
@@ -350,6 +355,34 @@ export function ContactForm({ content }: ContactFormProps) {
     if (showNotConnected) noticeHeadingRef.current?.focus();
   }, [showNotConnected]);
 
+  /** Re-points the org-type `<select>`'s NATIVE default at `value`.
+   *
+   *  The five text controls survive the post-action reset purely by having a
+   *  `defaultValue` prop, because React re-syncs `node.defaultValue` from that
+   *  prop on every render for `<input>`/`<textarea>`. It does NOT do the
+   *  equivalent for an uncontrolled `<select>`: `defaultValue` there is
+   *  translated into `defaultSelected` on the matching `<option>` at MOUNT
+   *  only, so a prop-only change on re-render is inert. Measured directly
+   *  after a round trip, before this fix — every option's `defaultSelected`
+   *  was still exactly as it mounted (`true` on the disabled placeholder,
+   *  `false` on the chosen option), so the reset dutifully restored the
+   *  placeholder while the other five fields came back. One field silently
+   *  contradicting "your answers are still in the fields below" is the same
+   *  class of defect as the one that copy was written to close.
+   *
+   *  `defaultSelected` is precisely the state a native reset consumes, so
+   *  setting it here — at the one moment the intended default is known, and
+   *  before the action is ever dispatched — needs no assumption about WHEN
+   *  React resets the form, and no remount. It is the same thing React itself
+   *  does for the text controls, done by hand for the one element type it
+   *  skips. The `defaultValue` prop stays on the element for the mount case
+   *  (first render, and the deliberate remount in `startAnother`). */
+  function syncSelectDefault(value: string): void {
+    const select = typeRef.current;
+    if (!select) return;
+    for (const option of select.options) option.defaultSelected = option.value === value;
+  }
+
   /** Reads and validates every tracked field from a submitted `<form>`,
    *  blocking the action from dispatching (via `preventDefault`) when any
    *  fail — see this file's header for why that stops React's form action
@@ -361,14 +394,16 @@ export function ContactForm({ content }: ContactFormProps) {
 
     // Captured before any early return, so the values survive React's
     // post-action form reset on every outcome — see `retained`'s declaration.
+    const submittedType = String(data.get("type") ?? "");
     setRetained({
       name: String(data.get("name") ?? ""),
       email: String(data.get("email") ?? ""),
       organization: String(data.get("organization") ?? ""),
       phone: String(data.get("phone") ?? ""),
-      type: String(data.get("type") ?? ""),
+      type: submittedType,
       message: String(data.get("message") ?? ""),
     });
+    syncSelectDefault(submittedType);
 
     for (const field of VALIDATED_FIELDS) {
       const message = validateField(field, String(data.get(field) ?? ""), t);
@@ -578,7 +613,7 @@ export function ContactForm({ content }: ContactFormProps) {
         </div>
 
         <Field label={t("forms.type")} hint={content.hints.type}>
-          <select name="type" defaultValue={retained.type ?? ""} className={CONTROL_CLASS}>
+          <select ref={typeRef} name="type" defaultValue={retained.type ?? ""} className={CONTROL_CLASS}>
             <option value="" disabled>
               {t("forms.typePlaceholder")}
             </option>
