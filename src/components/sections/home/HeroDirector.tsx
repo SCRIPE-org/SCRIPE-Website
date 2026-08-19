@@ -33,7 +33,7 @@
  * every beat only move with scroll (scrub), i.e. under direct user control
  * — no self-running motion, so no WCAG 2.2.2 pause control is required.
  *
- * CAMERA MATH (Task G2 — the three-chapter path)
+ * CAMERA MATH (Task G2's three-chapter path, retimed in Wave I)
  * ------------------------------------------------------------------------
  * Task E2 bought real travel (peak scale 1.60, pans to ±15) at the price of
  * a 560svh track: five corner chapters plus a finale, 6,048px of hero on an
@@ -47,12 +47,54 @@
  * The rule this path is built on: three destinations, three quadrants,
  * three scales, no two beats sharing a crop.
  *
- *   0.24  CLUBS         (−x, −y)  s 1.53  the lit clubhouse colonnade and
+ * WAVE I — WHY THE TRACK IS 280svh AND NOT 220svh
+ * ------------------------------------------------------------------------
+ * G2 sized the 220svh track for what the hero contained AT THE TIME: three
+ * camera moves and three captions over one aerial. Task H2 then added three
+ * full-bleed establishing photographs, each needing its own entrance, hold
+ * and exit — into a budget that had already been spent. The stills got the
+ * remainder, and the remainder was not enough:
+ *
+ *   on 220svh the scrubbed distance is 2,376 − 1,080 = 1,296px, and each
+ *   still held at FULL opacity for 0.128 of that — 166px, about a wheel
+ *   notch and a half. Reported from the outside as "the transition between
+ *   images is too fast, some images are hidden".
+ *
+ * The three levers on that, cheapest first, and what each actually bought:
+ *
+ *   1. REDISTRIBUTE (free). The intro held the bare aerial for 214px and the
+ *      settle drift spent 181px on almost nothing. Reclaiming both buys
+ *      ~188px total — split three ways, +63px of hold each. Real, and not
+ *      close to sufficient on its own.
+ *   2. LENGTHEN (costs page height). 280svh puts the scrubbed distance at
+ *      3,024 − 1,080 = 1,944px. With the crossfades held at their existing
+ *      ABSOLUTE lengths (65px in, 54px out — see CHAPTER_FADE on why short
+ *      matters) each still now holds for 0.180 of the track = 350px, a 111%
+ *      increase. The hero grows 2,376 → 3,024px on a ~9,299px page: 32.5%
+ *      of it, against the 51.2% G2 was called in to fix and the 27.5% it
+ *      achieved. G2's win is kept; it is not undone.
+ *   3. DECODE-WARM (costs one image). Lengthening also grows every mount
+ *      lead in absolute terms (260 → 389px), but chapter 01's entrance is
+ *      too early in the track for any scroll-triggered gate to give it
+ *      enough — so it is warmed at arm time instead. See the effect body.
+ *
+ * Every timing constant below was re-derived from these two numbers (1,944px
+ * of scroll; crossfades fixed in px), never nudged by feel. Where a value's
+ * job is to hold a RELATIONSHIP — the intro clearing before the first
+ * caption, a caption's baton pass to the next — it was converted so that its
+ * absolute scroll distance is unchanged, which is why several of them shrank
+ * in progress units while getting longer on screen.
+ *
+ * The camera geometry is untouched: scale, x, y and tilt are identical at
+ * every keyframe and only `at` moved, so the per-keyframe margin audit
+ * below carries over exactly as computed.
+ *
+ *   0.157 CLUBS         (−x, −y)  s 1.53  the lit clubhouse colonnade and
  *                                         members' walkway — the
  *                                         organization's built home
- *   0.46  VENUES        (+x, −y)  s 1.58  the Olympic pool and padel courts
+ *   0.398 VENUES        (+x, −y)  s 1.58  the Olympic pool and padel courts
  *                                         — the bookable surfaces
- *   0.68  INTELLIGENCE  (−x, +y)  s 1.68  a tight push onto the floodlit
+ *   0.639 INTELLIGENCE  (−x, +y)  s 1.68  a tight push onto the floodlit
  *                                         match pitch inside the bowl —
  *                                         the deepest point of the flight
  *
@@ -82,22 +124,22 @@
  * Per-keyframe margin audit (L = (s−1)/(2s)×100; slack = limit − |used|):
  *
  *   at    scale   L      x used  x slack  y used  y limit        y slack
- *   0.00  1.14   6.14    0       6.14     0       —              —
- *   0.24  1.53  17.32  −14.0     3.32    −6.5     20.09 (1.16L) 13.59
- *   0.46  1.58  18.35  +13.0     5.35   −10.5     21.29 (1.16L) 10.79
- *   0.68  1.68  20.24  −11.5     8.74    +8.5     17.00 (0.84L)  8.50
- *   0.86  1.20   8.33    0       8.33    −2.0      9.67 (1.16L)  7.67
- *   1.00  1.24   9.68    0       9.68    −3.0     11.23 (1.16L)  8.23
+ *   0.000 1.14   6.14    0       6.14     0       —              —
+ *   0.157 1.53  17.32  −14.0     3.32    −6.5     20.09 (1.16L) 13.59
+ *   0.398 1.58  18.35  +13.0     5.35   −10.5     21.29 (1.16L) 10.79
+ *   0.639 1.68  20.24  −11.5     8.74    +8.5     17.00 (0.84L)  8.50
+ *   0.882 1.20   8.33    0       8.33    −2.0      9.67 (1.16L)  7.67
+ *   1.000 1.24   9.68    0       9.68    −3.0     11.23 (1.16L)  8.23
  *
- * Tightest margin: 3.32 percentage points (x at the 0.24 clubs move) —
+ * Tightest margin: 3.32 percentage points (x at the 0.157 clubs move) —
  * marginally SAFER than E2's 3.19, on top of the conservative-vs-exact
  * slack above (÷s ≈ another 30% of L at these scales).
  *
  * Depth-scaled layers: `flyPath` multiplies every excursion by the layer's
  * depth, so the mid and foreground plates travel further than the table
  * above. The midground (DEPTH_MID 1.10) clears the conservative bound at
- * every keyframe — tightest is 3.01 (x at 0.24: s 1.583, L 18.41, |x| 15.4).
- * The foreground (DEPTH_NEAR 1.85) exceeds the CONSERVATIVE bound at 0.24
+ * every keyframe — tightest is 3.01 (x at 0.157: s 1.583, L 18.41, |x| 15.4).
+ * The foreground (DEPTH_NEAR 1.85) exceeds the CONSERVATIVE bound at 0.157
  * (|x| 25.90 vs L 24.75) but clears the EXACT bound with 23.1 points to
  * spare ((s−1)×50 = 49.03 at s 1.9805) — the same condition E2's path had
  * at its own 0.63 peak, and harmless either way: the foreground is a
@@ -170,10 +212,10 @@ import { resetHeroReach, setHeroReach } from "@/lib/hero-reach-store";
  */
 const CAMERA_PATH = [
   { at: 0.0, scale: 1.14, x: 0, y: 0, tilt: 0 },
-  { at: 0.24, scale: 1.53, x: -14, y: -6.5, tilt: 2.0 },
-  { at: 0.46, scale: 1.58, x: 13, y: -10.5, tilt: 2.6 },
-  { at: 0.68, scale: 1.68, x: -11.5, y: 8.5, tilt: 2.2 },
-  { at: 0.86, scale: 1.2, x: 0, y: -2, tilt: 0.5 },
+  { at: 0.157, scale: 1.53, x: -14, y: -6.5, tilt: 2.0 },
+  { at: 0.398, scale: 1.58, x: 13, y: -10.5, tilt: 2.6 },
+  { at: 0.639, scale: 1.68, x: -11.5, y: 8.5, tilt: 2.2 },
+  { at: 0.882, scale: 1.2, x: 0, y: -2, tilt: 0.5 },
   { at: 1.0, scale: 1.24, x: 0, y: -3, tilt: 0.7 },
 ] as const;
 
@@ -196,56 +238,64 @@ const TILT_NEAR = 1.3;
 
 /** Progress at which each corner beat's caption is fully on screen — one
  *  per CAMERA_PATH corner keyframe, in the same order. */
-const BEAT_IN = [0.24, 0.46, 0.68] as const;
+const BEAT_IN = [0.157, 0.398, 0.639] as const;
 
 /**
- * CHAPTER STILL TIMELINE (Task H2)
+ * CHAPTER STILL TIMELINE (Task H2, retimed in Wave I)
  * --------------------------------------------------------------------------
  * Each corner beat crossfades from the aerial to its own establishing
  * photograph (`Hero.tsx`'s CHAPTER STILLS note explains why a crossfade and
  * not a cut). Four numbers per chapter, all derived rather than chosen:
  *
- *   in      = BEAT_IN[i] − 0.075          the picture leads its caption in
- *   up      = in + CHAPTER_FADE           fully up 0.01 before the caption
+ *   in      = BEAT_IN[i] − 0.050          the picture leads its caption in
+ *   up      = in + CHAPTER_FADE           fully up ~33px before the caption
  *   out     = outEnd − CHAPTER_FADE_OUT
  *   outEnd  = the next PICTURE event      (see below)
  *
  * The rule for `outEnd` is that a still clears exactly where the next thing
  * the frame has to show begins: chapters 01 and 02 hand over to the next
- * still's own entrance (0.385, 0.605), chapter 03 hands over to the finale
- * plate's crossfade (0.80). Deriving it that way means two photographs are
+ * still's own entrance (0.348, 0.589), chapter 03 hands over to the finale
+ * plate's crossfade (0.830). Deriving it that way means two photographs are
  * never dissolving through each other with the aerial underneath — the one
- * failure mode a three-layer crossfade stack has, and the reason chapter
- * 03's exit starts 0.045 rather than 0.02 before its caption's.
+ * failure mode a three-layer crossfade stack has.
  *
  *   i  in     up     out    outEnd  caption in / out      hands over to
- *   0  0.165  0.215  0.343  0.385   0.185 / 0.350-0.405   chapter 02's still
- *   1  0.385  0.435  0.563  0.605   0.405 / 0.570-0.625   chapter 03's still
- *   2  0.605  0.655  0.758  0.800   0.625 / 0.790-0.845   the finale plate
+ *   0  0.107  0.140  0.320  0.348   0.120 / 0.324-0.361   chapter 02's still
+ *   1  0.348  0.381  0.561  0.589   0.361 / 0.565-0.602   chapter 03's still
+ *   2  0.589  0.622  0.802  0.830   0.602 / 0.806-0.843   the finale plate
  *
  * So in every beat the photograph arrives just before the words and leaves
  * just before them: the picture announces the place, the caption confirms
  * it, the picture releases the frame, the caption follows it out.
+ *
+ * Each window is 0.241 of the track (468px) and each still holds at full
+ * opacity for 0.180 of it (350px, up from 166px before Wave I). The three
+ * windows tile the track back-to-back with no gap and no overlap, which is
+ * what makes the outEnd rule above land exactly on the next entrance.
  */
-const CHAPTER_IN = [0.165, 0.385, 0.605] as const;
+const CHAPTER_IN = [0.107, 0.348, 0.589] as const;
 
 /** Where each still has fully released the frame — see the table above. */
-const CHAPTER_OUT_END = [0.385, 0.605, 0.8] as const;
+const CHAPTER_OUT_END = [0.348, 0.589, 0.83] as const;
 
 /** Crossfade durations, in progress units. The entrance is longer than the
  *  exit because it is dissolving ONTO a moving aerial (a slow dissolve reads
  *  as arriving) while the exit is releasing back to it.
  *
- *  Kept SHORT on purpose. Two dense photographs dissolving through each other
+ *  Kept SHORT ON SCREEN on purpose, which is a statement about pixels, not
+ *  progress units. Two dense photographs dissolving through each other
  *  produce a double exposure for as long as both are legible, and the only
- *  levers on that band are the ease (see the tweens) and the duration. At
- *  0.05 / 0.042 with a `power2.inOut` curve the mix passes through 35–65% in
- *  about 0.010 of the track — roughly a fifth of what a linear 0.065 fade
- *  spent there — and the window that frees up goes to the still's own hold,
- *  which is the part worth looking at (0.128 of the track at full opacity per
- *  chapter, up from 0.10). */
-const CHAPTER_FADE = 0.05;
-const CHAPTER_FADE_OUT = 0.042;
+ *  levers on that band are the ease (see the tweens) and the duration. So
+ *  Wave I's longer track did NOT lengthen them: 0.033 / 0.028 of 1,944px is
+ *  65px in and 54px out, the same scroll distance 0.05 / 0.042 of 1,296px
+ *  bought before. With a `power2.inOut` curve the mix passes through the
+ *  35–65% band in ~13px of scroll either way.
+ *
+ *  Every pixel the longer track added therefore goes to the still's own hold,
+ *  which is the part worth looking at: 0.180 of the track at full opacity per
+ *  chapter — 350px, up from 166px. That ratio is the whole fix. */
+const CHAPTER_FADE = 0.033;
+const CHAPTER_FADE_OUT = 0.028;
 
 /**
  * Each still's own push, played across its whole visible window.
@@ -277,32 +327,41 @@ const CHAPTER_PUSH = [
 
 /**
  * Progress at which each chapter still is MOUNTED (not shown) — one lead
- * time of 0.20 ahead of its own entrance, clamped at chapter 01 to "the
- * reader has begun to scroll at all".
+ * time of 0.20 ahead of its own entrance, i.e. ~389px of scroll on the
+ * 280svh track, which is the decode head start each plate gets.
+ *
+ * Chapter 01's entry is 0 because its gate is not here at all: its crossfade
+ * starts 0.107 into the track, so no scroll-triggered threshold can give it
+ * a useful lead, and `HeroDirector` warms it at arm time instead (see the
+ * effect body for the trade). Chapters 02 and 03 keep the 0.20 lead, derived
+ * as CHAPTER_IN[i] − 0.20.
  *
  * This is the byte gate. `HeroChapterPlate` renders nothing until the reach
- * store reaches its index, so an armed hero that is never scrolled costs
- * none of the three stills, and a reader who stops after chapter 01 pays for
- * one. On the 220svh track 0.20 of progress is ~260px of scroll, which is the
- * decode head start each plate gets.
+ * store reaches its index, so an armed hero that is never scrolled costs one
+ * still rather than three, and a reader who stops inside chapter 01 pays for
+ * exactly that one.
  *
  * If a plate has not finished decoding when its crossfade begins, the
  * degraded state is exactly the hero that shipped before this feature: the
  * aerial is still underneath, so the beat plays over the base plate's own
- * camera move. A late plate is a missed cut, never a hole.
+ * camera move. A late plate is a missed cut, never a hole — but a missed cut
+ * on EVERY fast scroll is what Wave I treats as a defect rather than a
+ * graceful degradation, which is why the leads grew and 01 is pre-warmed.
  */
-const CHAPTER_REACH_AT = [0.015, 0.185, 0.405] as const;
+const CHAPTER_REACH_AT = [0, 0.148, 0.389] as const;
 
 /** How long (in progress units) a caption takes to enter / to leave. */
-const BEAT_FADE = 0.055;
+const BEAT_FADE = 0.037;
 
 /** How long a caption holds at full opacity after arriving, before its exit
- *  tween starts. BEAT_FADE + BEAT_HOLD + BEAT_FADE = 0.22 — just inside the
- *  0.22 spacing between corner keyframes, so caption N's exit lands exactly
+ *  tween starts. BEAT_FADE + BEAT_HOLD + BEAT_FADE = 0.241 — exactly the
+ *  0.241 spacing between corner keyframes, so caption N's exit lands exactly
  *  where caption N+1's entrance begins (a baton pass, never an overlap) and
  *  no caption is ever mid-flight alone with a frame it does not describe.
- *  On the 220svh track that is ~285px of scroll per caption. */
-const BEAT_HOLD = 0.11;
+ *  On the 280svh track that is ~468px of scroll per caption, up from ~285px:
+ *  the caption grew with its photograph, so the words are still on screen for
+ *  the whole time the picture is. */
+const BEAT_HOLD = 0.167;
 
 /** Progress buckets mapping scroll position to the active rail tick:
  *  index i is active while progress < RAIL_BOUNDS[i]; the last tick is
@@ -319,22 +378,21 @@ const BEAT_HOLD = 0.11;
  *  `power2.in`, i.e. 1 − t²):
  *
  *    bound   value  incoming enters  lead    outgoing clears  still visible
- *    [0]     0.17   0.185 (Clubs)    0.015   —                —
- *    [1]     0.40   0.405 (Venues)   0.005   0.405            30%
- *    [2]     0.62   0.625 (Intel.)   0.005   0.625            30%
- *    [3]     0.84   0.86  (finale)   0.020   0.845            17%
+ *    [0]     0.117  0.120 (Clubs)    0.003   —                —
+ *    [1]     0.356  0.361 (Venues)   0.005   0.361            25%
+ *    [2]     0.597  0.602 (Intel.)   0.005   0.602            25%
+ *    [3]     0.864  0.885 (finale)   0.021   0.843             0%
  *
- *  Task G3 fix: bound [3] was 0.80. The Intelligence caption's exit runs
- *  0.79 → 0.845, so at 0.80 the rail jumped to ORGANIZATION while the
- *  INTELLIGENCE lower-third was still at ~99% opacity, and stayed
- *  contradictory for 0.045 of the track (~58px of scroll) — measured live at
- *  progress 0.82: rail "Organization", caption "Intelligence" @ 0.85. That is
- *  an order of magnitude past the ~0.005 sliver bounds [1] and [2] carry by
- *  design, and it is the only bound that was not derived from its neighbour
- *  caption's exit. 0.84 puts it back on the same rule as its siblings (the
- *  outgoing caption is a ghost at 17% when the rail moves) while still
- *  leading the finale block's own 0.86 entrance. */
-const RAIL_BOUNDS = [0.17, 0.4, 0.62, 0.84] as const;
+ *  Task G3 established this rule the hard way: bound [3] was then 0.80,
+ *  which jumped the rail to ORGANIZATION while the INTELLIGENCE lower-third
+ *  was still at ~99% opacity and left the two contradicting each other for
+ *  ~58px of scroll. It was the one bound not derived from its neighbour
+ *  caption's exit. Wave I's retime re-derives all four from the same rule, so
+ *  the property G3 bought is preserved by construction rather than by having
+ *  been checked once: on the new timing the outgoing caption is a 25% ghost
+ *  at bounds [1] and [2], and at [3] it has left the frame entirely (0.843)
+ *  a full 0.021 before the finale block enters at 0.885. */
+const RAIL_BOUNDS = [0.117, 0.356, 0.597, 0.864] as const;
 
 /**
  * Mounts the flight. Renders `null`; all work happens in the effect. See
@@ -352,7 +410,7 @@ export function HeroDirector() {
       const root = document.querySelector<HTMLElement>("[data-hero-root]");
       if (!root) return;
 
-      // Late-arming guard: arming grows the hero into a ~2.2-viewport scroll
+      // Late-arming guard: arming grows the hero into a ~2.8-viewport scroll
       // track. If the user has already scrolled past the static frame (slow
       // network, restored scroll position), inserting that much scroll would
       // yank the page out from under them — the static hero is the designed
@@ -369,6 +427,17 @@ export function HeroDirector() {
       // resource, so this store gate is what actually stops the download
       // under reduced-motion/no-JS, not the CSS.
       setHeroArmed(true);
+      // Chapter 01's still is warmed HERE rather than behind a scroll
+      // threshold. Its crossfade begins 0.107 into the track (~208px of
+      // scroll), which is less decode time than a full-bleed AVIF reliably
+      // gets — and a still that has not decoded when its crossfade starts is
+      // an invisible beat, the defect Wave I fixes. Mounting it at arm time
+      // spends its bytes against the seconds the reader is already giving the
+      // title card. Chapters 02/03 stay scroll-gated (CHAPTER_REACH_AT) where
+      // the lead is ~389px and sufficient. The cost, stated plainly: an armed
+      // hero that is never scrolled now pays for one photograph where it used
+      // to pay for none.
+      setHeroReach(0);
 
       const ticks = Array.from(root.querySelectorAll<HTMLElement>("[data-hero-tick]"));
       let activeTick = -1;
@@ -449,18 +518,20 @@ export function HeroDirector() {
         // Intro departs: statement/tagline + CTAs + hint clear the frame.
         // Informative layers (h1, CTA row) fade with plain `opacity` so they
         // never leave the accessibility tree — see the file header. The
-        // aria-hidden hint may use autoAlpha freely. On the 220svh track the
-        // statement holds for the first 0.09 of progress (~117px of scroll)
-        // and is clear of the frame by 0.17, well before the first caption
-        // starts entering at 0.185.
-        tl.to("[data-hero-intro]", { opacity: 0, y: -34, duration: 0.08, ease: "power2.in" }, 0.09);
-        tl.to("[data-hero-ctas]", { opacity: 0, y: -24, duration: 0.07, ease: "power2.in" }, 0.1);
+        // aria-hidden hint may use autoAlpha freely. These four positions
+        // were converted to the 280svh track by preserving their absolute
+        // scroll distance, not their progress values: the statement still
+        // holds for the first ~117px of scroll (0.060 of progress, was 0.09
+        // of a shorter track) and is still clear of the frame ~13px before
+        // the first caption starts entering, now at 0.120.
+        tl.to("[data-hero-intro]", { opacity: 0, y: -34, duration: 0.053, ease: "power2.in" }, 0.06);
+        tl.to("[data-hero-ctas]", { opacity: 0, y: -24, duration: 0.047, ease: "power2.in" }, 0.067);
         // Transparent controls must not catch stray clicks mid-flight; a
         // reversed scrub past a set() restores the previous value, so this
         // stays correct scrolling both ways. Keyboard focus is unaffected by
         // pointer-events (the :focus-within rule in home.css reveals the row).
-        tl.set("[data-hero-ctas]", { pointerEvents: "none" }, 0.18);
-        tl.to("[data-hero-hint]", { autoAlpha: 0, duration: 0.05 }, 0.04);
+        tl.set("[data-hero-ctas]", { pointerEvents: "none" }, 0.12);
+        tl.to("[data-hero-hint]", { autoAlpha: 0, duration: 0.033 }, 0.027);
 
         // Authoritative "all captions hidden" at the head of the timeline.
         // Without it, a backwards scroll-seek could stack two to four
@@ -511,7 +582,8 @@ export function HeroDirector() {
           // `power2.inOut`, not `power1`: both the aerial and the still are
           // dense, mid-tone photographs, and a LINEAR dissolve spends a third
           // of its run in the 35–65% band where both are legible at once —
-          // read live at progress 0.355, where the dugout ghosted through the
+          // read live (pre-Wave-I timing) at progress 0.355, where the
+          // dugout ghosted through the
           // pool and two sets of pitch markings crossed. An S-curve traverses
           // that band in roughly half the scroll while holding the clean ends
           // longer, so the same dissolve reads as a cut-on-motion rather than
@@ -548,26 +620,26 @@ export function HeroDirector() {
         tl.fromTo(
           "[data-hero-plate-finale]",
           { autoAlpha: 0 },
-          { autoAlpha: 1, duration: 0.1, ease: "power1.inOut", immediateRender: false },
-          0.8,
+          { autoAlpha: 1, duration: 0.067, ease: "power1.inOut", immediateRender: false },
+          0.83,
         );
 
         // Finale: destination chapter + the CTAs return, centered. Both are
         // informative — plain `opacity`, never autoAlpha (file header). The
-        // last caption's exit finishes at 0.845, so the destination block
+        // last caption's exit finishes at 0.843, so the destination block
         // lands on an empty frame rather than under a leaving lower-third.
         tl.fromTo(
           "[data-hero-finale]",
           { opacity: 0, y: 32 },
-          { opacity: 1, y: 0, duration: 0.08, ease: "power2.out", immediateRender: false },
-          0.86,
+          { opacity: 1, y: 0, duration: 0.053, ease: "power2.out", immediateRender: false },
+          0.885,
         );
-        tl.set("[data-hero-ctas]", { pointerEvents: "auto" }, 0.89);
+        tl.set("[data-hero-ctas]", { pointerEvents: "auto" }, 0.91);
         tl.fromTo(
           "[data-hero-ctas]",
           { opacity: 0, y: 26 },
-          { opacity: 1, y: 0, duration: 0.07, ease: "power2.out", immediateRender: false },
-          0.89,
+          { opacity: 1, y: 0, duration: 0.047, ease: "power2.out", immediateRender: false },
+          0.91,
         );
 
         // Signal scanline: one full sweep, strictly scroll-bound.

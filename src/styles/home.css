@@ -118,14 +118,18 @@
 }
 
 .hero[data-armed] {
-  /* The scroll track: 2.2 viewports of scrub distance for four beats
-     (Task G2, down from 560svh/six beats). The old track made the hero
-     6,048px of an 11,813px page — more than half the site was one
+  /* The scroll track: 2.8 viewports of scrub distance for four beats.
+     Task G2 cut this to 220svh from E2's 560svh, because the old track made
+     the hero 6,048px of an 11,813px page — more than half the site was one
      photograph, and nothing below it was reachable in under a dozen wheel
-     flicks. Three product-distinct corner chapters plus the destination
-     beat now fly in 220svh; see HeroDirector.tsx's camera-math header for
-     how the shorter path stays legible (bigger moves, not faster ones). */
-  height: 220svh;
+     flicks. Wave I then gave 60svh of that back, because H2 had since added
+     three full-bleed chapter photographs to a budget already spent on three
+     camera moves and three captions: each still held at full opacity for
+     only 166px of scroll, which reads as a flash rather than an arrival.
+     At 280svh that hold is 350px and the hero is 3,024px of a ~9,299px page
+     (32.5%) — still nothing like the 51.2% G2 was called in to fix. See
+     HeroDirector.tsx's camera-math header for the full derivation. */
+  height: 280svh;
 }
 
 .hero-stage {
