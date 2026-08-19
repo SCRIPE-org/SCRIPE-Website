@@ -10,16 +10,29 @@
  * `opengraph-image.tsx` later if a page needs a bespoke image, but none do
  * yet, so every page under a locale shares this file's output.
  *
- * Font note: Satori (the renderer behind `next/og`'s `ImageResponse`) can
- * only parse TrueType/OpenType-container fonts (magic bytes `\x00\x01\x00\x00`,
- * `"OTTO"`, or `"true"`) — not WOFF/WOFF2. Every font asset this project
- * ships (`src/fonts/*.woff2`) is a variable WOFF2, so {@link loadArchivoFont}
- * always returns `null` today and every render below falls back to Satori's
- * bundled default font. Verified locally against next@16.3.1's bundled
- * `@vercel/og`: handing the raw `Archivo-var.woff2` buffer to `ImageResponse`
- * throws `Unsupported OpenType signature wOF2`. Signature-checking (rather
- * than hardcoding "always skip") means this starts working again on its own
- * if a TTF/OTF Archivo asset is ever added, with no changes needed here.
+ * Font note (Task G5 — real brand typography): Satori (the renderer behind
+ * `next/og`'s `ImageResponse`) can only parse TrueType/OpenType-container
+ * fonts (magic bytes `\x00\x01\x00\x00`, `"OTTO"`, or `"true"`) — never
+ * WOFF/WOFF2. Every font asset this project ships for the live site
+ * (`src/fonts/*.woff2`) is a variable WOFF2, unparseable by Satori (verified
+ * locally against next@16.3.1's bundled `@vercel/og`: handing the raw
+ * `Archivo-var.woff2` buffer to `ImageResponse` throws `Unsupported OpenType
+ * signature wOF2`). That's why this card used to render in Satori's
+ * fallback font instead of Archivo.
+ *
+ * The fix: `scripts/build-og-fonts.py` mechanically derives STATIC
+ * (non-variable) `.ttf` instances from the same owned `Archivo-var.woff2` —
+ * `fontTools.varLib.instancer` pins the `wght`/`wdth` axes to the two
+ * weights this card actually uses (800 for the wordmark, 400 for the
+ * tagline), then `fontTools.subset` cuts each to the project's existing
+ * Latin block policy (same ranges `scripts/subset-fonts.mjs` uses). Output
+ * lands in `src/fonts/og/*.ttf` — build-time-only assets this route reads
+ * from disk, never shipped to the browser (unlike `src/fonts/*.woff2`,
+ * nothing under `src/fonts/og/` is ever passed to `next/font/local`). Both
+ * instances are still signature-checked below before use — not because
+ * they're expected to fail (`build-og-fonts.py`'s only job is producing a
+ * parseable SFNT), but so a bad re-run or an accidentally-reintroduced
+ * WOFF2 fails loud (fallback font) instead of crashing the build.
  *
  * A second, unrelated Satori quirk to preserve if this file is edited: a
  * style object's `fontFamily` key must be entirely absent when there is no
@@ -70,46 +83,82 @@ interface OgLocaleContent {
  * Per-locale content for the OG image.
  *
  * The `ar` entry deliberately does NOT contain the real Arabic tagline
- * ("نظام تشغيل العمليات الرياضية"). Verified locally against next@16.3.1's
- * bundled `@vercel/og`: rendering Arabic-script text through `ImageResponse`
- * throws `lookupType: 5 - substFormat: 3 is not yet supported` from Satori's
- * internal Arabic-shaping module. This was reproduced with the default
- * bundled font (Satori has no system-font fallback — it can only shape text
- * with whichever font is loaded into it) and is NOT reliably avoidable by
- * font choice: the project's own Arabic source fonts
- * (`src/fonts/NotoKufiArabic-var.woff2`, `NotoSansArabic-var.woff2`) are
- * WOFF2 (unparseable, same as Archivo above), and the only alternative
- * Arabic assets in the repo — the variable TTFs under
- * `backup/_ds/.../assets/fonts/` — fail to parse for an unrelated reason
- * (a crash in Satori's `fvar` variable-axis table parser). The failure was
- * also observed to be non-deterministic across calls within one process
- * (identical input sometimes throws, sometimes doesn't, depending on prior
- * renders in the same runtime) — unacceptable for a route that must not
- * intermittently 500 in production.
+ * (`messages/ar.json`'s `footer.tagline`, "نظام تشغيل المنظمات الرياضية
+ * الحديثة"). Task 12 first found that `ImageResponse` cannot shape
+ * Arabic-script text at all in next@16.3.1: it throws `lookupType: 5 -
+ * substFormat: 3 is not yet supported` from Satori's bundled Arabic-shaping
+ * code, reproduced even with Satori's own default font (not a font-loading
+ * problem). Task 12 left open whether a STATIC (non-variable) Arabic font
+ * might avoid it, since the only Arabic assets tried then were variable and
+ * separately crashed Satori's `fvar` parser for an unrelated reason.
  *
- * TODO(task-12): once a static (non-variable) Arabic TTF/OTF asset is added
- * to the repo AND Satori's Arabic shaping is confirmed stable against it,
- * restore the real Arabic tagline here and drop this comment. Flagged for
- * Task 26 visual QA in the sequencing brief — the `ar` image today is a
- * mirrored layout with an English-language tagline, not a translated one.
+ * Task G5 closed that question: it does not. Two static instances were
+ * derived with the same `fontTools.varLib.instancer` pipeline that fixed
+ * the Latin/Archivo case above — Noto Sans Arabic Regular (400) and Noto
+ * Kufi Arabic SemiBold (600), both pinned from the variable `.woff2`s this
+ * project already owns (`src/fonts/NotoSansArabic-var.woff2`,
+ * `NotoKufiArabic-var.woff2`) via `scripts/build-og-fonts.py`. Both are
+ * valid, Satori-parseable SFNT TTFs (confirmed: correct `\x00\x01\x00\x00`
+ * signature, load without error). Both still crash the instant Arabic text
+ * is shaped through them — identical error, identical call stack, for
+ * *both* faces:
+ *
+ *   Error: lookupType: 5 - substFormat: 3 is not yet supported
+ *       at FeatureQuery.getLookupMethod (.../@vercel/og/index.node.js:10032)
+ *       at FeatureQuery.lookupFeature (.../@vercel/og/index.node.js:10057)
+ *       at Bidi.arabicRequiredLigatures (.../@vercel/og/index.node.js:10358)
+ *       at Bidi.applyArabicRequireLigatures (.../@vercel/og/index.node.js:10527)
+ *       at Bidi.applyFeaturesToContexts (.../@vercel/og/index.node.js:10553)
+ *       at Bidi.processText (.../@vercel/og/index.node.js:10566)
+ *
+ * Reproduced deterministically (5/5 runs, both the full `footer.tagline`
+ * string and short 1–2 word fragments) against a standalone
+ * `next/og`/`ImageResponse` call outside the Next build — this is Satori's
+ * own bundled OpenType-shaping engine failing to implement GSUB lookup type
+ * 5 / substFormat 3 (a coverage-based chained contextual substitution,
+ * which real Arabic fonts' `ArabicRequiredLigatures` GSUB feature needs for
+ * baseline shaping). It fires inside `Bidi.arabicRequiredLigatures` before
+ * any per-font lookup succeeds or fails on its own merits, so it is NOT
+ * avoidable by font choice, weight, or variable-vs-static — confirmed
+ * across two different Arabic typefaces here, on top of Task 12's default-
+ * font reproduction. There is no known way to render literal Arabic-script
+ * text through this Next.js/`@vercel/og` version at all.
+ *
+ * Given "do NOT ship a broken image route," the `ar` image keeps Task 12's
+ * mitigation: a mirrored RTL layout (mark and text align right) with the
+ * English-language tagline text, not a translated one. Flagged for Task 26
+ * visual QA, same as before.
+ *
+ * TODO(task-12, reconfirmed task-g5): once `@vercel/og`/Satori ships GSUB
+ * lookup type 5 support (or this route moves off `next/og`), swap this back
+ * to the real Arabic tagline and delete this comment. The derived Arabic
+ * fonts that were proven to load correctly (just not to shape) are not
+ * committed under `src/fonts/og/` — only the two Archivo weights that are
+ * actually used are — but `scripts/build-og-fonts.py` documents exactly how
+ * to regenerate them the moment this is worth revisiting.
  */
 const CONTENT: Record<"en" | "ar", OgLocaleContent> = {
   en: { tagline: "Sports Operations OS", isRtl: false },
   ar: { tagline: "Sports Operations OS", isRtl: true },
 };
 
+/** Directory holding this route's build-time-only static font instances
+ *  (never shipped to the browser — see the file header). */
+const OG_FONTS_DIR = join(process.cwd(), "src/fonts/og");
+
 /**
- * Loads the Archivo variable font for Satori, if its container format is
- * one Satori can actually parse.
+ * Loads one static Archivo weight for Satori from `src/fonts/og/`.
  *
- * @returns The font's raw bytes when the file's magic bytes match a
+ * @param filename - e.g. `"Archivo-ExtraBold.ttf"` — see
+ *   `scripts/build-og-fonts.py` for how these are derived.
+ * @returns The font's raw bytes when its magic bytes match a
  *   TrueType/OpenType container, otherwise `null`. Callers must omit the
- *   `fonts` entry when this returns `null` — Satori's bundled default font
- *   still renders Latin text correctly without it.
+ *   corresponding `fonts` entry when this returns `null` — Satori's bundled
+ *   default font still renders Latin text correctly without it.
  */
-async function loadArchivoFont(): Promise<Buffer | null> {
+async function loadArchivoWeight(filename: string): Promise<Buffer | null> {
   try {
-    const buffer = await readFile(join(process.cwd(), "src/fonts/Archivo-var.woff2"));
+    const buffer = await readFile(join(OG_FONTS_DIR, filename));
     const signature = buffer.subarray(0, 4).toString("ascii");
     const isTrueTypeSfnt = buffer.length >= 4 && buffer.readUInt32BE(0) === 0x00010000;
     if (signature === "OTTO" || signature === "true" || isTrueTypeSfnt) {
@@ -127,7 +176,7 @@ async function loadArchivoFont(): Promise<Buffer | null> {
  * image element's `src`. See the file header for why this reads the
  * pre-shrunk 220×174 derivative rather than a source original.
  *
- * @returns A `data:image/png;base64,...` URI. Unlike {@link loadArchivoFont}
+ * @returns A `data:image/png;base64,...` URI. Unlike {@link loadArchivoWeight}
  *   this has no failure/fallback mode — the derivative is a build-script
  *   output checked into `public/`, not an optional enhancement.
  */
@@ -152,9 +201,18 @@ export function generateStaticParams() {
 export default async function Image({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const content = locale === "ar" ? CONTENT.ar : CONTENT.en;
-  const [archivoFont, markDataUri] = await Promise.all([loadArchivoFont(), loadMarkDataUri()]);
+  const [archivoExtraBold, archivoRegular, markDataUri] = await Promise.all([
+    loadArchivoWeight("Archivo-ExtraBold.ttf"),
+    loadArchivoWeight("Archivo-Regular.ttf"),
+    loadMarkDataUri(),
+  ]);
+
+  const fonts: NonNullable<ConstructorParameters<typeof ImageResponse>[1]>["fonts"] = [];
+  if (archivoExtraBold) fonts.push({ name: "Archivo", data: archivoExtraBold, style: "normal", weight: 800 });
+  if (archivoRegular) fonts.push({ name: "Archivo", data: archivoRegular, style: "normal", weight: 400 });
+
   // See the file header: this key must be omitted, not set to `undefined`.
-  const fontFamilyStyle = archivoFont ? { fontFamily: "Archivo" } : {};
+  const fontFamilyStyle = fonts.length > 0 ? { fontFamily: "Archivo" } : {};
 
   return new ImageResponse(
     (
@@ -185,15 +243,15 @@ export default async function Image({ params }: { params: Promise<{ locale: stri
           <div style={{ fontSize: 148, fontWeight: 800, color: NEAR_WHITE, letterSpacing: -4 }}>
             SCRIPE
           </div>
-          <div style={{ fontSize: 40, color: SIGNAL_LIME, marginTop: 20 }}>{content.tagline}</div>
+          <div style={{ fontSize: 40, fontWeight: 400, color: SIGNAL_LIME, marginTop: 20 }}>
+            {content.tagline}
+          </div>
         </div>
       </div>
     ),
     {
       ...size,
-      fonts: archivoFont
-        ? [{ name: "Archivo", data: archivoFont, style: "normal", weight: 800 }]
-        : undefined,
+      fonts: fonts.length > 0 ? fonts : undefined,
     },
   );
 }
