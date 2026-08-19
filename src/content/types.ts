@@ -454,6 +454,14 @@ export interface PlatformContent {
     primaryCta: string;
     /** Secondary CTA label (see pricing). */
     secondaryCta: string;
+    /** Alt text for the hero's companion photograph, when one exists — see
+     *  `CapabilityHero.tsx`'s header. Optional in lockstep with the
+     *  photograph itself: absent today (no delivered frame yet), the hero
+     *  renders single-column exactly as it always has; once present, it
+     *  gates the second column into existence. Never set this ahead of the
+     *  photograph landing — an alt with no image is a broken contract, not
+     *  a preview of one. */
+    imageAlt?: string;
   };
   /** Sticky in-page subnav, one entry per {@link CapabilityGroup}. */
   nav: {
