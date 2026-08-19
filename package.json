@@ -2,6 +2,7 @@
   "name": "scripe-website",
   "private": true,
   "version": "1.0.0",
+  "packageManager": "npm@11.13.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
