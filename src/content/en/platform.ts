@@ -483,6 +483,8 @@ export const platformContent: PlatformContent = {
       { value: "1,860", label: "Active members", caption: "+124 this month" },
       { value: "97%", label: "Attendance marked", caption: "Same-day close" },
     ],
+    imageAlt:
+      "The operations desk at a sports campus after closing: dark monitors and a lanyard left on the counter, the floodlit pitches and courts still lit through the window.",
   },
   closing: {
     title: "See the platform against your own operation.",

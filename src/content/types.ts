@@ -473,6 +473,11 @@ export interface PlatformContent {
     /** Headline stats, reprised from the Reports module's own evidence —
      *  the same read, once for the whole organization. */
     stats: EvidenceStat[];
+    /** Alt text for the operations-desk photograph that sits between the
+     *  heading and the stats. The image is a real room, not a product
+     *  screenshot (see `build-media-assets.mjs`'s entry for why), so the alt
+     *  describes the room — it must not claim to describe a dashboard. */
+    imageAlt: string;
   };
   /** Closing conversion band. */
   closing: {

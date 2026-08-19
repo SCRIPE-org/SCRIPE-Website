@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
+import { LOCKED_THEME, THEME_LOCKED_TO_DARK } from "@/theme/theme-lock";
 
 const STORAGE_KEY = "scripe-theme";
 
@@ -50,7 +51,11 @@ export function ThemeGuard() {
 }
 
 function reassertTheme() {
-  const stored = window.localStorage.getItem(STORAGE_KEY);
+  // Theming is deferred (see `theme-lock.ts`): while the lock holds, the
+  // stored preference is suspended rather than read — including for visitors
+  // who chose light before the lock shipped and would otherwise be stranded
+  // on the half-finished theme with the toggle gone.
+  const stored = THEME_LOCKED_TO_DARK ? LOCKED_THEME : window.localStorage.getItem(STORAGE_KEY);
   const dark = stored !== "light";
   const theme = dark ? "dark" : "light";
   const root = document.documentElement;

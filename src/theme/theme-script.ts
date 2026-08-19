@@ -1,3 +1,5 @@
+import { THEME_LOCKED_TO_DARK } from "@/theme/theme-lock";
+
 /**
  * Pre-paint theme resolution. SCRIPE's brand is dark-first: the obsidian
  * night-cinematic identity is the product, not a "mode". A stored explicit
@@ -6,10 +8,15 @@
  * intentionally NOT consulted on first visit — a visitor whose system prefers
  * light must still land on the dark brand, then opt into light via the
  * toggle. Light is an explicit user choice only, never an inferred default.
+ *
+ * WHILE `THEME_LOCKED_TO_DARK` HOLDS the storage read is compiled out and this
+ * resolves to a constant `"dark"`. It stays a pre-paint script rather than
+ * being deleted because it also owns `colorScheme` and the `theme-color` meta
+ * tag, and because the storage read must come back with one flag flip. See
+ * `theme-lock.ts` for why the read is suppressed rather than merely ignored.
  */
 export const THEME_SCRIPT = `(function(){try{
-var t=localStorage.getItem("scripe-theme");
-var dark=t!=="light";
+var dark=${THEME_LOCKED_TO_DARK ? "true" : 'localStorage.getItem("scripe-theme")!=="light"'};
 var e=document.documentElement;
 e.setAttribute("data-theme",dark?"dark":"light");
 e.style.colorScheme=dark?"dark":"light";

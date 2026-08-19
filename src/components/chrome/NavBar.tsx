@@ -20,7 +20,11 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/Button";
-import { ThemeToggle } from "@/components/chrome/ThemeToggle";
+// import { ThemeToggle } from "@/components/chrome/ThemeToggle";
+// ^ Theming is deferred and the site ships dark-only — see
+//   `src/theme/theme-lock.ts` for why, and for the one-flag procedure that
+//   brings this control and both storage reads back. The component itself is
+//   untouched and still works; it is simply not mounted.
 import { BrandMark } from "./BrandMark";
 import { LocaleSwitch } from "./LocaleSwitch";
 import { MegaMenu } from "./MegaMenu";
@@ -81,7 +85,7 @@ export async function NavBar() {
 
         <div className="ms-auto hidden items-center gap-4 lg:flex">
           <LocaleSwitch />
-          <ThemeToggle />
+          {/* <ThemeToggle /> — withdrawn while theming is deferred (theme-lock.ts) */}
           <a href={SIGN_IN_CTA.href} className="text-text-secondary hover:text-text-primary text-[length:var(--fs-small)] font-medium">
             {t(SIGN_IN_CTA.labelKey)}
           </a>
@@ -91,7 +95,8 @@ export async function NavBar() {
         </div>
 
         <div className="ms-auto lg:hidden">
-          <MobileNav localeSwitch={<LocaleSwitch />} themeToggle={<ThemeToggle />} />
+          {/* themeToggle omitted while theming is deferred (theme-lock.ts) */}
+          <MobileNav localeSwitch={<LocaleSwitch />} />
         </div>
       </div>
     </header>

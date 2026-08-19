@@ -79,8 +79,11 @@ export interface MobileNavProps {
   /** A rendered `LocaleSwitch` instance, supplied by `NavBar` so both
    *  surfaces share one composition point (see the file header). */
   localeSwitch: ReactNode;
-  /** A rendered `ThemeToggle` instance, supplied by `NavBar`. */
-  themeToggle: ReactNode;
+  /** A rendered `ThemeToggle` instance, supplied by `NavBar`. Optional
+   *  because theming is currently deferred and `NavBar` passes nothing — see
+   *  `src/theme/theme-lock.ts`. The sheet's control row renders whatever it is
+   *  given, so an absent toggle simply leaves the locale switch alone in it. */
+  themeToggle?: ReactNode;
 }
 
 /** Finds every currently-visible, focusable element inside `root`, in DOM

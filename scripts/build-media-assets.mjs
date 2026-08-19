@@ -35,17 +35,30 @@
  *      the deploy for no gain. That is §2 below.
  * └────────────────────────────────────────────────────────────────────────┘
  *
- * SOURCES — read-only, never written to:
- *   - `assets/hero-plates/new/*.png` — the owner's untouched drop.
- *   - `public/media/hero/plate-*.png` — the night plates already in
- *     production (see the NIGHT SET note below for why these, not the
- *     delivered night candidates, are the hero's night film).
+ * SOURCES — read-only, never written to. `assets/` is the SINGLE source of
+ * truth: every file under `public/media/` is generated from it by this
+ * script, and nothing under `public/media/` is ever a source for anything
+ * else. That was not true before — the night encodes used to read
+ * `public/media/hero/plate-background.png`, which meant a 2.25MB PNG sat in
+ * the deploy purely to be this script's input while no browser ever requested
+ * it (the stylesheet only ever asks for `.avif`/`.webp`). It now lives at
+ * `assets/hero/night-background.png` — byte-identical, verified by hash — and
+ * the deploy is 2.25MB lighter.
+ *
+ *   - `assets/hero/*.png`  — the hero's night film, day film and the three
+ *     chapter subjects. Named for their ROLE in the flight.
+ *   - `assets/pages/*.png` — one framed photograph per page slot, named
+ *     `<page>-<subject>`.
+ *   - `assets/unused/`     — delivered frames nothing consumes, each named
+ *     for what it is AND why it lost. Never read by this script.
  *
  * NIGHT SET — a documented deviation from the delivered-images catalog
  * (`docs/asset-briefs/delivered-images-catalog-2026-08-19.md` §6, which
  * proposed replacing all four night plates). Viewing the candidates against
  * the production plates showed the delivered night batch renders the campus
  * walkway as a WHITE line; the production plates render it in signal lime.
+ * The rejected candidates are the four `assets/unused/*-white-walkway*.png`
+ * files, named so this decision does not have to be rediscovered.
  * That lime thread is not incidental decoration — `home.css`'s `.hero-bloom`
  * is authored as "the campus walkway's own light temperature", the hero's
  * whole accent system rhymes with it, and `.hero-stamp` carries a shadow
@@ -103,6 +116,7 @@
  *        public/media/solutions/clubs-sideline.webp
  *        public/media/solutions/multisport-masterplan.webp
  *        public/media/pricing/city-hubs.webp
+ *        public/media/platform/operations-desk.webp
  *
  * CHAPTER STILLS — the three frames catalog §1 mapped to P5/P6/P7 and the
  * previous pass declined to copy ("the hero rig has no code path that would
@@ -121,11 +135,13 @@
  * clubhouse glazing — the finest detail in the set — q52 holds where q46
  * smears; q58 buys nothing visible for ~25% more bytes.
  *
- * STILL NOT COPIED: the parked alternates (`Aerial Night Sports Complex
- * Panorama`, `Illuminated Sports Complex at Night{,-1}`, `Illuminated Stadium
- * and Pool Complex`, `Golden-Hour Sports Complex Diorama`). Nothing consumes
- * them; the night-set deviation above is why the first four are not swapped
- * in, and the Diorama carries the matting defect catalog §1 found.
+ * STILL NOT COPIED: everything under `assets/unused/`. Nothing consumes it;
+ * each filename carries its own reason (the four `-white-walkway` night
+ * alternates per the deviation above, the `-DEFECTIVE-tilt-shift-red-fringe`
+ * day midground per catalog §1, and the two peopled `platform-desk-` frames,
+ * which lost to the empty room because a legible spreadsheet on a screen,
+ * on a page headlined "every module resolves into one dashboard", reads as a
+ * claim about our software that our software has not earned).
  *
  * USAGE
  *   npm run media:build
@@ -143,10 +159,14 @@ import sharp from "sharp";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-/** The owner's untouched source drop. Read-only. */
-const DROP = path.join(ROOT, "assets", "hero-plates", "new");
+/** The hero's own source photography — night film, day film, chapter
+ *  subjects. Read-only. */
+const HERO_SRC = path.join(ROOT, "assets", "hero");
 
-/** Already-in-production plates, used as sources for the night encodes. */
+/** One framed photograph per page slot. Read-only. */
+const PAGES_SRC = path.join(ROOT, "assets", "pages");
+
+/** Output directory for the hero's generated encodes. */
 const HERO_DIR = path.join(ROOT, "public", "media", "hero");
 
 /**
@@ -203,8 +223,8 @@ const MASTER_WEBP = { quality: 90, effort: 6 };
 const HERO_PLATES = [
   {
     /** Night film, both the static frame and the armed flight's base layer.
-     *  Source is the production plate itself — see the NIGHT SET note. */
-    source: path.join(HERO_DIR, "plate-background.png"),
+     *  See the NIGHT SET note for why this frame and not a delivered one. */
+    source: path.join(HERO_SRC, "night-background.png"),
     out: "plate-background",
     /** 0.58 — the stadium bowl (pitch and running track legible) stacked
      *  directly over the four lit padel courts, road at the bottom edge.
@@ -220,7 +240,7 @@ const HERO_PLATES = [
   {
     /** Day film (light theme). `Golden-Hour Aerial Sports Complex` won the
      *  P14 slot over `Aerial Sports Complex Masterplan` in catalog §1. */
-    source: path.join(DROP, "Golden-Hour Aerial Sports Complex.png"),
+    source: path.join(HERO_SRC, "day-background.png"),
     out: "plate-background-day",
     /** 0.56 — the whole stadium (both ends inside the frame) over the full
      *  eight-court grid and the clubhouse block. The default centre is the
@@ -235,7 +255,7 @@ const HERO_PLATES = [
     /** Beat 01 CLUBS — `Empty Stadium Under Floodlights` (catalog P5).
      *  Ground level: dugout benches, folded tactics board, wet reflective
      *  surfaces, the main stand dark behind a floodlit pitch. */
-    source: path.join(DROP, "Empty Stadium Under Floodlights.png"),
+    source: path.join(HERO_SRC, "chapter-01-clubs.png"),
     out: "chapter-clubs",
     avif: CHAPTER_AVIF,
     /** 0.34 — the dugout shelter running across the lower frame with the
@@ -247,7 +267,7 @@ const HERO_PLATES = [
     /** Beat 02 VENUES — `Modern Sports Complex at Night` (catalog P6).
      *  Elevated oblique: the padel/tennis grid reading as a booking board,
      *  the warm-lit glass clubhouse behind it. */
-    source: path.join(DROP, "Modern Sports Complex at Night.png"),
+    source: path.join(HERO_SRC, "chapter-02-venues.png"),
     out: "chapter-venues",
     avif: CHAPTER_AVIF,
     /** 0.38 — two full lit courts in the foreground with the glazed
@@ -259,7 +279,7 @@ const HERO_PLATES = [
     /** Beat 03 INTELLIGENCE — `Night Soccer Training Under Floodlights`
      *  (catalog P7). The coach seen from behind (breath fog visible, no
      *  face) watching a small group work through cones and ladders. */
-    source: path.join(DROP, "Night Soccer Training Under Floodlights.png"),
+    source: path.join(HERO_SRC, "chapter-03-intelligence.png"),
     out: "chapter-intelligence",
     avif: CHAPTER_AVIF,
     /** 0.36 — the coach silhouette on the left edge, two players mid-drill,
@@ -282,18 +302,18 @@ const PHOTO_MASTERS = [
   {
     /** /company — the night operations room overlooking the campus. Native
      *  1122×1402 is already the 4:5 the portrait slot wants. */
-    source: path.join(DROP, "Night Operations Room Overlooking Sports Complex.png"),
+    source: path.join(PAGES_SRC, "company-ops-room.png"),
     out: path.join("company", "ops-room"),
   },
   {
     /** /solutions/sports-academies — misty dawn training ground. 4:5 native. */
-    source: path.join(DROP, "Misty Dawn Soccer Training Ground.png"),
+    source: path.join(PAGES_SRC, "solution-academies-dawn.png"),
     out: path.join("solutions", "academies-dawn"),
   },
   {
     /** /solutions/sports-venues — the near-nadir padel court grid, one court
      *  lit. 4:5 native. */
-    source: path.join(DROP, "Midnight Paddle Courts from Above.png"),
+    source: path.join(PAGES_SRC, "solution-venues-courts.png"),
     out: path.join("solutions", "venues-courts"),
   },
   {
@@ -303,7 +323,7 @@ const PHOTO_MASTERS = [
      *  crop is anchored to the TOP: the frame's subject stack (dugout roof,
      *  benches, tactics board, floodlight, far stand) all lives in the upper
      *  three quarters, and the bottom quarter is wet foreground tarmac. */
-    source: path.join(DROP, "Rainy Night at the Soccer Sideline.png"),
+    source: path.join(PAGES_SRC, "solution-clubs-sideline.png"),
     out: path.join("solutions", "clubs-sideline"),
     crop: { width: 971, height: 1214, position: "top" },
   },
@@ -326,7 +346,7 @@ const PHOTO_MASTERS = [
      *  pool, a full football pitch, the stadium and the eight-court tennis
      *  block inside one frame — four disciplines, which is the page's own
      *  argument. Centres further right trade the aquatics for parking. */
-    source: path.join(DROP, "Aerial Sports Complex Masterplan.png"),
+    source: path.join(PAGES_SRC, "solution-multisport-masterplan.png"),
     out: path.join("solutions", "multisport-masterplan"),
     window: { aspect: 4 / 5, centerX: 0.45 },
   },
@@ -334,8 +354,29 @@ const PHOTO_MASTERS = [
     /** /pricing — four lit facility islands across a dark city. Stays at its
      *  native 21:9: the whole point of the frame is the four separate hubs,
      *  and any portrait crop throws two of them away. */
-    source: path.join(DROP, "Four Sports Hubs Across the Night City.png"),
+    source: path.join(PAGES_SRC, "pricing-city-hubs.png"),
     out: path.join("pricing", "city-hubs"),
+  },
+  {
+    /** /platform — the operations counter a minute after the last person left:
+     *  dark monitors, a lanyard and a bottle on the stone, one warm overhead
+     *  pool of light, and the floodlit campus still running through the glass.
+     *
+     *  This is the page's only photograph and it is deliberately NOT a
+     *  dashboard. `/platform` is headlined "every module resolves into one
+     *  dashboard", and a generated screenshot under that sentence is
+     *  fabricated product evidence — a reader would reasonably take it as what
+     *  our software looks like. The two delivered alternates that DO show a
+     *  legible screen are parked in `assets/unused/` for exactly that reason.
+     *  An empty operations room makes the same argument (someone runs this
+     *  place, and they close the day here) and claims nothing.
+     *
+     *  Stays at its native 21:9: it is a wide room shot whose subject is the
+     *  length of the desk against the window, and it renders as a framed
+     *  print inside a section rather than a full-bleed plate, so the phone
+     *  gets a legible letterbox rather than 17% of a panorama. */
+    source: path.join(PAGES_SRC, "platform-operations-desk.png"),
+    out: path.join("platform", "operations-desk"),
   },
 ];
 
