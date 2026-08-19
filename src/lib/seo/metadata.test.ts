@@ -66,8 +66,8 @@ test("pageMetadata's og:image locale matches the page locale, not always 'en'", 
   assert.equal(arUrl, `${SITE_URL}/ar/opengraph-image`);
 });
 
-test("ROUTES excludes notFound and has 11 indexable entries", () => {
-  assert.equal(ROUTES.length, 11);
+test("ROUTES excludes notFound and has 13 indexable entries", () => {
+  assert.equal(ROUTES.length, 13);
   assert.equal(
     ROUTES.some((route) => route.id === "notFound"),
     false,

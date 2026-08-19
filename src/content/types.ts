@@ -34,6 +34,8 @@ export type PageId =
   | "resources"
   | "company"
   | "contact"
+  | "privacy"
+  | "terms"
   | "notFound";
 
 /**
@@ -1403,6 +1405,103 @@ export interface ContactContent {
     /** The three channel cards, in display order. */
     items: ContactChannel[];
   };
+}
+
+/**
+ * One content unit inside a {@link LegalSection}'s body, in display order.
+ * Two ordinary reading blocks (`"paragraph"`, `"list"`) plus one deliberately
+ * different one: `"note"` is a visually flagged callout for a fact this
+ * standard, in-house-drafted policy cannot honestly state yet (a legal
+ * entity name, a jurisdiction, a retention schedule) — see
+ * `LegalPageContent`'s own doc comment for why those gaps exist and why they
+ * are marked rather than guessed at. `LegalArticle.tsx` renders `"note"` with
+ * a distinct bordered/tinted treatment (the same `accent-club` "attention"
+ * color `Field.tsx`'s validation-error text already establishes as this
+ * design system's nearest warm/flag color) so a placeholder never reads as
+ * finished legal text.
+ */
+export type LegalBlock =
+  | { kind: "paragraph"; text: string }
+  | { kind: "list"; items: string[] }
+  | { kind: "note"; text: string };
+
+/**
+ * One heading + body section of a legal document — the unit both the
+ * in-page table of contents and the document body iterate over, one to one.
+ */
+export interface LegalSection {
+  /** Anchor id — the section's own heading id and its ToC entry's target.
+   *  A stable, English, kebab-case slug in both locales (matches every other
+   *  anchor id on the site, e.g. `CompanyContent["legal"]`'s `"legal"` —
+   *  ids are addresses, not content, and are never translated). */
+  id: string;
+  /** Section heading, rendered as an `<h2>`. */
+  heading: string;
+  /** The section's body content, in display order. */
+  blocks: LegalBlock[];
+}
+
+/**
+ * Content shared by the Privacy Policy (`/privacy`) and Terms of Service
+ * (`/terms`) pages — one interface for both, since they are two instances of
+ * exactly the same long-form-document template (typography-led hero with a
+ * draft-review banner, a table of contents, ordered sections) differing only
+ * in copy, unlike e.g. the FAQ pattern's per-page component copies (see
+ * `ResourcesFaq.tsx`'s header) which exist because those pages' FAQs are
+ * free to diverge structurally over time. `LegalHero.tsx`/`LegalArticle.tsx`
+ * under `src/components/sections/legal/` are the one shared implementation
+ * both `src/app/[locale]/privacy/page.tsx` and `.../terms/page.tsx` render
+ * through.
+ *
+ * Task G4: these are standard, plain-language, honest documents the SCRIPE
+ * team wrote in-house to close a real launch blocker — the contact form
+ * collects PII with no policy published anywhere — NOT a substitute for a
+ * counsel-drafted policy. `banner`/`tbdLabel` and every {@link LegalBlock}
+ * of kind `"note"` exist specifically so that gap is visible on the page
+ * itself, not just in an internal report: no company registration number,
+ * registered address, DPO name, or governing-law jurisdiction is invented
+ * anywhere in this content — each is a marked placeholder instead.
+ */
+export interface LegalPageContent {
+  /** Page-level metadata strings. */
+  meta: {
+    /** Page title (the layout's `"%s · SCRIPE"` template wraps it). */
+    title: string;
+    /** Meta/OG description. */
+    description: string;
+    /** Breadcrumb label for the home crumb in structured data. */
+    breadcrumbHome: string;
+    /** Breadcrumb label for this page's own crumb in structured data. */
+    breadcrumbCurrent: string;
+  };
+  /** Typography-led hero/intro — same shape as `ResourcesContent["hero"]`,
+   *  minus a CTA (a legal document is a reading destination, not a
+   *  conversion page — see `LegalHero.tsx`'s own header). */
+  hero: {
+    /** Small section marker label (e.g. "Legal"). */
+    label: string;
+    /** Page heading (e.g. "Privacy Policy"). */
+    title: string;
+    /** Supporting sentence. */
+    subtitle: string;
+  };
+  /** Visible "draft pending legal review" honesty banner, rendered directly
+   *  under the hero — the standing disclosure that this is an in-house
+   *  document, not yet reviewed by outside counsel. */
+  banner: string;
+  /** Pre-formatted effective-date line (e.g. "Effective August 19, 2026").
+   *  Kept as one formatted string rather than a raw date value, since
+   *  Arabic date formatting differs from a generic `Intl` call this
+   *  content layer would otherwise have to hardcode. */
+  effective: string;
+  /** Table-of-contents landmark label (e.g. "On this page"). */
+  tocLabel: string;
+  /** Small uppercase tag shown on every `"note"`-kind {@link LegalBlock}
+   *  (e.g. "Placeholder — pending counsel"), so a reader can tell a flagged
+   *  gap apart from finished policy text without reading its body first. */
+  tbdLabel: string;
+  /** The document's sections, in reading and ToC order. */
+  sections: LegalSection[];
 }
 
 /**

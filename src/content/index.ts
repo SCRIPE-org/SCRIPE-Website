@@ -18,6 +18,8 @@ import { pricingContent as pricingEn } from "./en/pricing";
 import { resourcesContent as resourcesEn } from "./en/resources";
 import { companyContent as companyEn } from "./en/company";
 import { contactContent as contactEn } from "./en/contact";
+import { privacyContent as privacyEn } from "./en/privacy";
+import { termsContent as termsEn } from "./en/terms";
 import { notFoundContent as notFoundEn } from "./en/notFound";
 import { homeContent as homeAr } from "./ar/home";
 import { platformContent as platformAr } from "./ar/platform";
@@ -30,6 +32,8 @@ import { pricingContent as pricingAr } from "./ar/pricing";
 import { resourcesContent as resourcesAr } from "./ar/resources";
 import { companyContent as companyAr } from "./ar/company";
 import { contactContent as contactAr } from "./ar/contact";
+import { privacyContent as privacyAr } from "./ar/privacy";
+import { termsContent as termsAr } from "./ar/terms";
 import { notFoundContent as notFoundAr } from "./ar/notFound";
 
 /**
@@ -51,6 +55,8 @@ export const CONTENT_REGISTRY: Partial<Record<PageId, Record<Locale, unknown>>> 
   resources: { en: resourcesEn, ar: resourcesAr },
   company: { en: companyEn, ar: companyAr },
   contact: { en: contactEn, ar: contactAr },
+  privacy: { en: privacyEn, ar: privacyAr },
+  terms: { en: termsEn, ar: termsAr },
   notFound: { en: notFoundEn, ar: notFoundAr },
 };
 

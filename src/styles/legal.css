@@ -1,0 +1,28 @@
+/* ============================================================================
+   SCRIPE — Legal document page styles (Privacy Policy / Terms of Service)
+
+   Scope: imported by both `src/app/[locale]/privacy/page.tsx` and
+   `src/app/[locale]/terms/page.tsx` — the two pages share one template
+   (`LegalHero.tsx` + `LegalArticle.tsx`, see those files' own headers for
+   why) and so share one stylesheet, the same way `platform.css`/
+   `resources.css`/`company.css` each host one page's own `--atmo-glow`
+   modifier. Class names here are prefixed `.lg-` so nothing here can collide
+   with any other page-scoped stylesheet during a client-side navigation.
+   ============================================================================ */
+
+/* ---------------------------------------------------------------------------
+   1. Ground atmosphere (Task E4 pattern) — a quiet, neutral glow anchored to
+   the hero. Deliberately calmer than a product page's own glow (lower
+   alpha, centered rather than corner-anchored): a legal document's hero
+   should read as composed and serious, not as another marketing beat.
+   Combined with the shared `.atmo`/`.atmo-grain` roots
+   (`src/styles/tokens/atmosphere.css`).
+   --------------------------------------------------------------------------- */
+
+.lg-hero-atmo {
+  --atmo-glow: radial-gradient(50% 70% at 50% -8%, rgba(70, 84, 105, 0.04), transparent 74%);
+}
+
+[data-theme="dark"] .lg-hero-atmo {
+  --atmo-glow: radial-gradient(50% 70% at 50% -8%, rgba(168, 190, 224, 0.04), transparent 74%);
+}

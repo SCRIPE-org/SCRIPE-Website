@@ -95,6 +95,8 @@ export const ROUTES: ReadonlyArray<RouteEntry> = [
   { id: "resources", path: "/resources", changeFrequency: "weekly", priority: 0.7 },
   { id: "company", path: "/company", changeFrequency: "yearly", priority: 0.5 },
   { id: "contact", path: "/contact", changeFrequency: "monthly", priority: 0.7 },
+  { id: "privacy", path: "/privacy", changeFrequency: "yearly", priority: 0.3 },
+  { id: "terms", path: "/terms", changeFrequency: "yearly", priority: 0.3 },
 ];
 
 /** Options accepted by {@link pageMetadata}. */

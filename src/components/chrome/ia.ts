@@ -218,8 +218,8 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
     key: "legal",
     titleKey: "footer.legal",
     links: [
-      { labelKey: "footer.privacy", href: "/company#legal" },
-      { labelKey: "footer.terms", href: "/company#legal" },
+      { labelKey: "footer.privacy", href: "/privacy" },
+      { labelKey: "footer.terms", href: "/terms" },
     ],
   },
 ];

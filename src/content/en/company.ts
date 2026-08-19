@@ -103,8 +103,8 @@ export const companyContent: CompanyContent = {
   legal: {
     label: "Working with us",
     title: "Sales-assisted, from first call to first season.",
-    body: "There is no self-service provisioning. Programs, surfaces and staff are mapped with your team before anything goes live — and privacy, terms and data handling are covered in that same conversation.",
-    note: "Privacy policy, terms of service and data-processing documentation are not published on this site yet — they are issued as part of onboarding. Request them at any point before signing.",
+    body: "There is no self-service provisioning. Programs, surfaces and staff are mapped with your team before anything goes live — and any deeper data-processing agreement your organization needs is covered in that same conversation.",
+    note: "Our Privacy Policy and Terms of Service cover this website and are linked below. Both are standard, in-house drafts, marked as pending review by outside counsel before commercial launch — request a live copy, or a formal data-processing agreement, at any point before signing.",
   },
   cta: {
     title: "Talk to the people building it.",
