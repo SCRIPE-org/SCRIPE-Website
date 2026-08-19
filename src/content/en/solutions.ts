@@ -146,6 +146,6 @@ export const solutionsContent: SolutionsHubContent = {
     subtitle: "Most organizations are more than one. We scope it with your operations team before anything is configured.",
     primaryCta: "Book a demo",
     secondaryCta: "See pricing",
-    note: "Sales-assisted onboarding · typically live within one season break.",
+    note: "Sales-assisted onboarding · timeline set during scoping.",
   },
 };

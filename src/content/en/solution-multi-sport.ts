@@ -110,7 +110,7 @@ export const solutionMultiSportContent: SolutionContent = {
       { value: "4", label: "Branches" },
       { value: "7", label: "Sports" },
       { value: "12,400", label: "Total members" },
-      { value: "SAR 214K", label: "Group revenue" },
+      { value: "SAR 1.4M", label: "Group revenue" },
     ],
   },
   otherSolutions: {
@@ -121,6 +121,6 @@ export const solutionMultiSportContent: SolutionContent = {
     subtitle: "Bring every branch and every sport onto one reporting line — scoped, permissioned and reconciled the same day.",
     primaryCta: "Book a demo",
     secondaryCta: "Explore the platform",
-    note: "Sales-assisted onboarding · typically live within one season break.",
+    note: "Sales-assisted onboarding · timeline set during scoping.",
   },
 };

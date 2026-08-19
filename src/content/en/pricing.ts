@@ -282,6 +282,6 @@ export const pricingContent: PricingContent = {
     title: "Get a plan scoped to your operation.",
     subtitle: "Bring your branch count, sports and season volume — we will confirm the plan before anything is signed.",
     primaryCta: "Book a Demo",
-    note: "Sales-assisted onboarding · typically live within one season break.",
+    note: "Sales-assisted onboarding · timeline set during scoping.",
   },
 };

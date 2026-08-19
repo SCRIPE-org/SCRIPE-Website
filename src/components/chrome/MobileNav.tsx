@@ -6,12 +6,14 @@
  *
  * Client Component because it owns open state, a real focus trap and a
  * scroll lock — one of the "use client" boundaries in the site chrome
- * (alongside `MegaMenu`, `LocaleSwitch` and `ThemeToggle`). `localeSwitch`
- * and `themeToggle` still arrive as already-rendered nodes from `NavBar`
- * rather than being imported and instantiated here directly: `NavBar`
- * renders each control exactly once and reuses that same composition point
- * for both the desktop row and this sheet, instead of each surface owning
- * its own separate instance.
+ * (alongside `MegaMenu` and `LocaleSwitch`). `localeSwitch` still arrives as
+ * an already-rendered node from `NavBar` rather than being imported and
+ * instantiated here directly: `NavBar` renders it exactly once and reuses
+ * that same composition point for both the desktop row and this sheet,
+ * instead of each surface owning its own separate instance. `themeToggle`
+ * is the same shape of prop but currently unused — theming is deferred
+ * (`src/theme/theme-lock.ts`) and `NavBar` passes nothing for it, which is
+ * why it is optional here rather than required.
  *
  * Behavior contract: opening focuses the DIALOG CONTAINER itself (it carries
  * `tabIndex={-1}` for exactly that), never its first focusable child;

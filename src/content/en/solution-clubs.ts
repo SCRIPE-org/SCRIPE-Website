@@ -118,6 +118,6 @@ export const solutionClubsContent: SolutionContent = {
     subtitle: "We map your squads, fixtures and coaching staff before the demo, so you see your own matchweek running on SCRIPE.",
     primaryCta: "Book a demo",
     secondaryCta: "Explore the platform",
-    note: "Sales-assisted onboarding · typically live within one season break.",
+    note: "Sales-assisted onboarding · timeline set during scoping.",
   },
 };

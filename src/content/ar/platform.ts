@@ -208,7 +208,7 @@ export const platformContent: PlatformContent = {
           evidence: {
             kind: "meters",
             title: "الحضور · هذا الأسبوع",
-            badge: "٩٧٪ مُسجَّل",
+            badge: "بيانات تجريبية",
             meters: [
               { label: "الاثنين", percent: 58 },
               { label: "الأربعاء", percent: 64 },
@@ -366,7 +366,7 @@ export const platformContent: PlatformContent = {
           evidence: {
             kind: "rows",
             title: "أحدث المدفوعات",
-            badge: "مُطابَق",
+            badge: "بيانات تجريبية",
             rows: [
               {
                 primary: "ح. كمال",
@@ -408,7 +408,7 @@ export const platformContent: PlatformContent = {
           evidence: {
             kind: "rows",
             title: "إشعارات مفتوحة",
-            badge: "٣ مفتوحة",
+            badge: "بيانات تجريبية",
             rows: [
               { primary: "مطلوب مدرب بديل لاختبارات المراكز تحت ١٦.", secondary: "قبل ١٢ دقيقة" },
               { primary: "١١ اشتراكًا تتجدد هذا الأسبوع.", secondary: "قبل ساعة" },
@@ -450,7 +450,7 @@ export const platformContent: PlatformContent = {
           evidence: {
             kind: "chips",
             title: "منظمة واحدة · ٤ فروع",
-            badge: "عرض المجموعة",
+            badge: "بيانات تجريبية",
             chips: [
               { label: "القاهرة · ٩٤٪" },
               { label: "المعادي · ٨٨٪" },
@@ -481,6 +481,6 @@ export const platformContent: PlatformContent = {
     subtitle: "نربط برامجك وملاعبك وطاقمك قبل أن تجربه — ليكون العرض على جدولك أنت، لا على جدولنا.",
     primaryCta: "احجز عرضًا توضيحيًا",
     secondaryCta: "اختر حلًا",
-    note: "تهيئة بمرافقة فريق المبيعات · التشغيل عادةً خلال فترة توقف موسم واحدة.",
+    note: "تهيئة بمرافقة فريق المبيعات · يُحدَّد الجدول الزمني أثناء التخطيط.",
   },
 };

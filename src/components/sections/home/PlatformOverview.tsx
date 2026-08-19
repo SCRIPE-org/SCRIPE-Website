@@ -7,14 +7,17 @@
  * Split composition: a start column carrying the slate, headline, supporting
  * sentence and both CTAs; an end column holding the operations-board
  * evidence panel — a real schedule surface with times, activities, owners
- * and status chips, honestly badged as product evidence (row names and
- * times are a staged example, not live customer data — the single header
- * badge says so). A cleanup wave removed a second, redundant mono
- * "Illustrative" tag that used to sit beside that badge: doubling the same
- * disclosure read as defensive over-explaining rather than honest. The
- * canonical "this is sample data" footnote for the product itself lives on
- * `/platform`'s per-module evidence panels (`CapabilityEvidence.tsx`) —
- * this teaser board keeps its one plain badge and nothing more. Task E3
+ * and status chips, honestly badged (row names, times and the row owner are
+ * a staged example, not live customer data — the single header badge says
+ * so). A cleanup wave removed a second, redundant mono "Illustrative" tag
+ * that used to sit beside that badge: doubling the same disclosure read as
+ * defensive over-explaining rather than honest. The badge word itself was
+ * originally "Product evidence", which a ship-readiness audit flagged
+ * against an invented named row owner ("A. Haddad") as reading closer to a
+ * claim of real usage than a disclosure of a staged one; it is now "Sample
+ * data", matching the exact wording `/platform`'s per-module evidence
+ * panels use (`CapabilityEvidence.tsx`) — one badge word, one meaning, used
+ * everywhere the site shows illustrative product data. Task E3
  * gives the board 3D presence: it rests slightly turned toward the copy like a desk
  * monitor (`.board-scene`/`.board-3d`, `src/styles/home.css` §13 — physical
  * rotation, flipped in RTL via `--tilt-dir`), levels flat on hover, and —

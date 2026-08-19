@@ -4,6 +4,16 @@ import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 /**
+ * NOT CURRENTLY MOUNTED. Theming is deferred and the site ships dark-only —
+ * see `src/theme/theme-lock.ts` for why and for the one-flag restore
+ * procedure. `NavBar.tsx` composes this component but comments out the
+ * import and both render sites; nothing on the live site currently renders
+ * it. The component itself is unchanged and correct — kept exactly as it
+ * was so lifting the lock is the only step needed.
+ *
+ * The description below describes its behaviour WHEN MOUNTED, i.e. before
+ * the lock and again after it lifts:
+ *
  * SCRIPE is dark-first: the pre-paint script in `theme-script.ts` renders
  * DARK by default whenever no explicit choice is stored, regardless of OS
  * `prefers-color-scheme`. This toggle is the ONLY way a visitor reaches

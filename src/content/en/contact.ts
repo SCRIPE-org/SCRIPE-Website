@@ -41,7 +41,7 @@ export const contactContent: ContactContent = {
       type: "Optional — it tells us which modules to show first.",
     },
     submitCta: "Book a Demo",
-    footnote: "Sales-assisted onboarding · typically live within one season break.",
+    footnote: "Sales-assisted onboarding · timeline set during scoping.",
   },
   expect: {
     label: "What happens next",

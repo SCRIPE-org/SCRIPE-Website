@@ -12,12 +12,14 @@
  * legacy `mso.headline` dictionary entry's three `<br/>`-separated lines
  * ("فروع متعددة.<br/>رياضات متعددة.<br/>صورة تشغيلية واحدة.") as one plain
  * sentence, matching `src/content/en/solution-multi-sport.ts`'s own
- * treatment of the English headline. The "Group revenue" outcome figure
- * (`sar-214k`) has a dictionary entry with Eastern-Arabic-numeral rendering
- * ("٢١٤ ألف ريال"), but is kept as "SAR 214K" here instead, matching
- * `src/content/ar/platform.ts`'s own resolution of this exact same figure
- * (see that file's header, "Numeral convention") for internal consistency
- * with the three sibling KPI values in this same structured stats row
+ * treatment of the English headline. The "Group revenue" outcome figure was
+ * originally kept identical to `src/content/ar/platform.ts`'s single-org
+ * revenue stat ("SAR 214K") for numeral-convention consistency — but a
+ * ship-readiness audit correctly flagged that as the SAME revenue figure
+ * standing for a 1,860-member single organization on one page and a
+ * 4-branch, 12,400-member group on this one, an internal inconsistency a
+ * careful reader could catch. It is now "SAR 1.4M", its own distinct figure,
+ * proportionate to the sibling KPIs in this same structured stats row
  * ("4", "7", "12,400"), all Western digits — a stats row is a structured
  * data slot, not free-form prose, so it follows the site's "Western
  * numerals held constant" rule rather than the dictionary's literal digits.
@@ -113,7 +115,7 @@ export const solutionMultiSportContent: SolutionContent = {
       { value: "4", label: "الفروع" },
       { value: "7", label: "الرياضات" },
       { value: "12,400", label: "إجمالي الأعضاء" },
-      { value: "SAR 214K", label: "إيرادات المجموعة" },
+      { value: "SAR 1.4M", label: "إيرادات المجموعة" },
     ],
   },
   otherSolutions: {
@@ -124,6 +126,6 @@ export const solutionMultiSportContent: SolutionContent = {
     subtitle: "اجمع كل فرع وكل رياضة على خط تقارير واحد — بصلاحيات محددة ومطابقة في اليوم نفسه.",
     primaryCta: "احجز عرضًا توضيحيًا",
     secondaryCta: "استكشف المنصة",
-    note: "تهيئة بمرافقة فريق المبيعات · التشغيل عادةً خلال فترة توقف موسم واحدة.",
+    note: "تهيئة بمرافقة فريق المبيعات · يُحدَّد الجدول الزمني أثناء التخطيط.",
   },
 };

@@ -216,7 +216,7 @@ export const platformContent: PlatformContent = {
           evidence: {
             kind: "meters",
             title: "Attendance · this week",
-            badge: "97% marked",
+            badge: "Sample data",
             meters: [
               { label: "Monday", percent: 58 },
               { label: "Wednesday", percent: 64 },
@@ -376,7 +376,7 @@ export const platformContent: PlatformContent = {
           evidence: {
             kind: "rows",
             title: "Recent payments",
-            badge: "Reconciled",
+            badge: "Sample data",
             rows: [
               {
                 primary: "H. Kamal",
@@ -418,7 +418,7 @@ export const platformContent: PlatformContent = {
           evidence: {
             kind: "rows",
             title: "Open notifications",
-            badge: "3 open",
+            badge: "Sample data",
             rows: [
               { primary: "Coach cover needed for U16 position trials.", secondary: "12 min ago" },
               { primary: "11 subscriptions renew this week.", secondary: "1 hour ago" },
@@ -460,7 +460,7 @@ export const platformContent: PlatformContent = {
           evidence: {
             kind: "chips",
             title: "One organization · 4 branches",
-            badge: "Group view",
+            badge: "Sample data",
             chips: [
               { label: "Cairo · 94%" },
               { label: "Maadi · 88%" },
@@ -492,6 +492,6 @@ export const platformContent: PlatformContent = {
       "We map your programs, surfaces and staff before you test it — so the demo is your timetable, not ours.",
     primaryCta: "Book a Demo",
     secondaryCta: "Choose a solution",
-    note: "Sales-assisted onboarding · typically live within one season break.",
+    note: "Sales-assisted onboarding · timeline set during scoping.",
   },
 };

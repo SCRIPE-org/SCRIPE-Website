@@ -30,12 +30,12 @@
  *
  * `SOLUTION_HERO_IMAGE` maps a slug to its photograph. It is keyed here, not
  * in the locale content files, because a file path is not translated copy —
- * only the alt text is, and that lives on `content.imageAlt`. Both are
- * optional in lockstep: `/solutions/multi-sports-organizations` has no
- * delivered photograph yet (catalog §2, prompt P12 undelivered), so its
- * hero renders exactly as it did before — panel alone, no gap, no
- * placeholder. Dropping the file in and adding one line to each of the two
- * maps is the whole integration when it arrives.
+ * only the alt text is, and that lives on `content.imageAlt`. Every slug now
+ * has an entry — `multi-sports-organizations` is the interim masterplan
+ * frame described below, not a placeholder — but the map stays `Partial`
+ * because that is still the correct type for a slug that genuinely has no
+ * photograph: if a future page is ever added without one, it renders panel
+ * alone, no gap, no placeholder, exactly as this one used to.
  *
  * A cleanup wave removed the snapshot panel's own "Sample data — replaced
  * with yours during onboarding." footnote: identical text repeated across

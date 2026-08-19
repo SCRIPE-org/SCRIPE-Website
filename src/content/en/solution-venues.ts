@@ -116,6 +116,6 @@ export const solutionVenuesContent: SolutionContent = {
     subtitle: "Put every court, field and pool on one grid — and see the peak hours you are currently selling by hand.",
     primaryCta: "Book a demo",
     secondaryCta: "Explore the platform",
-    note: "Sales-assisted onboarding · typically live within one season break.",
+    note: "Sales-assisted onboarding · timeline set during scoping.",
   },
 };

@@ -3,8 +3,10 @@
  *
  * Server Component shell for the whole header: skip-to-content link, brand
  * lockup, primary nav (`PRIMARY_NAV` from `ia.ts`, with the Solutions entry
- * swapped for `MegaMenu`), `LocaleSwitch`, `ThemeToggle`, and the primary
- * "Book a Demo" CTA. Sticky (not fixed) — it occupies its normal document-
+ * swapped for `MegaMenu`), `LocaleSwitch`, and the primary "Book a Demo" CTA.
+ * `ThemeToggle` is composed but not mounted while theming is deferred — see
+ * the import comment below and `src/theme/theme-lock.ts`. Sticky (not
+ * fixed) — it occupies its normal document-
  * flow height, so `<main>` never needs a manual top-offset to compensate,
  * and sticks to the viewport top once the page scrolls past it. The surface
  * is a translucent, blurred page-color panel over whatever scrolls beneath
@@ -13,9 +15,11 @@
  * "lit room" chrome — frosted white glass, ink hairline, floating shadow —
  * while the dark bar stays exactly as composed here.
  *
- * Renders `MobileNav` for viewports below `lg`, passing it already-rendered
- * `LocaleSwitch`/`ThemeToggle` instances so both controls are composed once,
- * in one place, and reused in both the desktop row and the mobile sheet.
+ * Renders `MobileNav` for viewports below `lg`, passing it an already-
+ * rendered `LocaleSwitch` instance so the control is composed once, in one
+ * place, and reused in both the desktop row and the mobile sheet.
+ * `themeToggle` is not passed while theming is deferred — `MobileNav`'s prop
+ * is optional for exactly this reason.
  */
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";

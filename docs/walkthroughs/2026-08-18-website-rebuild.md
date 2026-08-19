@@ -1,13 +1,35 @@
 # SCRIPE Website Rebuild — Walkthrough
 
-**Date:** 2026-08-18
+**Date:** 2026-08-18 (see update below — several numbers and one claim in this document have
+since moved; this file itself has not been rewritten to match)
 **Branch:** `main` (this repo is the `SCRIPE-Website` submodule)
-**Status:** Build green, 75/75 tests passing, all 22 page URLs statically prerendered. Two backend
-connections and one DNS step are still open — see "What's left before launch" at the end.
+**Status, as of 2026-08-18:** Build green, 75/75 tests passing, all 22 page URLs statically
+prerendered. Two backend connections and one DNS step are still open — see "What's left before
+launch" at the end.
+
+> **Update — 2026-08-19, post ship-readiness audit.** Six further waves landed after this document
+> was written (E6, the theme-flip fix, Wave G, imagery integration, Wave H, Wave I), none of them
+> recorded here — the plan of record this walkthrough summarizes stops at Task E5. Three things a
+> launch decision would actually check are now stale in the numbers above and in §1/§6 below:
+> - **Tests/routes:** 95/95 tests, 26 URLs (13 page templates × 2 locales, up from 12/22 — the
+>   platform page gained its first photograph and a hero-timing suite was added).
+> - **Theming:** the site is **dark-only**, not dual-theme. `src/theme/theme-lock.ts` withdraws the
+>   toggle behind one flag; light CSS and tokens stay in the tree, deliberately unremoved, so the
+>   flag can be flipped back. §1's "dual-theme" line below describes the pre-lock state.
+> - **§6, the Arabic OG image:** **closed**, not open. A Chromium-rendered static PNG replaced the
+>   Satori route once the AR text-shaping engine limit below was confirmed unfixable in Satori
+>   itself. §5's table row and §6's own heading are left as the historical record of the
+>   investigation; a closure note sits at the top of §6.
+>
+> Everything else below — the stack, the performance budgets, the quality-process methodology, the
+> deferred-polish list — was re-verified at the newer commit and still holds. This document was kept
+> as the historical record of the 2026-08-18 launch review rather than rewritten in place; the
+> current owner-side blockers are tracked in the session's own ledger, not here.
 
 This is the plain-language record of what the site rebuild delivered, what it costs in the
-browser, how it was checked, and what's still outstanding. It's written for the person who has to
-decide whether this is ready to point a domain at, not for the people who built it.
+browser, how it was checked, and what's still outstanding, **as it stood on 2026-08-18** — see the
+update note above for what has moved since. It's written for the person who has to decide whether
+this is ready to point a domain at, not for the people who built it.
 
 ---
 
@@ -15,7 +37,9 @@ decide whether this is ready to point a domain at, not for the people who built 
 
 The old static HTML site (`scripe-static/`) has been fully replaced by a Next.js application. It
 is bilingual (English / Arabic, with proper right-to-left layout for Arabic — not a mirrored
-CSS hack), dual-theme (light and dark, both hand-tuned, not one inverted from the other), and
+CSS hack). **As of 2026-08-18** it was dual-theme (light and dark, both hand-tuned, not one
+inverted from the other) — see the update note above: the site now ships dark-only, with light
+withdrawn behind a flag rather than deleted. At the time this section was written,
 every page is pre-built to static HTML at deploy time rather than rendered on request. There is no
 database, no server-side session, and no third-party script anywhere on the site — everything a
 visitor's browser loads comes from the site's own domain.
@@ -151,8 +175,9 @@ second reviewer's pass, and are called out as such in the ledger.
     to how Next.js merges per-page metadata, fixed in the one shared function every page's metadata
     already routes through, and locked in with 5 new tests so it can't silently regress again.
 
-Final gate at time of writing: **75/75 tests pass, typecheck clean, lint clean, build clean, all 22
-routes statically prerendered.**
+Final gate at time of writing (2026-08-18): **75/75 tests pass, typecheck clean, lint clean, build
+clean, all 22 routes statically prerendered.** (Current: 95/95 tests, 26 routes — see the update
+note at the top of this document.)
 
 ---
 
@@ -163,7 +188,7 @@ routes statically prerendered.**
 | Live pricing currency conversion needs backend CORS | **Waiting on backend** | The pricing page already calls a live currency-detection endpoint and converts prices for the visitor's country. That endpoint needs to allow requests from `www.scripe.org` on the backend side — until it does, or if it's ever briefly down, the page quietly falls back to the baked-in Saudi Riyal prices. Nobody sees an error either way. |
 | Contact form lead delivery | **Waiting on backend** | The form validates every field, blocks spam (a hidden honeypot field plus a minimum-time-on-page check), and is fully wired end to end — it just has nowhere to deliver a real lead yet. Until a `LEADS_ENDPOINT` is configured, a submitted form shows an honest "we're not connected yet, please email us directly" message instead of a fake success. |
 | DNS / domain go-live | **Not started** | `www.scripe.org` isn't pointed at this build yet. Needs the Vercel project created, the domain attached, and an apex (`scripe.org`) → `www` redirect configured at the domain level. |
-| Arabic social-share image | **Known limitation, two fixes identified** | See §6 below — full detail with both candidate fixes. |
+| Arabic social-share image | **Closed, 2026-08-19** | Was: known limitation, two fixes identified. A Chromium-rendered static PNG shipped — see the closure note at the top of §6. |
 | Hero images are below target resolution | **Working as designed, upgrade path ready** | Covered in §1 — drop-in replacement, no code change needed when higher-res versions exist. |
 | A handful of small polish items | **Deferred, tracked** | See §8 — none of these affect correctness, security, or what a visitor experiences; they're the kind of thing that gets picked up opportunistically. |
 
@@ -174,6 +199,13 @@ cosmetic or deferred by design.
 ---
 
 ## 6. OG (social-share) image QA
+
+> **Closed, 2026-08-19.** The limitation this section documents was fixed by rendering the Arabic
+> variant as a static PNG through headless Chromium instead of through the Satori route every other
+> image on the site uses — Satori's Arabic-shaping failure below turned out to be a property of
+> Satori itself, not of a font or a workaround this section hadn't tried. The investigation and the
+> two candidate fixes below are kept as the record of why that was the right call; neither
+> "candidate fix" is the one that shipped.
 
 One 1200×630 preview image is generated per locale (English, Arabic) — not per page. It's a
 site-wide image (`src/app/[locale]/opengraph-image.tsx`, prerendered at build time for both
@@ -336,8 +368,8 @@ reduced-motion handling, and performance budgets all pass with margin.
 1. Backend: allow the live-pricing endpoint to accept requests from `www.scripe.org`.
 2. Backend: stand up (or point to) a real lead-intake endpoint and set `LEADS_ENDPOINT`.
 3. Ops: attach the domain in Vercel and configure the apex → `www` redirect.
-4. Content call: decide what to do about the Arabic social-share image (§6 has two ready-to-execute
-   options) and the two minor heading gaps (§10) — neither blocks launch, both are quick once
-   someone signs off on the copy/approach.
+4. ~~Content call: decide what to do about the Arabic social-share image~~ — **closed 2026-08-19**,
+   see the note at the top of §6. The two minor heading gaps (§10) remain open; neither blocks
+   launch.
 
 Everything else in this document is either already closed or explicitly non-blocking.

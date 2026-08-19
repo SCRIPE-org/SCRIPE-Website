@@ -119,7 +119,7 @@ export const homeContent: HomeContent = {
     secondaryCta: "Book a demo",
     board: {
       title: "Today · Tuesday",
-      badge: "Product evidence",
+      badge: "Sample data",
       rows: [
         {
           time: "16:30",
@@ -247,6 +247,6 @@ export const homeContent: HomeContent = {
       "Bring your teams, members, venues, coaches and operations together in one powerful platform.",
     primaryCta: "Book a Demo",
     pricingLink: "See pricing",
-    note: "Sales-assisted onboarding · typically live within one season break.",
+    note: "Sales-assisted onboarding · timeline set during scoping.",
   },
 };

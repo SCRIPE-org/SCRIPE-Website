@@ -115,6 +115,6 @@ export const solutionAcademiesContent: SolutionContent = {
     subtitle: "Bring your programmes, groups and guardians into one operating rhythm — mapped with your team before you test it.",
     primaryCta: "Book a demo",
     secondaryCta: "Explore the platform",
-    note: "Sales-assisted onboarding · typically live within one season break.",
+    note: "Sales-assisted onboarding · timeline set during scoping.",
   },
 };

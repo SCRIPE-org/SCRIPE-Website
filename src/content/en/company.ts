@@ -111,6 +111,6 @@ export const companyContent: CompanyContent = {
     subtitle: "Bring the operation you actually run. We will show you where SCRIPE fits and where it does not.",
     primaryCta: "Book a Demo",
     secondaryCta: "See pricing",
-    note: "Sales-assisted onboarding · typically live within one season break.",
+    note: "Sales-assisted onboarding · timeline set during scoping.",
   },
 };

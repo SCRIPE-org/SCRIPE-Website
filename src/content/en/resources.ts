@@ -110,7 +110,7 @@ export const resourcesContent: ResourcesContent = {
       {
         question: "Can coaches use SCRIPE?",
         answer:
-          "The Coach App holds session plans, rosters, attendance and observations, and works offline when the pitch has no signal.",
+          "Session plans, rosters and attendance already live in the record; a dedicated Coach App with offline marking is rolling out now.",
       },
       {
         question: "Can parents access the platform?",
@@ -243,6 +243,6 @@ export const resourcesContent: ResourcesContent = {
     subtitle: "Ask the question directly — an operations lead will answer it, and it usually becomes the next guide.",
     primaryCta: "Book a Demo",
     secondaryCta: "Talk to sales",
-    note: "Sales-assisted onboarding · typically live within one season break.",
+    note: "Sales-assisted onboarding · timeline set during scoping.",
   },
 };

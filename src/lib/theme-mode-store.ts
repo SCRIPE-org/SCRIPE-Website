@@ -2,10 +2,12 @@
  * Active theme external store.
  *
  * A `useSyncExternalStore`-compatible reader for the `data-theme` attribute
- * that `src/theme/theme-script.ts` writes on `<html>` pre-paint and
- * `ThemeToggle.tsx` rewrites on click. Deliberately a READER, not a second
- * source of truth: the attribute on `<html>` stays the only place the theme
- * lives, so nothing here can drift out of sync with what CSS is rendering.
+ * that `src/theme/theme-script.ts` writes on `<html>` pre-paint. Deliberately
+ * a READER, not a second source of truth: the attribute on `<html>` stays the
+ * only place the theme lives, so nothing here can drift out of sync with
+ * what CSS is rendering. (`ThemeToggle.tsx` is the other writer when theming
+ * is live; while it is deferred — `src/theme/theme-lock.ts` — the only writer
+ * is the pre-paint script, reasserted by `ThemeGuard.tsx` on navigation.)
  *
  * Why an observer rather than an event the toggle fires: the attribute has
  * two writers (the pre-paint script and the toggle) and this store must be
