@@ -1,0 +1,16 @@
+Copyright (c) 2026 SCRIPE. All rights reserved.
+
+This repository and its contents (source code, styles, content, and assets
+authored within it) are proprietary and confidential. No license, express or
+implied, is granted to any person to use, copy, modify, merge, publish,
+distribute, sublicense, or sell copies of this software, in whole or in
+part, without the prior written permission of SCRIPE.
+
+Access to this repository is provided solely for the purpose of developing,
+maintaining, and operating SCRIPE's own products. Nothing in this repository
+may be used to create a competing product or service.
+
+Third-party dependencies listed in `package.json` remain licensed under
+their own respective terms; this notice does not extend to them.
+
+All rights not expressly granted are reserved.
