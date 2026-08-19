@@ -68,14 +68,25 @@ export function DashboardStrip({ content }: DashboardStripProps) {
       <Reveal y={24} className="mt-12">
         {/* 1915×821 native 21:9 — a wide room shot whose subject is the length
             of the desk against the glass, so it keeps its own ratio rather
-            than being cropped to the 4:5 the sub-page heroes use. `sizes`
-            mirrors `Section`'s own max width. */}
+            than being cropped to the 4:5 the sub-page heroes use.
+
+            `sizes` is DERIVED from the real layout chain, not estimated, because
+            an estimate here is not a rounding error — it makes `next/image`
+            serve a candidate narrower than the box and upscale it. Measured
+            live, the window is
+              min(1360px, 100vw) − 2 × clamp(20px, 4vw, 48px) − 2 × 12px
+            where 1360px is `Section`'s max width, the clamp is its inline
+            padding, and 12px is `PlatePhoto`'s own frame inset. The 4vw term
+            hits its 48px ceiling at 1200px and its 20px floor at 500px, which
+            is where the three breakpoints below come from. At 1440px that
+            resolves to 1240px — the first hint said 1120px, and the browser
+            duly stretched a 1120px file across 1238 CSS px. */}
         <PlatePhoto
           src="/media/platform/operations-desk.webp"
           alt={content.imageAlt}
           width={1915}
           height={821}
-          sizes="(min-width: 1200px) 1120px, 100vw"
+          sizes="(min-width: 85rem) 1240px, (min-width: 75rem) calc(100vw - 120px), (min-width: 31.25rem) calc(92vw - 24px), calc(100vw - 64px)"
         />
       </Reveal>
 
