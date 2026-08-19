@@ -192,10 +192,39 @@
  * plates never mirror, so a fly-over reads identically in both directions.
  * Text beats are positioned by logical CSS properties and need no JS
  * handling.
+ *
+ * WAVE J — A SCROLL-RATE CLAMP, ON TOP OF THE RETIMED TRACK
+ * ------------------------------------------------------------------------
+ * Wave I's retime was verified with `scrollTo()` sampling, which can only
+ * check the SETTLED opacity at an exact pixel — never what a continuous
+ * gesture actually exposes in wall-clock time. Dispatching real, physically
+ * modelled wheel events (a decaying burst mimicking trackpad momentum) and
+ * sampling every animation frame during the scroll found what that
+ * measurement couldn't: a single fast flick can still cross the whole
+ * ~1,620px scrub in ~500ms, giving chapter 1 — which sees a flick's fastest,
+ * least-decayed velocity — only ~120ms of full-opacity visibility, against
+ * the ~300ms floor a photograph generally needs to register as seen rather
+ * than flashed. A careful scroll was already comfortable at 450ms+; the
+ * defect is specific to genuinely fast continuous scrolling.
+ *
+ * Closing that gap with MORE track does not scale here: matching the target
+ * purely by lengthening would need roughly 720svh (3x the current
+ * per-chapter window), which reopens the exact "half the site is one
+ * photograph" regression Task G2 was created to close. `installHeroScrollDamper`
+ * (`src/lib/hero-scroll-damper.ts`) takes the other lever instead: a
+ * `wheel` listener, active only while `scrollY` sits inside this hero's own
+ * scrub range, that clamps a fast flick's IMPLIED RATE down to a derived
+ * ceiling — a careful or moderate scroll's natural rate already sits under
+ * it and is left completely untouched (verified both by that file's own
+ * unit tests and by re-running the same wheel-flick harness against the
+ * wired-in clamp — see the task report for the before/after numbers). See
+ * that file's header for the full derivation and why a rate clamp, not a
+ * scroll-snap or per-event size cap, is the right mechanism.
  */
 import { useEffect } from "react";
 import { loadGsap } from "@/lib/gsap";
 import { setHeroArmed } from "@/lib/hero-armed-store";
+import { installHeroScrollDamper } from "@/lib/hero-scroll-damper";
 import { resetHeroReach, setHeroReach } from "@/lib/hero-reach-store";
 
 /**
@@ -653,7 +682,16 @@ export function HeroDirector() {
 
       setActiveTick(0);
 
+      // See the file header (WAVE J) for why this exists and how the cap
+      // was derived. Scoped to exactly the range GSAP is scrubbing over —
+      // outside it, scrolling is completely native and untouched.
+      const removeScrollDamper = installHeroScrollDamper(() => ({
+        start: root.offsetTop,
+        end: root.offsetTop + Math.max(0, root.getBoundingClientRect().height - window.innerHeight),
+      }));
+
       cleanup = () => {
+        removeScrollDamper();
         ctx.revert();
         root.removeAttribute("data-armed");
         setHeroArmed(false);
