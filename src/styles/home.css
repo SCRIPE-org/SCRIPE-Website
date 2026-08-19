@@ -212,9 +212,27 @@
   /* Rest frame overscan. Must match CAMERA_PATH[0].scale (depth ×1.0) —
      see the camera-math audit in HeroDirector.tsx. GSAP overrides this
      transform inline in armed mode. */
-  transform: scale(1.14);
+  transform: scale(1.14) translateZ(0);
   transform-origin: 50% 42%;
   will-change: transform;
+  /* Wave L, verified with a real CDP trace (task report), not assumed:
+     `translateZ(0)` + `backface-visibility: hidden` on this and the other
+     three continuously-scaled `background-image` layers below
+     (`.hero-plate-mid`, `.hero-plate-chapter`, `.hero-plate-fg`) roughly
+     HALVES the raster cost of a chapter crossfade on their own (measured:
+     264ms → 136ms worst single frame during a real scroll) — but ONLY once
+     paired with HeroDirector's own fix (splitting the chapter still's push
+     into two short tweens instead of one running the whole hold). Tested
+     each in isolation: the CSS hints alone against the OLD long-running
+     push barely moved the needle: worst frame 454ms → 264ms. The short
+     push alone, WITHOUT these hints, was measured WORSE than doing
+     nothing — 2,160ms of raster for one chapter crossfade, against 1,029ms
+     unfixed. Read literally: an un-promoted `background-image` layer that
+     starts and stops animating a `scale()` transform pays MORE to
+     re-establish itself each time than one continuously scaling never
+     bothers to re-establish. Do not remove either half of this fix without
+     re-measuring both together — removing one silently un-fixes the other. */
+  backface-visibility: hidden;
 }
 
 /* THE THEME-ADAPTIVE BASE PLATE (Task G3).
@@ -281,10 +299,11 @@
   position: absolute;
   inset: 0;
   /* 1 + (1.14 - 1) * 1.10 = 1.154. */
-  transform: scale(1.154);
+  transform: scale(1.154) translateZ(0);
   transform-origin: 50% 42%;
   pointer-events: none;
   will-change: transform;
+  backface-visibility: hidden;
 }
 
 .hero[data-armed] .hero-plate-mid {
@@ -344,8 +363,9 @@
      rest-state contract as the other plates (GSAP's `fromTo` sets it
      explicitly, but a mounted plate sits here for the ~0.02 of progress
      between its mount threshold and its own tween). */
-  transform: scale(1.06);
-  will-change: transform;
+  transform: scale(1.06) translateZ(0);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 .hero[data-armed] .hero-plate-chapter {
@@ -425,10 +445,11 @@
   position: absolute;
   inset: 0;
   /* 1 + (1.14 - 1) * 1.85 = 1.259. */
-  transform: scale(1.259);
+  transform: scale(1.259) translateZ(0);
   transform-origin: 50% 42%;
   pointer-events: none;
   will-change: transform;
+  backface-visibility: hidden;
 }
 
 .hero[data-armed] .hero-plate-fg {

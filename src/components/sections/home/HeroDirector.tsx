@@ -327,7 +327,11 @@ const CHAPTER_FADE = 0.033;
 const CHAPTER_FADE_OUT = 0.028;
 
 /**
- * Each still's own push, played across its whole visible window.
+ * Each still's own push. Wave L split what used to be one tween spanning
+ * the whole visible window into two short ones at the crossfade edges only
+ * (see the tween site for the full performance story — a continuous scale
+ * on a `background-image` layer was the dominant cost of the entire hero).
+ * The table below is unchanged; only WHEN the range is traversed changed.
  *
  * `from` is the rest scale every chapter plate holds in CSS (the same
  * rest-state contract the other plates keep). `to` deepens beat by beat —
@@ -629,15 +633,48 @@ export function HeroDirector() {
             clear - CHAPTER_FADE_OUT,
           );
 
-          // The still's own push, spanning its whole visible window so the
-          // move is already under way when it dissolves in and still running
-          // when it dissolves out — the arrival reads as a continuation of
-          // the camera, not a freeze frame. Scale only; see CHAPTER_PUSH.
+          // The still's own push (Wave L) — split across the two crossfade
+          // edges rather than run continuously across the whole visible
+          // window. It used to: one tween, `push.from` to `push.to`, spanning
+          // `clear − enter` (the ENTIRE hold, ~270-370px). Measured with a
+          // real CDP trace (task report), that single continuous scale was
+          // the dominant cost of the whole hero: a chapter crossfade window
+          // rasterized 5-6x more than the base camera's own continuous zoom
+          // alone (308 vs 61 RasterTask events over the same real scroll
+          // distance; 1,029ms vs 231ms of raster time) — a background-image
+          // layer under continuous CSS transform: scale() apparently cannot
+          // settle into a single cached raster the way a fixed-scale layer
+          // can, so every frame of the LONG hold was paying a re-rasterize
+          // cost for a still nobody had scrolled past yet. That, not the
+          // crossfade duration Wave I already fixed, is what read as
+          // "flicker"/"bad response" during a real scroll.
+          //
+          // The photo still arrives with motion and still leaves with
+          // motion — the two tweens below run ONLY across CHAPTER_FADE /
+          // CHAPTER_FADE_OUT, the exact windows the opacity crossfade is
+          // already animating, so the eye is absorbing a dissolve at the
+          // same moment as the scale change on both ends. Between them the
+          // scale is never touched: GSAP writes nothing, the layer's raster
+          // is never invalidated, and a still held for the bulk of its
+          // window (the majority of its ~270-370px, per Wave I's own table)
+          // now costs the same as a static image, because it is one.
+          // `pushMid` splits the total range evenly between the two edges —
+          // arriving having done half the push, leaving having done the
+          // rest — so the still's own transform-origin composition (each
+          // chapter's own value, above) still reads as "growing toward the
+          // subject" on the way in and "continuing past it" on the way out.
+          const pushMid = push.from + (push.to - push.from) / 2;
           tl.fromTo(
             plate,
             { scale: push.from },
-            { scale: push.to, duration: clear - enter, ease: "power1.inOut", immediateRender: false },
+            { scale: pushMid, duration: CHAPTER_FADE, ease: "power2.inOut", immediateRender: false },
             enter,
+          );
+          tl.fromTo(
+            plate,
+            { scale: pushMid },
+            { scale: push.to, duration: CHAPTER_FADE_OUT, ease: "power2.inOut" },
+            clear - CHAPTER_FADE_OUT,
           );
         });
 
