@@ -9,6 +9,11 @@
  * page.tsx in that exact segment folder — every other page's own
  * `openGraph` object (built here) silently replaced it with no image at
  * all until `pageMetadata` set `images` explicitly.
+ *
+ * Also locks in Task G6's per-locale OG image contract: `en` uses the
+ * dynamic Satori route, `ar` uses the static Chromium-rendered PNG
+ * (`public/og/og-ar.png`) — see `metadata.ts`'s `ogImageUrl` comment for
+ * why the two locales diverge (Satori cannot shape Arabic script).
  */
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -43,13 +48,13 @@ test("pageMetadata sets an absolute, locale-scoped og:image and twitter:image fo
   const ogImages = meta.openGraph && "images" in meta.openGraph ? meta.openGraph.images : undefined;
   assert.ok(Array.isArray(ogImages) && ogImages.length === 1);
   const [image] = ogImages as Array<{ url: string; width: number; height: number; alt: string }>;
-  assert.equal(image.url, `${SITE_URL}/ar/opengraph-image`);
+  assert.equal(image.url, `${SITE_URL}/og/og-ar.png`);
   assert.equal(image.width, 1200);
   assert.equal(image.height, 630);
   assert.ok(image.alt.length > 0);
 
   assert.deepEqual(meta.twitter && "images" in meta.twitter ? meta.twitter.images : undefined, [
-    `${SITE_URL}/ar/opengraph-image`,
+    `${SITE_URL}/og/og-ar.png`,
   ]);
 });
 
@@ -63,7 +68,16 @@ test("pageMetadata's og:image locale matches the page locale, not always 'en'", 
   const arUrl = (arImages as Array<{ url: string }>)[0].url;
 
   assert.equal(enUrl, `${SITE_URL}/en/opengraph-image`);
-  assert.equal(arUrl, `${SITE_URL}/ar/opengraph-image`);
+  assert.equal(arUrl, `${SITE_URL}/og/og-ar.png`);
+});
+
+test("pageMetadata's ar og:image is the static Chromium-rendered PNG, not the Satori route (Task G6 — Satori cannot shape Arabic)", () => {
+  const ar = pageMetadata({ locale: "ar", path: "/pricing", title: "t", description: "d" });
+  const arImages = ar.openGraph && "images" in ar.openGraph ? ar.openGraph.images : undefined;
+  const arUrl = (arImages as Array<{ url: string }>)[0].url;
+
+  assert.equal(arUrl, `${SITE_URL}/og/og-ar.png`);
+  assert.ok(!arUrl.includes("/opengraph-image"), "ar og:image must not point at the dynamic Satori route");
 });
 
 test("ROUTES excludes notFound and has 13 indexable entries", () => {

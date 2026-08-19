@@ -148,7 +148,23 @@ export function pageMetadata({ locale, path, title, description }: PageMetadataO
   // auto-attached image, so every non-home page silently shipped without an
   // `og:image`/`twitter:image` tag. Setting `images` explicitly here fixes
   // every page (including home) with one consistent, locale-correct URL.
-  const ogImageUrl = `${origin}/${locale}/opengraph-image`;
+  //
+  // `en` keeps pointing at the dynamic `next/og` (Satori) route — Satori
+  // shapes Latin type fine. `ar` points at a static, pre-rendered PNG
+  // instead (Task G6): Satori cannot shape Arabic script at all (throws
+  // `lookupType: 5 - substFormat: 3 is not yet supported` — see Task G5's
+  // report and `opengraph-image.tsx`'s `CONTENT` doc comment for the full
+  // repro), so `/ar/opengraph-image` can only ever ship an English-fallback
+  // tagline. `public/og/og-ar.png` (built by
+  // `scripts/build-og-ar-card.mjs`, which renders the same card design in
+  // headless Chromium — a real browser shapes Arabic correctly) carries the
+  // actual Arabic tagline instead. The dynamic `/ar/opengraph-image` route
+  // itself is deliberately left in place rather than deleted or redirected:
+  // nothing links to it anymore after this change, so it is inert, and
+  // removing a prerendered Next.js special-file route is more churn (route
+  // table, tests, the file's own doc comments) than the zero cost of an
+  // unlinked static export earns back.
+  const ogImageUrl = locale === "ar" ? `${origin}/og/og-ar.png` : `${origin}/${locale}/opengraph-image`;
 
   return {
     metadataBase: new URL(origin),
