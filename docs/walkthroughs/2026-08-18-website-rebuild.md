@@ -295,7 +295,7 @@ For whoever sets up the Vercel project:
   |---|---|---|
   | `SITE_URL` | Yes | `https://www.scripe.org` — used for canonical URLs, sitemap, and Open Graph tags. No trailing slash. |
   | `NEXT_PUBLIC_API_BASE_URL` | Yes | The SCRIPE backend's public API base (e.g. `https://api.scripe.org/api`) — used for the live pricing lookup. Public by design (ships to the browser). Also determines the `connect-src` origin in the CSP header (`next.config.ts`), so it must be set before the pricing feature can reach the backend in production. |
-  | `NEXT_PUBLIC_APP_URL` | No (defaults to `https://app.scripe.org`) | The SCRIPE app's sign-in destination — read by `src/components/chrome/ia.ts` for the header/mobile-nav "Sign In" CTA link. Public by design (ships to the browser). |
+  | `NEXT_PUBLIC_APP_URL` | No (defaults to `https://admin.scripe.org`) | The SCRIPE app's sign-in destination — read by `src/components/chrome/ia.ts` for the header/mobile-nav "Sign In" CTA link. Public by design (ships to the browser). Was `app.scripe.org` at the time this table was written; the app is hosted at `admin.scripe.org` instead. |
   | `LEADS_ENDPOINT` | No (until backend ready) | Where contact-form submissions are POSTed. Server-only — never exposed to the browser. Leave unset and the contact form runs in its honest "not connected" mode described in §5/§7. |
 
 - **Domain:** attach `www.scripe.org` as the production domain, and configure an apex

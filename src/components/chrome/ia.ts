@@ -167,9 +167,11 @@ export const ACCENT_DOT_CLASS: Record<CardAccent, string> = {
  * fallback-domain convention `next.config.ts` already uses for
  * `NEXT_PUBLIC_API_BASE_URL` (falling back to `https://api.scripe.org`), so
  * the chrome links somewhere real in every environment even before the env
- * var is configured.
+ * var is configured. The app is hosted at `admin.scripe.org`, not the
+ * `app.` subdomain the naming pattern would suggest — this fallback was
+ * corrected to match after shipping with the wrong one.
  */
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://app.scripe.org";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://admin.scripe.org";
 
 /** Primary conversion CTA — "Book a Demo", routed to the contact page. */
 export const PRIMARY_CTA: CtaLink = { labelKey: "nav.bookDemo", href: "/contact" };

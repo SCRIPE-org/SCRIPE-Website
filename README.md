@@ -76,6 +76,7 @@ cp .env.example .env.local
 | `SITE_URL` | No — has a working default | Public origin used for canonicals, OG images, and the sitemap. |
 | `SITE_INDEXABLE` | No | Opts a **non-Vercel** production host into search indexing. Vercel production is auto-detected via `VERCEL_ENV`; leave unset everywhere else (previews, local dev, CI) — indexing defaults closed. |
 | `NEXT_PUBLIC_API_BASE_URL` | No — has a working default | SCRIPE backend API base for the live pricing/currency feature. Public by design (`NEXT_PUBLIC_*`). |
+| `NEXT_PUBLIC_APP_URL` | No — has a working default | The SCRIPE app's sign-in destination — the header/mobile-nav "Sign In" CTA. Public by design. Currently defaults to `https://admin.scripe.org`. |
 | `LEADS_ENDPOINT` | No | Contact-form lead delivery endpoint. Server-only, never bundled to the client. Unset by default — the form still validates and submits, and honestly tells the visitor it isn't connected yet rather than faking success. See `src/lib/leads/submit-lead.ts`. |
 
 ## Scripts
