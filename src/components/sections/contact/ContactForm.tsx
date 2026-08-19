@@ -185,7 +185,13 @@ const ORG_TYPE_OPTIONS: ReadonlyArray<{ value: string; labelKey: string }> = [
  *  in — the native arrow reaches the same result (and already sits on the
  *  correct side in RTL) with no extra markup. */
 const CONTROL_CLASS =
-  "w-full rounded-md border border-border-subtle bg-surface-page px-4 py-3 text-[length:var(--fs-body)] " +
+  // `border-strong`, not `border-subtle`: these are input boundaries, which
+  // WCAG 1.4.11 holds to 3:1 against their background as UI components, not to
+  // the 1.4.3 text ratio. Measured in the dark palette (the only one that ships
+  // today): subtle #26282c on surface-page #0b0b0e is 1.33:1 — effectively an
+  // invisible field on the site's only conversion surface. Strong #666a70 is
+  // 3.62:1 and clears it.
+  "w-full rounded-md border border-border-strong bg-surface-page px-4 py-3 text-[length:var(--fs-body)] " +
   "text-text-primary placeholder:text-text-muted transition-colors duration-[var(--motion-quick)] " +
   "ease-[var(--ease-standard)] aria-invalid:border-accent-club disabled:cursor-not-allowed disabled:opacity-60";
 

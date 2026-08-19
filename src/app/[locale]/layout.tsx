@@ -11,6 +11,7 @@ import { dirFor, routing, type Locale } from "@/i18n/routing";
 import { buildOrganization } from "@/lib/seo/jsonld";
 import { pageMetadata, siteUrl } from "@/lib/seo/metadata";
 import { ThemeGuard } from "@/theme/ThemeGuard";
+import { LOCKED_THEME, THEME_LOCKED_TO_DARK } from "@/theme/theme-lock";
 import { NO_JS_SCRIPT, THEME_SCRIPT } from "@/theme/theme-script";
 
 export function generateStaticParams() {
@@ -74,6 +75,18 @@ export default async function LocaleLayout({
       lang={locale}
       dir={dirFor(locale)}
       className={`${fontClassesFor(locale as "en" | "ar")} no-js`}
+      /* While theming is locked (`theme/theme-lock.ts`) the resolved theme is a
+         BUILD-TIME CONSTANT, so it belongs in the server render rather than in a
+         script the client has to run. The stylesheet treats a missing
+         `data-theme` as light — bare `:root` IS the light palette — so without
+         this attribute a visitor whose JS never runs (disabled, blocked, CSP
+         failure, script error before the inline block) renders the withdrawn
+         light theme in full. THEME_SCRIPT below still runs and still owns
+         `color-scheme` and the `theme-color` meta; this just means the correct
+         palette is already in the markup before it does. When the lock lifts
+         this must go back to being script-resolved — a server-rendered constant
+         would flash for anyone whose stored preference is light. */
+      {...(THEME_LOCKED_TO_DARK ? { "data-theme": LOCKED_THEME } : {})}
       suppressHydrationWarning
     >
       <head>

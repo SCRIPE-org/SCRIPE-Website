@@ -14,7 +14,7 @@ import { ROUTES, siteUrl } from "@/lib/seo/metadata";
 
 /**
  * Builds the site's sitemap: `ROUTES.length * routing.locales.length`
- * entries (11 routes × 2 locales today).
+ * entries (13 routes × 2 locales today).
  *
  * @returns The sitemap entries Next.js serializes to `sitemap.xml`.
  */

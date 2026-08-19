@@ -158,12 +158,11 @@ export const privacyContent: LegalPageContent = {
         },
         {
           kind: "paragraph",
-          text: "Two small preferences live in your browser's own local storage instead, and never leave your device:",
+          text: "One small preference lives in your browser's own local storage instead, and never leaves your device:",
         },
         {
           kind: "list",
           items: [
-            "scripe-theme — remembers whether you last chose light or dark mode.",
             "scripe-currency — remembers a currency you manually chose on the Pricing page, if any.",
           ],
         },
@@ -179,7 +178,7 @@ export const privacyContent: LegalPageContent = {
       blocks: [
         {
           kind: "paragraph",
-          text: "This Site loads no analytics package, no advertising pixel, no chat widget, and no third-party font or script of any kind. Every font is hosted on our own server; the only two inline scripts on the page are ours, and both exist purely to apply your saved theme before the page paints and to detect whether JavaScript is enabled — neither one contacts any server.",
+          text: "This Site loads no analytics package, no advertising pixel, no chat widget, and no third-party font or script of any kind. Every font is hosted on our own server; the only two inline scripts on the page are ours, and both exist purely to set the page's colour scheme before it paints and to detect whether JavaScript is enabled — neither one contacts any server.",
         },
         {
           kind: "paragraph",
