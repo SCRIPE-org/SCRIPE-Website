@@ -90,6 +90,43 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       />
       <JsonLd data={buildSoftwareApplication(origin, locale)} />
 
+      {/* Wave K: the hero's own background plate is a CSS `background-image`
+          (home.css §2 — see Hero.tsx's header for why it isn't an `<img>`),
+          which the browser's preload scanner cannot discover until the
+          stylesheet is parsed AND the element is laid out — measurably later
+          than an `<img>` or an explicit preload hint, and the direct cause of
+          the reported "screen is black until the image loads." Only possible
+          to fix cleanly now that theming is locked to dark
+          (`src/theme/theme-lock.ts`): the plate's URL used to depend on
+          client-resolved theme state, which a server-rendered preload hint
+          cannot know; with the lock, the dark plate IS the only plate any
+          visitor is served, so its path is a build-time constant. AVIF only
+          (the format `--hero-plate` lists first, and what `home.css` prefers
+          whenever the browser supports it) — a browser without AVIF support
+          simply ignores this hint and falls through to the WebP `home.css`
+          already declares, so nothing is lost for that minority. Two links,
+          not one, mirroring the exact `(max-aspect-ratio: 3 / 4)` breakpoint
+          `home.css` §1b uses to choose between the landscape and portrait
+          crop — preloading the wrong one would waste bandwidth on every
+          visitor whose aspect ratio doesn't match it.
+          REVISIT WHEN THE THEME LOCK LIFTS: this becomes two plates × two
+          themes, and a server-rendered preload can only ever pick one theme
+          confidently — see the lock's own file for the restore procedure. */}
+      <link
+        rel="preload"
+        as="image"
+        href="/media/hero/plate-background.avif"
+        type="image/avif"
+        media="(min-aspect-ratio: 3.0001/4)"
+      />
+      <link
+        rel="preload"
+        as="image"
+        href="/media/hero/plate-background-portrait.avif"
+        type="image/avif"
+        media="(max-aspect-ratio: 3/4)"
+      />
+
       <Hero content={content.hero} />
       <ProductFamily content={content.productFamily} />
       <PlatformOverview content={content.platform} />
