@@ -69,13 +69,6 @@ export const homeContent: HomeContent = {
     stamp: "الثقة",
     title: "موضع ثقة المنظمات الرياضية الحديثة",
     subtitle: "منصة واحدة للأندية والأكاديميات والمنشآت والمنظمات متعددة الرياضات.",
-    categories: [
-      "أندية كرة القدم",
-      "الأكاديميات الرياضية",
-      "أندية البادل",
-      "أكاديميات السباحة",
-      "المنشآت الرياضية",
-    ],
   },
   productFamily: {
     stamp: "عائلة المنتجات",
@@ -119,7 +112,6 @@ export const homeContent: HomeContent = {
     board: {
       title: "اليوم · الثلاثاء",
       badge: "دليل من المنتج",
-      illustrativeTag: "مثال توضيحي",
       rows: [
         {
           time: "16:30",

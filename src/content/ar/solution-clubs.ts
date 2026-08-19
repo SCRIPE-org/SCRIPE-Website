@@ -39,7 +39,6 @@ export const solutionClubsContent: SolutionContent = {
         { label: "الأعضاء", value: "1,860" },
         { label: "مباريات هذا الشهر", value: "23" },
       ],
-      note: "بيانات تجريبية — تُستبدل ببياناتك أثناء التهيئة.",
     },
   },
   painPoints: {
@@ -105,7 +104,6 @@ export const solutionClubsContent: SolutionContent = {
       { value: "23", label: "مباريات هذا الشهر" },
       { value: "97%", label: "الحضور المُسجَّل" },
     ],
-    note: "بيانات تجريبية — تمثّل منظمة متوسطة الحجم.",
   },
   otherSolutions: {
     title: "منظمة بشكل مختلف؟ النظام تحتها هو نفسه.",

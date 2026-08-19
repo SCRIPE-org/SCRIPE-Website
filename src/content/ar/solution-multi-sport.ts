@@ -48,7 +48,6 @@ export const solutionMultiSportContent: SolutionContent = {
         { label: "الرياضات", value: "7" },
         { label: "خط تقارير واحد", value: "المجموعة" },
       ],
-      note: "بيانات تجريبية — تُستبدل ببياناتك أثناء التهيئة.",
     },
   },
   painPoints: {
@@ -114,7 +113,6 @@ export const solutionMultiSportContent: SolutionContent = {
       { value: "12,400", label: "إجمالي الأعضاء" },
       { value: "SAR 214K", label: "إيرادات المجموعة" },
     ],
-    note: "بيانات تجريبية — تمثّل منظمة متوسطة الحجم.",
   },
   otherSolutions: {
     title: "منظمة بشكل مختلف؟ النظام تحتها هو نفسه.",

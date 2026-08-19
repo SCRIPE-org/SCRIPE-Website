@@ -2,20 +2,27 @@
  * Site footer.
  *
  * Server Component — renders the brand lockup, `FOOTER_COLUMNS` from
- * `ia.ts`, the social row (channels with no published URL yet render as
- * muted text, never a guessed link) and the legal/rights line. Quiet visual
- * register throughout: muted text, subtle borders, no accent fills — the
- * footer is reference material, not another call-to-action surface.
+ * `ia.ts` and the legal/rights line. Quiet visual register throughout:
+ * muted text, subtle borders, no accent fills — the footer is reference
+ * material, not another call-to-action surface.
+ *
+ * A cleanup wave removed the social channel row (LinkedIn/X/Instagram/
+ * YouTube, every one `href: null` since none was published) and its
+ * "Social channels are not published yet." apology line, plus the
+ * `SocialLink`/`SOCIAL_LINKS` data behind them in `ia.ts` — a row of dead,
+ * unclickable labels plus a footnote explaining why they are dead reads
+ * worse than having no social row at all. Add a `SocialLink[]` list back to
+ * `ia.ts` and render it here once a real channel exists to link to.
  */
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { cx } from "@/components/ui/cx";
 import { BrandMark } from "./BrandMark";
-import { ACCENT_DOT_CLASS, FOOTER_COLUMNS, SOCIAL_LINKS } from "./ia";
+import { ACCENT_DOT_CLASS, FOOTER_COLUMNS } from "./ia";
 
 /**
- * Renders the footer: brand lockup + tagline + socials, `FOOTER_COLUMNS`,
- * and the rights line. See the file header for the full contract.
+ * Renders the footer: brand lockup + tagline, `FOOTER_COLUMNS`, and the
+ * rights line. See the file header for the full contract.
  */
 export async function Footer() {
   const t = await getTranslations();
@@ -33,28 +40,6 @@ export async function Footer() {
               </span>
             </Link>
             <p className="text-text-secondary max-w-[26ch] text-[length:var(--fs-small)]">{t("footer.tagline")}</p>
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-              {SOCIAL_LINKS.map((social) =>
-                social.href ? (
-                  <a
-                    key={social.label}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-text-secondary hover:text-text-primary text-[length:var(--fs-small)]"
-                  >
-                    {social.label}
-                  </a>
-                ) : (
-                  <span key={social.label} className="text-text-muted text-[length:var(--fs-small)]">
-                    {social.label}
-                  </span>
-                ),
-              )}
-            </div>
-            {SOCIAL_LINKS.every((social) => social.href === null) && (
-              <p className="text-text-muted text-[length:var(--fs-meta)]">{t("footer.socialNote")}</p>
-            )}
           </div>
 
           {FOOTER_COLUMNS.map((column) => (

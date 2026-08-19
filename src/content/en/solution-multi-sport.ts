@@ -42,7 +42,6 @@ export const solutionMultiSportContent: SolutionContent = {
         { label: "Sports", value: "7" },
         { label: "One reporting line", value: "Group" },
       ],
-      note: "Sample data — replaced with yours during onboarding.",
     },
   },
   painPoints: {
@@ -111,7 +110,6 @@ export const solutionMultiSportContent: SolutionContent = {
       { value: "12,400", label: "Total members" },
       { value: "SAR 214K", label: "Group revenue" },
     ],
-    note: "Sample data — indicative of a mid-size organization.",
   },
   otherSolutions: {
     title: "Organized differently? The system underneath is the same.",

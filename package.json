@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "node --import tsx --test \"src/**/*.test.ts\"",
     "brand:build": "node scripts/build-brand-assets.mjs",
-    "media:build": "node scripts/build-media-assets.mjs"
+    "media:build": "node scripts/build-media-assets.mjs",
+    "fonts:subset": "node scripts/subset-fonts.mjs"
   },
   "dependencies": {
     "gsap": "^3.15.0",

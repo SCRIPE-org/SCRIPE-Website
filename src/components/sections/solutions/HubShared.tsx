@@ -9,6 +9,13 @@
  * Task E4: the checklist panel moved from a flat `border` onto the shared
  * elevation ramp (`.atmo-panel`, `src/styles/tokens/atmosphere.css`). A
  * Server Component; `Reveal` is the only client leaf.
+ *
+ * Task G2 deliberately left this heading on `--fs-h1` (48px) rather than
+ * riding the display tier's Task G2 upsize to 5.5rem/88px: the heading
+ * shares a flex row with the checklist panel on a 420px basis each, and at
+ * that measure the display tier would wrap to six-plus lines instead of
+ * reading as a heading. See the inline comment on the `<h2>` below for the
+ * full reasoning.
  */
 import type { SolutionsHubContent } from "@/content/types";
 import { Reveal } from "@/components/motion/Reveal";

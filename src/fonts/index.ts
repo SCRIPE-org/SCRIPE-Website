@@ -26,10 +26,10 @@
  *    `typography.css`, so they don't need to live in the Arabic font too).
  *    Variable axes (weight, and Archivo's width axis) are untouched —
  *    subsetting only drops unused GLYPHS, never variation range. Regenerate
- *    with (from a scratch directory, no project dependency added):
- *    `npm install subset-font` then a script calling
- *    `subsetFont(buffer, text, { targetFormat: "woff2" })` per face — see
- *    the Wave G Task G1 report for the exact character-range script used.
+ *    with `npm run fonts:subset` (`scripts/subset-fonts.mjs` — documented,
+ *    rerunnable, no project dependency added; that script's own header has
+ *    the exact character-range method and the scratch-install recipe for
+ *    its one build-time dependency).
  */
 import localFont from "next/font/local";
 

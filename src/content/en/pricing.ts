@@ -44,6 +44,17 @@
  * to sales.") reuses `resources.html`'s own already-approved FAQ heading
  * strings, which fit the pre-sales-call framing this page needs just as
  * well as the resources page's.
+ *
+ * A cleanup wave found the "confirmed with your operations team before
+ * signing" pricing hedge stated FOUR times on this one page (`meta
+ * .description`, `hero.subtitle`, `plansFootnote` and `comparison.caption`)
+ * — repetition that reads as anxious over-qualifying rather than honest
+ * disclosure. Kept once, on `plansFootnote`: the strongest placement, sitting
+ * directly under the plan cards at the exact moment a reader is looking at
+ * the numbers, rather than pre-empting them before they have seen a price
+ * (the old `hero.subtitle` placement) or repeating it again after the
+ * comparison table (the old `comparison.caption` placement, which now keeps
+ * only its trial-scoping sentence).
  */
 import type { PricingContent } from "../types";
 
@@ -51,15 +62,14 @@ export const pricingContent: PricingContent = {
   meta: {
     title: "Pricing",
     description:
-      "SCRIPE pricing: Starter, Growth and Enterprise, billed monthly or yearly and priced around branches, sports and volume. Indicative pricing, confirmed with your operations team before signing.",
+      "SCRIPE pricing: Starter, Growth and Enterprise, billed monthly or yearly and priced around branches, sports and volume.",
     breadcrumbHome: "Home",
     breadcrumbCurrent: "Pricing",
   },
   hero: {
     label: "Pricing",
     title: "Priced around branches, sports and volume.",
-    subtitle:
-      "Three plans, billed monthly or yearly. Every plan is confirmed with your operations team before signing — indicative figures below.",
+    subtitle: "Three plans, billed monthly or yearly.",
     primaryCta: "Book a Demo",
     imageAlt:
       "Night aerial of a city with four separate sports facilities lit up across it — each a stadium, pool or court cluster of its own",
@@ -140,8 +150,7 @@ export const pricingContent: PricingContent = {
     title: "What each plan actually includes.",
     subtitle: "Every plan runs on the same record. The difference is how much of the operation it covers.",
     columnHeader: "Compare plans",
-    caption:
-      "Every plan is confirmed with your operations team before signing. Trials are set up with our team so your programs, surfaces and staff are mapped before you test it.",
+    caption: "Trials are set up with our team so your programs, surfaces and staff are mapped before you test it.",
     includedLabel: "Included",
     notIncludedLabel: "Not included",
     groups: [

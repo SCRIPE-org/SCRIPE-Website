@@ -10,11 +10,10 @@
  *   captions (`data-cap`), the progress-rail labels (`data-tick`), the
  *   scroll hint, and the closing scene's two CTAs. Task G2 dropped the
  *   ported Academies caption (`data-cap` 2) from the flight: it framed the
- *   same crop of the plate as the Clubs caption, and its copy is already
- *   carried below the fold by `trusted.categories` ("Sports Academies"),
- *   `productFamily.products` (the Academy product + "Explore Sports
- *   Academies") and `solutions.items`. The hero now flies three
- *   product-distinct chapters plus the destination beat.
+ *   same crop of the plate as the Clubs caption, and its subject is already
+ *   carried below the fold by `productFamily.products` (the Academy product
+ *   + "Explore Sports Academies") and `solutions.items`. The hero now flies
+ *   three product-distinct chapters plus the destination beat.
  * - `productFamily` is the one recomposed section: the current Sports
  *   Operations OS product framing (SCRIPE Venue / Academy / Football
  *   Intelligence) presented with approved copy lines — descriptions reuse
@@ -78,13 +77,6 @@ export const homeContent: HomeContent = {
     stamp: "Trusted",
     title: "Trusted by modern sports organizations",
     subtitle: "One platform for clubs, academies, venues and multi-sport organizations.",
-    categories: [
-      "Football Clubs",
-      "Sports Academies",
-      "Padel Clubs",
-      "Swimming Academies",
-      "Sports Venues",
-    ],
   },
   productFamily: {
     stamp: "Product family",
@@ -129,7 +121,6 @@ export const homeContent: HomeContent = {
     board: {
       title: "Today · Tuesday",
       badge: "Product evidence",
-      illustrativeTag: "Illustrative",
       rows: [
         {
           time: "16:30",

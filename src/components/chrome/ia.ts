@@ -6,9 +6,9 @@
  * consts below instead of hand-authoring their own link lists, so the IA
  * changes in exactly one place. Mirrors the legacy static site's
  * `backup/scripe-static/js/navbar.js` (`SOLUTIONS`, `PRIMARY_NAV`,
- * `FOOTER_COLUMNS`, `SOCIAL`, `LEGAL_LINKS`) with two deliberate departures
- * from that source, both requested for this rebuild rather than carried over
- * by accident:
+ * `FOOTER_COLUMNS`, `SOCIAL`, `LEGAL_LINKS`) with deliberate departures from
+ * that source, requested for this rebuild rather than carried over by
+ * accident:
  *
  * 1. `PRIMARY_NAV` adds `company` as a fifth top-level item (the legacy
  *    desktop bar only surfaced it in the mobile sheet).
@@ -17,6 +17,14 @@
  *    dropped in favor of a dedicated "Legal" column (Privacy/Terms), which
  *    the legacy site rendered as a separate un-columned row rather than a
  *    footer column.
+ * 3. A cleanup wave pulled `resources` back OUT of `PRIMARY_NAV` — the
+ *    `/resources` route and its guides/FAQ/articles content stay live, but
+ *    the page reads thin next to the other four primary items until it has
+ *    more real content. It stays reachable via `nav.resources` in the
+ *    "company" `FOOTER_COLUMNS` entry below instead of the primary bar.
+ * 4. The same wave removed the `SOCIAL` placeholder list entirely (every
+ *    entry was `href: null` — no channel is published yet); see
+ *    `SocialLink`'s and `Footer.tsx`'s doc comments.
  *
  * Every label/description is a dot-path message key (e.g. `"nav.platform"`),
  * never literal copy — components resolve them with next-intl's root-level
@@ -92,24 +100,24 @@ export interface CtaLink {
   external?: boolean;
 }
 
-/** A social channel entry. `href: null` means the channel is not yet
- *  published — rendered as muted text instead of a link, never a guessed
- *  or placeholder URL (see `footer.socialNote`). */
+/** A social channel entry, for a future `SOCIAL_LINKS` list once a real
+ *  channel exists to link to (a cleanup wave removed the placeholder list
+ *  that used to live here — see `Footer.tsx`'s header). */
 export interface SocialLink {
   /** Platform name. A proper noun, so it is not a translation key. */
   label: string;
-  href: string | null;
+  href: string;
 }
 
 /**
  * Primary desktop/mobile navigation, left to right: Platform, Solutions
- * (menu), Pricing, Resources, Company.
+ * (menu), Pricing, Company. Resources is deliberately absent — see this
+ * file's header, departure 3 — but stays linked from the footer.
  */
 export const PRIMARY_NAV: NavLink[] = [
   { key: "platform", labelKey: "nav.platform", href: "/platform" },
   { key: "solutions", labelKey: "nav.solutions", href: "/solutions", hasMenu: true },
   { key: "pricing", labelKey: "nav.pricing", href: "/pricing" },
-  { key: "resources", labelKey: "nav.resources", href: "/resources" },
   { key: "company", labelKey: "nav.company", href: "/company" },
 ];
 
@@ -202,6 +210,7 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
       { labelKey: "footer.aboutScripe", href: "/company" },
       { labelKey: "nav.contact", href: "/contact" },
       { labelKey: "nav.pricing", href: "/pricing" },
+      { labelKey: "nav.resources", href: "/resources" },
       { labelKey: "nav.bookDemo", href: "/contact" },
     ],
   },
@@ -213,13 +222,4 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
       { labelKey: "footer.terms", href: "/company#legal" },
     ],
   },
-];
-
-/** Social channels. Every `href` is `null` until a real profile exists —
- *  see `SocialLink`'s doc comment; `footer.socialNote` covers the display. */
-export const SOCIAL_LINKS: SocialLink[] = [
-  { label: "LinkedIn", href: null },
-  { label: "X", href: null },
-  { label: "Instagram", href: null },
-  { label: "YouTube", href: null },
 ];

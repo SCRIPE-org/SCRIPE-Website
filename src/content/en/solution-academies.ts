@@ -38,7 +38,6 @@ export const solutionAcademiesContent: SolutionContent = {
         { label: "Sessions per week", value: "412" },
         { label: "Attendance marked", value: "97%" },
       ],
-      note: "Sample data — replaced with yours during onboarding.",
     },
   },
   painPoints: {
@@ -107,7 +106,6 @@ export const solutionAcademiesContent: SolutionContent = {
       { value: "97%", label: "Attendance marked" },
       { value: "+124", label: "Members this month" },
     ],
-    note: "Sample data — indicative of a mid-size organization.",
   },
   otherSolutions: {
     title: "Organized differently? The system underneath is the same.",

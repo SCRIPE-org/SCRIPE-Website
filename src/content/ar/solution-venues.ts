@@ -45,7 +45,6 @@ export const solutionVenuesContent: SolutionContent = {
         { label: "حجوزات هذا الأسبوع", value: "268" },
         { label: "معدل الاستخدام", value: "92%" },
       ],
-      note: "بيانات تجريبية — تُستبدل ببياناتك أثناء التهيئة.",
     },
   },
   painPoints: {
@@ -111,7 +110,6 @@ export const solutionVenuesContent: SolutionContent = {
       { value: "92%", label: "معدل الاستخدام" },
       { value: "+18%", label: "الطلب في ساعات الذروة" },
     ],
-    note: "بيانات تجريبية — تمثّل منظمة متوسطة الحجم.",
   },
   otherSolutions: {
     title: "منظمة بشكل مختلف؟ النظام تحتها هو نفسه.",

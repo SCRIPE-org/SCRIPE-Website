@@ -175,16 +175,19 @@ export interface HomeContent {
      *  corner beats (Clubs → Venues → Intelligence) followed by the
      *  destination beat that carries the CTAs in armed (cinematic) mode.
      *  Task G2 cut the former five-chapter list — the Academies chapter
-     *  repeated the Clubs framing on the same crop of the plate and its copy
-     *  is already carried below the fold by `trusted.categories`,
-     *  `productFamily.products` and `solutions.items`. */
+     *  repeated the Clubs framing on the same crop of the plate and its
+     *  subject is already carried below the fold by `productFamily.products`
+     *  and `solutions.items`. */
     chapters: HeroChapter[];
     /** Label of the primary call-to-action button. */
     primaryCta: string;
     /** Label of the secondary call-to-action button. */
     secondaryCta: string;
   };
-  /** Honest positioning strip (`#trusted`) — categories, never fake logos. */
+  /** Honest positioning strip (`#trusted`) — heading + sentence only, never
+   *  a logo wall (a cleanup wave removed the former category-pill row for
+   *  reading like one by position/styling despite not naming customers —
+   *  see `TrustStrip.tsx`'s header). */
   trusted: {
     /** Film-slate stamp label — the ground sequence continues the hero
      *  rail's timecode below the fold (`06 / <stamp>`; see `src/styles/
@@ -195,8 +198,6 @@ export interface HomeContent {
     title: string;
     /** Supporting sentence. */
     subtitle: string;
-    /** Organization categories SCRIPE is built for. */
-    categories: string[];
   };
   /** Product family section (`#product`) — the three SCRIPE products. */
   productFamily: {
@@ -226,11 +227,9 @@ export interface HomeContent {
     board: {
       /** Panel header label (e.g. "Today · Tuesday"). */
       title: string;
-      /** Honesty badge shown at the panel header end. */
+      /** Honesty badge shown at the panel header end — the rows' names and
+       *  times are a staged example, not live customer data. */
       badge: string;
-      /** Quiet mono disclosure beside the badge: the rows' names and times
-       *  are a staged example, not live customer data. */
-      illustrativeTag: string;
       /** The board's schedule rows. */
       rows: BoardRow[];
     };
@@ -580,12 +579,12 @@ export interface SolutionContent {
     imageAlt?: string;
     /** The "what this looks like" mini evidence panel beside the hero copy. */
     snapshot: {
-      /** Panel label (e.g. "What this looks like"). */
+      /** Panel label (e.g. "What this looks like") — already frames the
+       *  stats below as illustrative, so the panel carries no separate
+       *  sample-data footnote (see `SolutionHero.tsx`'s header). */
       label: string;
       /** Three illustrative metrics. */
       stats: SolutionStat[];
-      /** Honesty note under the stats (sample data, not live). */
-      note: string;
     };
   };
   /** The friction this solution exists to remove. */
@@ -614,8 +613,6 @@ export interface SolutionContent {
     subtitle: string;
     /** Four illustrative headline figures. */
     stats: EvidenceStat[];
-    /** Honesty note under the strip (sample data, not live). */
-    note: string;
   };
   /** Heading for the cross-links to the other three solutions. The links
    *  themselves are not stored here — the `[slug]` template derives them

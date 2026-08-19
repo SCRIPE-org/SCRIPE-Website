@@ -7,12 +7,15 @@
  * Split composition: a start column carrying the slate, headline, supporting
  * sentence and both CTAs; an end column holding the operations-board
  * evidence panel — a real schedule surface with times, activities, owners
- * and status chips, honestly badged as product evidence. The row names and
- * times are a staged example, not live customer data, so the panel chrome
- * also carries a quiet mono `illustrativeTag` disclosure beside the badge
- * (muted, never lime — the section's one lime moment stays `.board-live`).
- * Task E3 gives the
- * board 3D presence: it rests slightly turned toward the copy like a desk
+ * and status chips, honestly badged as product evidence (row names and
+ * times are a staged example, not live customer data — the single header
+ * badge says so). A cleanup wave removed a second, redundant mono
+ * "Illustrative" tag that used to sit beside that badge: doubling the same
+ * disclosure read as defensive over-explaining rather than honest. The
+ * canonical "this is sample data" footnote for the product itself lives on
+ * `/platform`'s per-module evidence panels (`CapabilityEvidence.tsx`) —
+ * this teaser board keeps its one plain badge and nothing more. Task E3
+ * gives the board 3D presence: it rests slightly turned toward the copy like a desk
  * monitor (`.board-scene`/`.board-3d`, `src/styles/home.css` §13 — physical
  * rotation, flipped in RTL via `--tilt-dir`), levels flat on hover, and —
  * where CSS scroll-driven animation is supported and motion allowed —
@@ -85,9 +88,6 @@ export function PlatformOverview({ content }: PlatformOverviewProps) {
                 <span className="flex-1" />
                 <span className="border-border-subtle text-text-muted rounded-full border px-3 py-1 text-[length:var(--fs-meta)]">
                   {content.board.badge}
-                </span>
-                <span className="text-text-muted font-mono text-[length:var(--fs-meta)] font-medium uppercase tracking-[0.14em] [&:lang(ar)]:tracking-normal [&:lang(ar)]:normal-case">
-                  {content.board.illustrativeTag}
                 </span>
               </div>
               <ul className="m-0 list-none p-0">

@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { PHASE_DEVELOPMENT_SERVER } from "next/constants";
 import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
@@ -42,31 +43,54 @@ const securityHeaders = [
   },
 ];
 
-const nextConfig: NextConfig = {
-  /**
-   * `next dev` and `next build`/`next start` must never share one output
-   * directory. Next's own dev server already nests its per-process state a
-   * layer deeper (`{distDir}/dev/...`) than a production build, but both
-   * still read/write the SAME top-level `{distDir}/cache` (webpack/turbopack
-   * persistent cache, image-optimization cache) by default — a `next build`
-   * running while a stray `next dev` is still alive on the same checkout
-   * corrupts that shared cache and can leave a production `.next` missing
-   * its manifests (observed: `.next/server` + `.next/cache` present with no
-   * `BUILD_ID`/`static`, from exactly this collision). Giving dev its own
-   * top-level directory removes the shared cache entirely; `next start`
-   * always runs with `NODE_ENV=production` (never "development"), so it
-   * reliably resolves back to the real build's `.next`.
-   */
-  distDir: process.env.NODE_ENV === "development" ? ".next-dev" : ".next",
-  images: {
-    // AVIF first (best compression), WebP fallback for browsers/paths that
-    // skip AVIF — Next negotiates via the request's `Accept` header and
-    // serves the original format for anything that accepts neither.
-    formats: ["image/avif", "image/webp"],
-  },
-  async headers() {
-    return [{ source: "/:path*", headers: securityHeaders }];
-  },
-};
+/**
+ * Phase-based config, not a plain object — see the `distDir` property below
+ * for why. Next calls this with `(phase, { defaultConfig })` (`phase` is one
+ * of the `PHASE_*` constants from `next/constants`, derived from the actual
+ * CLI command that invoked Next) and accepts a returned object or Promise —
+ * `server/config-shared.js`'s `normalizeConfig()` awaits whatever comes
+ * back, so wrapping the result in `withNextIntl()` before returning it is
+ * fine even though that call is synchronous.
+ *
+ * @param phase - Which Next.js command is loading this config.
+ * @returns The resolved config for `next-intl`'s plugin to further wrap.
+ */
+export default function nextConfig(phase: string): NextConfig {
+  const config: NextConfig = {
+    /**
+     * `next dev` and `next build`/`next start` must never share one output
+     * directory. Next's own dev server already nests its per-process state a
+     * layer deeper (`{distDir}/dev/...`) than a production build, but both
+     * still read/write the SAME top-level `{distDir}/cache` (webpack/turbopack
+     * persistent cache, image-optimization cache) by default — a `next build`
+     * running while a stray `next dev` is still alive on the same checkout
+     * corrupts that shared cache and can leave a production `.next` missing
+     * its manifests (observed: `.next/server` + `.next/cache` present with no
+     * `BUILD_ID`/`static`, from exactly this collision). Giving dev its own
+     * top-level directory removes the shared cache entirely.
+     *
+     * This branches on `phase`, not `NODE_ENV`: Next only APPLIES its own
+     * `NODE_ENV` default (`"development"` for `next dev`, `"production"` for
+     * `next build`/`next start`) when the variable is unset going in. An
+     * inherited `NODE_ENV=development` — common under Docker/PM2/self-host
+     * process managers that export it globally — survives untouched, so
+     * `next start` would read `.next-dev` under the old `NODE_ENV` check and
+     * crash with "Could not find a production build" even though a real
+     * `.next` build exists right next to it. `phase` has no such failure
+     * mode: it is derived from which `next` subcommand is actually running,
+     * never from a mutable environment variable.
+     */
+    distDir: phase === PHASE_DEVELOPMENT_SERVER ? ".next-dev" : ".next",
+    images: {
+      // AVIF first (best compression), WebP fallback for browsers/paths that
+      // skip AVIF — Next negotiates via the request's `Accept` header and
+      // serves the original format for anything that accepts neither.
+      formats: ["image/avif", "image/webp"],
+    },
+    async headers() {
+      return [{ source: "/:path*", headers: securityHeaders }];
+    },
+  };
 
-export default withNextIntl(nextConfig);
+  return withNextIntl(config);
+}

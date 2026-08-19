@@ -3,16 +3,18 @@
  * the ground sequence (slate `05 / Trusted` — see `Slate.tsx`).
  *
  * The quietest section on the page by design: a centered slate + heading +
- * sentence and the five organization categories SCRIPE is built for, as
- * elevated chips (`.chip-lit` — real surfaces on the shadow ramp, replacing
- * the old flat hairline boxes). Deliberately NO logo wall, NO invented
- * metrics and NO fabricated customer marks — the categories are the honest
- * claim the legacy site already made. Atmosphere: the `.gs-trusted` recipe
- * (a cool overhead glow — the hero stage's hand-off light; dark theme only,
- * see `src/styles/home.css` §13). Rhythm is compressed below the shared
- * Section default — this is a bridge, not a destination. Chips stagger in
- * via the shared `Reveal` + `data-rv-stagger` choreography. A Server
- * Component; `Reveal` is the only client leaf.
+ * sentence, nothing else. A cleanup-wave audit flagged the section's former
+ * five-pill category row ("Football Clubs" / "Sports Academies" / ...) as
+ * reading like a customer-logo wall by position and styling even though the
+ * copy itself never claimed a named customer — sitting where a "trusted by"
+ * strip conventionally carries real marks is enough to imply them. Removed
+ * rather than re-skinned: the heading + subtitle alone already state the
+ * honest claim (who SCRIPE is built for) without borrowing a logo-wall's
+ * visual authority to say it. Atmosphere: the `.gs-trusted` recipe (a cool
+ * overhead glow — the hero stage's hand-off light; dark theme only, see
+ * `src/styles/home.css` §13). Rhythm is compressed below the shared Section
+ * default — this is a bridge, not a destination. A Server Component;
+ * `Reveal` is the only client leaf.
  */
 import type { HomeContent } from "@/content/types";
 import { Reveal } from "@/components/motion/Reveal";
@@ -42,16 +44,6 @@ export function TrustStrip({ content }: TrustStripProps) {
           {content.subtitle}
         </p>
       </Reveal>
-
-      <div className="mt-8 flex flex-wrap justify-center gap-3" data-rv-stagger>
-        {content.categories.map((category) => (
-          <Reveal key={category} y={10}>
-            <span className="chip-lit text-text-secondary inline-flex min-h-[52px] items-center rounded-md px-6 font-display text-[0.8125rem] font-semibold tracking-[0.09em] uppercase [&:lang(ar)]:tracking-normal [&:lang(ar)]:normal-case">
-              {category}
-            </span>
-          </Reveal>
-        ))}
-      </div>
     </Section>
   );
 }

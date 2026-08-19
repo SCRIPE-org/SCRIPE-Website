@@ -39,7 +39,6 @@ export const solutionVenuesContent: SolutionContent = {
         { label: "Bookings this week", value: "268" },
         { label: "Utilization", value: "92%" },
       ],
-      note: "Sample data — replaced with yours during onboarding.",
     },
   },
   painPoints: {
@@ -108,7 +107,6 @@ export const solutionVenuesContent: SolutionContent = {
       { value: "92%", label: "Utilization" },
       { value: "+18%", label: "Peak-hour demand" },
     ],
-    note: "Sample data — indicative of a mid-size organization.",
   },
   otherSolutions: {
     title: "Organized differently? The system underneath is the same.",

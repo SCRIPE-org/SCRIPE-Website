@@ -39,7 +39,6 @@ export const solutionAcademiesContent: SolutionContent = {
         { label: "حصص أسبوعيًا", value: "412" },
         { label: "الحضور المُسجَّل", value: "97%" },
       ],
-      note: "بيانات تجريبية — تُستبدل ببياناتك أثناء التهيئة.",
     },
   },
   painPoints: {
@@ -105,7 +104,6 @@ export const solutionAcademiesContent: SolutionContent = {
       { value: "97%", label: "الحضور المُسجَّل" },
       { value: "+124", label: "أعضاء هذا الشهر" },
     ],
-    note: "بيانات تجريبية — تمثّل منظمة متوسطة الحجم.",
   },
   otherSolutions: {
     title: "منظمة بشكل مختلف؟ النظام تحتها هو نفسه.",

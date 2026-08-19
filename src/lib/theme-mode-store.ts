@@ -51,11 +51,18 @@ let observer: MutationObserver | null = null;
 /**
  * Reads the current theme straight off `<html>`.
  *
- * @returns `"light"` only for an explicit `data-theme="light"`; `"dark"`
- *   otherwise (including a missing attribute — dark is the default brand).
+ * @returns `"dark"` only for an explicit `data-theme="dark"`; `"light"`
+ *   otherwise, including a missing attribute — matching `colors.css`'s own
+ *   convention, where bare `:root` (no attribute required) IS the light
+ *   palette and `[data-theme="dark"]` is the override. A missing attribute
+ *   is unreachable in practice: `theme-script.ts` always writes an explicit
+ *   `data-theme` pre-paint, defaulting to `"dark"` (the brand default) when
+ *   no choice is stored, so a real visitor's `<html>` is never without it.
+ *   This fallback exists only so this reader can never disagree with the
+ *   CSS it is reading, per this file's own "nothing here can drift" header.
  */
 function readTheme(): ThemeMode {
-  return document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+  return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
 }
 
 /**

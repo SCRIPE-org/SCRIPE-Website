@@ -14,6 +14,13 @@
  * Task E4: the KPI panel moved off its old one-off `shadow-[...]` onto the
  * shared elevation ramp (`.atmo-panel`, `src/styles/tokens/atmosphere.css`).
  * A Server Component; `Reveal` is the only client leaf.
+ *
+ * A cleanup wave removed the strip's own "Sample data — indicative of a
+ * mid-size organization." footnote, repeated verbatim across all four
+ * solution pages — the same reflexive-hedging pattern `SolutionHero.tsx`'s
+ * header explains for its own snapshot note. The canonical sample-data
+ * footnote lives once, on `/platform`'s per-module evidence panels
+ * (`CapabilityEvidence.tsx`).
  */
 import type { AccentId, SolutionContent } from "@/content/types";
 import { Reveal } from "@/components/motion/Reveal";
@@ -61,7 +68,6 @@ export function Outcomes({ content, accent }: OutcomesProps) {
             ))}
           </div>
         </div>
-        <p className="text-text-muted mt-4 text-[length:var(--fs-meta)]">{content.note}</p>
       </Reveal>
     </Section>
   );

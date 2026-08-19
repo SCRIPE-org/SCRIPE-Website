@@ -41,7 +41,6 @@ export const solutionClubsContent: SolutionContent = {
         { label: "Members", value: "1,860" },
         { label: "Fixtures this month", value: "23" },
       ],
-      note: "Sample data — replaced with yours during onboarding.",
     },
   },
   painPoints: {
@@ -110,7 +109,6 @@ export const solutionClubsContent: SolutionContent = {
       { value: "23", label: "Fixtures this month" },
       { value: "97%", label: "Attendance marked" },
     ],
-    note: "Sample data — indicative of a mid-size organization.",
   },
   otherSolutions: {
     title: "Organized differently? The system underneath is the same.",

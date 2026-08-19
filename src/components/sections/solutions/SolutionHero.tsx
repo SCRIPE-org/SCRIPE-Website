@@ -36,6 +36,14 @@
  * hero renders exactly as it did before — panel alone, no gap, no
  * placeholder. Dropping the file in and adding one line to each of the two
  * maps is the whole integration when it arrives.
+ *
+ * A cleanup wave removed the snapshot panel's own "Sample data — replaced
+ * with yours during onboarding." footnote: identical text repeated across
+ * all four solution pages read as reflexive hedging rather than a real
+ * disclosure. The canonical sample-data footnote lives once, on `/platform`'s
+ * per-module evidence panels (`CapabilityEvidence.tsx`); this panel's own
+ * `snapshot.label` ("What this looks like") already frames the numbers as
+ * illustrative without needing a second line to say so again.
  */
 import type { AccentId, SolutionContent } from "@/content/types";
 import { Reveal } from "@/components/motion/Reveal";
@@ -131,9 +139,6 @@ export function SolutionHero({ content, accent, slug }: SolutionHeroProps) {
                 </span>
               </div>
             ))}
-            <span className="border-border-subtle text-text-muted border-t pt-3 text-[length:var(--fs-meta)] text-pretty">
-              {content.snapshot.note}
-            </span>
           </div>
         </Reveal>
       </div>
