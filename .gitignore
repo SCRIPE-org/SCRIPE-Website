@@ -24,3 +24,6 @@ next-env.d.ts
 # own guidance in docs/ and the parent monorepo; ignore the generated stubs.
 /AGENTS.md
 /CLAUDE.md
+
+# Local permission overrides -- machine-specific, never shared
+.claude/settings.local.json
