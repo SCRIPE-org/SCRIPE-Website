@@ -454,13 +454,15 @@ export interface PlatformContent {
     primaryCta: string;
     /** Secondary CTA label (see pricing). */
     secondaryCta: string;
-    /** Alt text for the hero's companion photograph, when one exists — see
+    /** Alt text for the hero's companion photograph — see
      *  `CapabilityHero.tsx`'s header. Optional in lockstep with the
-     *  photograph itself: absent today (no delivered frame yet), the hero
-     *  renders single-column exactly as it always has; once present, it
-     *  gates the second column into existence. Never set this ahead of the
-     *  photograph landing — an alt with no image is a broken contract, not
-     *  a preview of one. */
+     *  photograph itself, which landed in Wave M: both locale files set
+     *  this now, gating the hero into its two-column layout. Stays optional
+     *  because the contract cuts both ways — clearing this without also
+     *  removing the photograph falls back to the single-column layout
+     *  cleanly, the same way a future page with no photograph at all would.
+     *  Never set this ahead of a photograph actually landing — an alt with
+     *  no image is a broken contract, not a preview of one. */
     imageAlt?: string;
   };
   /** Sticky in-page subnav, one entry per {@link CapabilityGroup}. */

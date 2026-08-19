@@ -17,28 +17,27 @@
  * page's one hero-toned moment. A Server Component; `Reveal` is the only
  * client leaf.
  *
- * WAVE J — a companion photograph, gated on arrival.
+ * WAVE J/M — a companion photograph, gated on arrival, now landed.
  * ---------------------------------------------------------------------
- * At full viewport width the single-column layout below leaves roughly half
- * the section as bare ground glow — the largest unphotographed area on the
- * site outside the (deliberately) typography-only 404 page. `PLATFORM_HERO_IMAGE`
- * names where that photograph will live once delivered; the layout below
- * reuses `SolutionHero.tsx`'s exact two-column device (type + framed
- * portrait, `flex-wrap` so it stacks on narrow viewports) rather than
- * inventing a second one, since the two heroes already share the mono
- * marker, the same `atmo`/grain ground and the same
- * type-block-then-CTA-row shape — the photo column is the one piece
- * `CapabilityHero` never had.
+ * At full viewport width the single-column layout used to leave roughly
+ * half the section as bare ground glow — the largest unphotographed area on
+ * the site outside the (deliberately) typography-only 404 page.
+ * `PLATFORM_HERO_IMAGE` names the photograph; the layout below reuses
+ * `SolutionHero.tsx`'s exact two-column device (type + framed portrait,
+ * `flex-wrap` so it stacks on narrow viewports) rather than inventing a
+ * second one, since the two heroes already share the mono marker, the same
+ * `atmo`/grain ground and the same type-block-then-CTA-row shape — the
+ * photo column was the one piece `CapabilityHero` never had.
  *
  * The two-column layout activates SOLELY on `content.imageAlt` being
- * present — see its doc comment in `content/types.ts`. It is absent today,
- * so this renders single-column, byte-for-byte the same output as before
- * this change: `PLATFORM_HERO_IMAGE.src` points at a WebP that does not
- * exist yet, and `next/image` is never asked to resolve it while the gate is
- * closed. Landing the photograph is then the same three-step integration
- * `assets/README.md` and `SolutionHero.tsx`'s own header describe: drop the
- * source in `assets/pages/`, register it in `build-media-assets.mjs`, add
- * `imageAlt` to both locale files. Nothing here changes when that happens.
+ * present — see its doc comment in `content/types.ts`. Wave M set it in
+ * both locale files once the photograph itself landed
+ * (`assets/pages/platform-hero-terrace.png`, registered in
+ * `build-media-assets.mjs`), so this now renders two columns on every
+ * build. The gate itself is untouched and still correct: if `imageAlt` is
+ * ever cleared without a photograph to back it, this falls straight back to
+ * the single-column layout rather than an empty second column or a broken
+ * image — the same contract `SolutionHero.tsx`'s own image map documents.
  */
 import type { PlatformContent } from "@/content/types";
 import { Reveal } from "@/components/motion/Reveal";
@@ -47,13 +46,12 @@ import { PlatePhoto } from "@/components/ui/PlatePhoto";
 import { Section } from "@/components/ui/Section";
 
 /**
- * The hero's companion photograph. 4:5 portrait, matching the aspect every
- * `SolutionHero` frame already uses, so the day this lands the platform
- * page's hero reads as one more print in the same set rather than an
- * unrelated crop. Dimensions are the intended master size for
- * `scripts/build-media-assets.mjs` to encode against — update them together
- * with the real source once it exists; they are inert until `imageAlt` is
- * set (see the file header).
+ * The hero's companion photograph — an elevated terrace view connecting the
+ * court grid to a floodlit pitch beyond it. Native 1122×1402, exactly the
+ * 4:5 every `SolutionHero` frame already uses, so this reads as one more
+ * print in the same set rather than an unrelated crop; no cropping or
+ * resizing beyond format encoding (see the entry in
+ * `scripts/build-media-assets.mjs` for the full composition rationale).
  */
 const PLATFORM_HERO_IMAGE = { src: "/media/platform/hero.webp", width: 1122, height: 1402 };
 

@@ -71,6 +71,8 @@ export const platformContent: PlatformContent = {
       "Thirteen capabilities on one connected record. Switch modules on as the organization grows — nothing has to be re-entered, re-keyed or reconciled twice.",
     primaryCta: "Book a Demo",
     secondaryCta: "See pricing",
+    imageAlt:
+      "An elevated terrace view at night over a lit padel and tennis court complex, with a floodlit football pitch beyond it connected by a lit walkway.",
   },
   nav: {
     label: "Capability families",

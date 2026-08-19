@@ -358,18 +358,19 @@ const PHOTO_MASTERS = [
     out: path.join("pricing", "city-hubs"),
   },
   {
-    /** /platform — the operations counter a minute after the last person left:
-     *  dark monitors, a lanyard and a bottle on the stone, one warm overhead
-     *  pool of light, and the floodlit campus still running through the glass.
+    /** /platform#dashboard — the operations counter a minute after the last
+     *  person left: dark monitors, a lanyard and a bottle on the stone, one
+     *  warm overhead pool of light, and the floodlit campus still running
+     *  through the glass.
      *
-     *  This is the page's only photograph and it is deliberately NOT a
-     *  dashboard. `/platform` is headlined "every module resolves into one
-     *  dashboard", and a generated screenshot under that sentence is
-     *  fabricated product evidence — a reader would reasonably take it as what
-     *  our software looks like. The two delivered alternates that DO show a
-     *  legible screen are parked in `assets/unused/` for exactly that reason.
-     *  An empty operations room makes the same argument (someone runs this
-     *  place, and they close the day here) and claims nothing.
+     *  Deliberately NOT a dashboard screenshot. `/platform` is headlined
+     *  "every module resolves into one dashboard", and a generated
+     *  screenshot under that sentence is fabricated product evidence — a
+     *  reader would reasonably take it as what our software looks like. The
+     *  two delivered alternates that DO show a legible screen are parked in
+     *  `assets/unused/` for exactly that reason. An empty operations room
+     *  makes the same argument (someone runs this place, and they close the
+     *  day here) and claims nothing.
      *
      *  Stays at its native 21:9: it is a wide room shot whose subject is the
      *  length of the desk against the window, and it renders as a framed
@@ -377,6 +378,30 @@ const PHOTO_MASTERS = [
      *  gets a legible letterbox rather than 17% of a panorama. */
     source: path.join(PAGES_SRC, "platform-operations-desk.png"),
     out: path.join("platform", "operations-desk"),
+  },
+  {
+    /** /platform — the hero's companion photograph (Wave M), closing the gap
+     *  `CapabilityHero.tsx`'s own header names: at full width the
+     *  typography-only hero left roughly half the section as bare ground
+     *  glow, the largest unphotographed area on the site outside the 404
+     *  page. An elevated terrace view — not a drone's straight-down aerial
+     *  (that's the home hero's own device), not one surface in isolation
+     *  (that's what each SolutionHero photo already is) — connecting the
+     *  padel/tennis court grid in the near-to-mid distance with a floodlit
+     *  football pitch receding into the far distance, the two joined by the
+     *  lit walkway and retaining wall running through the frame: the
+     *  physical version of "every module resolves into one operating
+     *  system," the same rhetorical move the dashboard-strip photo above
+     *  makes for "reconciled the same day." A sliver of the terrace's own
+     *  stone ledge and railing in the extreme lower-left corner establishes
+     *  the elevated vantage point without becoming the subject.
+     *
+     *  Native 1122×1402 — exactly the 4:5 every `SolutionHero` frame already
+     *  uses (see that file's own `SOLUTION_HERO_IMAGE` map), so this reads as
+     *  one more print in the same set rather than an unrelated crop; no
+     *  cropping or resizing beyond format encoding. */
+    source: path.join(PAGES_SRC, "platform-hero-terrace.png"),
+    out: path.join("platform", "hero"),
   },
 ];
 
