@@ -335,6 +335,26 @@
   border-inline-end: 1px solid var(--lime-400);
 }
 
+/* CROP MARKS ON A BRIGHT PHOTOGRAPH.
+
+   The marks sit inside the image window on the premise that every photograph
+   in this set is a night frame, so lime always lands on something dark. One
+   print breaks that premise: `/solutions/multi-sports-organizations` runs a
+   golden-hour aerial as its interim print (see `SolutionHero.tsx`) and its
+   corners fall on pale roadway and a lit court, where a 1px lime hairline at
+   0.62 opacity all but disappears.
+
+   Same remedy the hero already uses where its own frame corners land on open
+   daylight sky (`home.css` §2b): `drop-shadow`, not `box-shadow`, so the
+   shadow follows the L rather than its bounding box, plus a little more
+   opacity. Deliberately opt-in per photograph rather than a blanket rule —
+   on the four night prints the shadow would be invisible work. */
+.plate-frame-bright .plate-frame-marks::before,
+.plate-frame-bright .plate-frame-marks::after {
+  opacity: 0.85;
+  filter: drop-shadow(0 1px 3px rgba(16, 12, 5, 0.75));
+}
+
 /* ---- Closing CTA: obsidian panel + lime horizon + shadow-4 + grain ------- */
 
 .atmo-cta-panel {

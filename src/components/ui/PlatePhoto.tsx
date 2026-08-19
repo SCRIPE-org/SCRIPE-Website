@@ -59,6 +59,11 @@ export interface PlatePhotoProps {
   /** Set on a photograph that is above the fold on its page, so it is
    *  preloaded rather than lazily fetched. Defaults to false. */
   priority?: boolean;
+  /** Set on a photograph that is NOT a night frame. The crop marks assume
+   *  lime always lands on something dark; a daylight image breaks that, so
+   *  this gives them the same drop-shadow the hero's own frame corners take
+   *  over its day film. Defaults to false — the set is night. */
+  bright?: boolean;
   /** Merged after the frame classes so callers can set width/placement. */
   className?: string;
 }
@@ -68,9 +73,18 @@ export interface PlatePhotoProps {
  *
  * @param props - See {@link PlatePhotoProps}.
  */
-export function PlatePhoto({ src, alt, width, height, sizes, priority = false, className }: PlatePhotoProps) {
+export function PlatePhoto({
+  src,
+  alt,
+  width,
+  height,
+  sizes,
+  priority = false,
+  bright = false,
+  className,
+}: PlatePhotoProps) {
   return (
-    <figure className={cx("plate-frame", className)}>
+    <figure className={cx("plate-frame", bright && "plate-frame-bright", className)}>
       <div className="plate-frame-window">
         <Image
           src={src}

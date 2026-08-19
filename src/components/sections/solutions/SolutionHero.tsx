@@ -56,14 +56,33 @@ import type { SolutionSlug } from "./registry";
 /**
  * Per-slug hero photograph. Every master is a 4:5 portrait built by
  * `scripts/build-media-assets.mjs` so the four solution pages read as one
- * set of prints rather than four unrelated crops. `Partial` on purpose —
- * `multi-sports-organizations` has no delivered photograph yet, and the type
- * should say so rather than let a missing key look accidental.
+ * set of prints rather than four unrelated crops.
+ *
+ * `multi-sports-organizations` is INTERIM (Task H2). Its own prompt (catalog
+ * §2, P12 — a night 21:9 "many disciplines, one estate") was never
+ * delivered, which left the page that sells the highest-value segment as the
+ * only solution hero with no photograph at all. `Aerial Sports Complex
+ * Masterplan` is the batch's one unassigned file: a golden-hour aerial of a
+ * larger estate, rejected for the home hero's day slot precisely because it
+ * is a DIFFERENT and bigger complex than the night establishing shot — which
+ * is what makes it right here, since "many branches, many sports, one
+ * operational picture" is the page's own headline and that frame's literal
+ * subject. It is day-graded where the rest of the set is night; the frame is
+ * what absorbs that (see `PlatePhoto`'s header — making one photograph read
+ * as a deliberate print in a room it does not match is the whole reason the
+ * frame exists). Swap the file when the owner's dedicated night frame lands;
+ * nothing else on this page changes.
+ *
+ * `Partial` stays, even now that all four slugs are present: the map is
+ * paired with an optional `content.imageAlt`, and the type should keep
+ * saying that a slug without a photograph renders correctly rather than
+ * hard-requiring one from every future solution page.
  */
 const SOLUTION_HERO_IMAGE: Partial<Record<SolutionSlug, { src: string; width: number; height: number }>> = {
   "sports-clubs": { src: "/media/solutions/clubs-sideline.webp", width: 971, height: 1214 },
   "sports-academies": { src: "/media/solutions/academies-dawn.webp", width: 1122, height: 1402 },
   "sports-venues": { src: "/media/solutions/venues-courts.webp", width: 1122, height: 1402 },
+  "multi-sports-organizations": { src: "/media/solutions/multisport-masterplan.webp", width: 657, height: 821 },
 };
 
 export interface SolutionHeroProps {
@@ -119,6 +138,10 @@ export function SolutionHero({ content, accent, slug }: SolutionHeroProps) {
               height={image.height}
               sizes="(min-width: 64rem) 380px, (min-width: 40rem) 40vw, 90vw"
               priority
+              /* The multi-sport print is the one daylight photograph in the
+                 set (see SOLUTION_HERO_IMAGE) — its crop marks need the
+                 shadow to stay legible on pale roadway. */
+              bright={slug === "multi-sports-organizations"}
             />
           ) : null}
           <div className="atmo-panel grid gap-3 rounded-lg p-6">

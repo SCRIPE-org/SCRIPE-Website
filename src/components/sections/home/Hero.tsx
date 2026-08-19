@@ -61,13 +61,51 @@
  *   mount-time theme read is safe there in a way it is not for the base
  *   plate.
  *
- * Plate architecture (four plates, `public/media/hero/plate-*`):
+ * CHAPTER STILLS (Task H2): the flight's three corner beats each cut to
+ * their OWN establishing photograph. This is the fix for the audit's central
+ * complaint about this hero — that its chapters were "three crops of one
+ * photograph". They were: the camera made three genuinely different moves,
+ * but all three landed on the same aerial, so 01 CLUBS, 02 VENUES and 03
+ * INTELLIGENCE were three framings of one place. The owner had already
+ * delivered an establishing frame for each (catalog §1 — P5 the dugout and
+ * tactics board, P6 the padel grid under the lit clubhouse, P7 the coach
+ * watching a drill) and they sat unused because the rig had no code path
+ * for them.
+ *
+ * The shape chosen, after looking at both on screen: CROSSFADE, with the
+ * still carrying its own slow push while it holds — not a hard cut, and not
+ * the base plate's own camera path re-applied to a new photograph.
+ * - A hard cut breaks the one thing the aerial is for. The flight's argument
+ *   is that these places are one estate; cutting between three unrelated
+ *   frames makes them three stock photographs. Crossfading keeps the aerial
+ *   underneath as the connective tissue, so the beat reads as a descent into
+ *   a real place and a climb back out to the map.
+ * - Re-flying each still along `CAMERA_PATH` would decapitate it. Those
+ *   keyframes pan to ±14% because they are hunting for a subject inside a
+ *   wide aerial; a still is ALREADY at its subject, so the same move would
+ *   push the dugout or the coach out of frame. Each still gets a push only
+ *   (`CHAPTER_PUSH`), around a per-chapter `transform-origin` — which also
+ *   means these layers carry no pan at all and so add nothing to the
+ *   coverage-margin audit in `HeroDirector.tsx`.
+ *
+ * Night film only. All three delivered stills are night frames and there is
+ * no day set, so in light theme the flight keeps the single golden-hour
+ * plate and its three camera moves — knowingly a step behind the night film
+ * until day chapter frames are delivered (the catalog's day-film gap list
+ * already carries the same shape of debt for the midground and finale).
+ *
+ * Plate architecture (four base plates, `public/media/hero/plate-*`, plus
+ * three chapter stills, `public/media/hero/chapter-*`):
  * - `plate-background` (`.hero-rig > .hero-plate`) — the base environment,
  *   always visible, driven by `CAMERA_PATH` at depth ×1.0. The only plate
  *   shown in static/no-JS/reduced-motion mode, and the only one that exists
  *   in both a night and a day cut today.
  * - `plate-midground` (`.hero-plate-mid`, armed-only) — stadium+pool cutout
  *   (alpha PNG), its own depth ×DEPTH_MID tween.
+ * - `chapter-{clubs,venues,intelligence}` (`.hero-plate-chapter`, armed-only,
+ *   night-only) — the three establishing stills above. Rendered by
+ *   `HeroChapterPlate`, which mounts each one only as the flight approaches
+ *   its beat, so an armed-but-unscrolled hero costs none of them.
  * - `plate-foreground` (`.hero-plate-fg`, armed-only) — bokeh floodlight
  *   mast + tree canopy corners on a transparent center (alpha PNG), its own
  *   depth ×DEPTH_NEAR tween. Purely decorative: `aria-hidden` +
@@ -119,6 +157,7 @@
 import type { HomeContent } from "@/content/types";
 import { Button } from "@/components/ui/Button";
 import { HeroArmedPlate } from "./HeroArmedPlate";
+import { HeroChapterPlate } from "./HeroChapterPlate";
 import { HeroDirector } from "./HeroDirector";
 
 /** Two-digit beat stamp (01-based) for a chapter index. */
@@ -182,6 +221,27 @@ export function Hero({ content }: HeroProps) {
         <div className="hero-plate-mid" data-hero-plate-mid aria-hidden="true">
           <HeroArmedPlate src="/media/hero/plate-midground.png" nightOnly />
         </div>
+
+        {/* Chapter stills (armed-only, night film only): one establishing
+            photograph per corner chapter, crossfading in as the camera
+            arrives and back out as it leaves. This is what stops the three
+            beats being three crops of one aerial — see the CHAPTER STILLS
+            note in the file header and `home.css` §2. Above the midground
+            (an opaque frame should hide the parallax cutout while it holds),
+            below the finale and the grade, so each still takes the same film
+            treatment the base plate does. Wrappers always render (GSAP's
+            tween targets); `HeroChapterPlate` mounts the photograph itself
+            only once the flight is approaching that beat. */}
+        {corners.map((chapter, index) => (
+          <div
+            className="hero-plate-chapter"
+            data-hero-plate-chapter={index}
+            aria-hidden="true"
+            key={`plate-${chapter.rail}`}
+          >
+            <HeroChapterPlate index={index} />
+          </div>
+        ))}
 
         {/* Finale plate (armed-only): the nadir "operational picture" shot,
             crossfades in via opacity 0.76→0.86 as the destination beat's

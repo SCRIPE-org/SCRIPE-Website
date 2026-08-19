@@ -287,6 +287,114 @@
   display: block;
 }
 
+/* CHAPTER STILLS (armed-only, night film only).
+
+   The audit's core complaint about this hero was that its three corner
+   chapters were "three crops of one photograph": the camera moved, but it
+   moved over the same aerial, so 01 CLUBS, 02 VENUES and 03 INTELLIGENCE
+   were three framings of one place. The owner delivered an establishing
+   still for each of the three (catalog §1, P5/P6/P7) and they had been
+   sitting unused in the source drop because the rig had no code path for
+   them. This is the code path.
+
+   Each chapter now crossfades to its own photograph as the camera arrives
+   and back to the aerial as it leaves, so the flight reads as a descent into
+   three real places and a climb back out — the aerial is the connective
+   tissue between them rather than the whole film. The still carries its own
+   slow push while it holds (HeroDirector's CHAPTER_PUSH) so the arrival is a
+   continuation of the camera's move, not a freeze frame.
+
+   Two elements per chapter, and the split is what makes the bytes conditional:
+
+   - `.hero-plate-chapter` — the wrapper, always in the DOM, GSAP's target
+     for both the crossfade and the push. Carries the transform, so the
+     photograph inside it is a plain painted surface with no transform of its
+     own.
+   - `.hero-chapter-film` — the photograph, rendered by `HeroChapterPlate`
+     only once the flight is actually approaching that beat. A
+     `background-image` on an element that does not exist is never fetched,
+     which is the same conditional-MOUNT contract `hero-armed-store.ts`
+     documents for the `<img>` plates, extended with a per-chapter threshold:
+     a reader who never scrolls past the intro pays for none of the three.
+
+   `background-image` rather than `next/image` for the same reason the base
+   plate uses one — it is the only shape that can art-direct on a media query
+   (the portrait windows in §2c), and these plates are already outside
+   `next/image`'s responsive negotiation because the pipeline emits their
+   AVIF/WebP as real files.
+
+   `transform-origin` is per chapter and does the compositional work the
+   push would otherwise need a pan for: the frame grows around the subject
+   that matters in that still. With no pan at all (`CHAPTER_PUSH` moves scale
+   only), the coverage guard is satisfied by construction — at |x| = |y| = 0
+   every scale ≥ 1 covers the stage regardless of origin, so these layers add
+   no new margin risk to the audit in HeroDirector's header. */
+.hero-plate-chapter {
+  display: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  /* Rest transform — must equal CHAPTER_PUSH's `from` scale, on the same
+     rest-state contract as the other plates (GSAP's `fromTo` sets it
+     explicitly, but a mounted plate sits here for the ~0.02 of progress
+     between its mount threshold and its own tween). */
+  transform: scale(1.06);
+  will-change: transform;
+}
+
+.hero[data-armed] .hero-plate-chapter {
+  display: block;
+}
+
+/* Beat 01 CLUBS — the dugout and the folded tactics board sit low and left
+   of centre; the push grows around them rather than around the empty stand. */
+.hero-plate-chapter[data-hero-plate-chapter="0"] {
+  transform-origin: 42% 64%;
+}
+
+/* Beat 02 VENUES — the lit court in the near-left of the grid is the
+   subject; the clubhouse behind it should drift outward, not toward camera. */
+.hero-plate-chapter[data-hero-plate-chapter="1"] {
+  transform-origin: 40% 58%;
+}
+
+/* Beat 03 INTELLIGENCE — the coach. Held at the left third so the push
+   walks the frame toward the drill he is watching. */
+.hero-plate-chapter[data-hero-plate-chapter="2"] {
+  transform-origin: 34% 52%;
+}
+
+.hero-chapter-film {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.hero-chapter-film[data-chapter="0"] {
+  background-image: image-set(
+    url("/media/hero/chapter-clubs.avif") type("image/avif"),
+    url("/media/hero/chapter-clubs.webp") type("image/webp")
+  );
+}
+
+.hero-chapter-film[data-chapter="1"] {
+  background-image: image-set(
+    url("/media/hero/chapter-venues.avif") type("image/avif"),
+    url("/media/hero/chapter-venues.webp") type("image/webp")
+  );
+}
+
+.hero-chapter-film[data-chapter="2"] {
+  background-image: image-set(
+    url("/media/hero/chapter-intelligence.avif") type("image/avif"),
+    url("/media/hero/chapter-intelligence.webp") type("image/webp")
+  );
+}
+
 /* Finale plate (armed-only): the nadir "operational picture" shot,
    crossfades via opacity 0.76→0.86 (HeroDirector) — no rig motion, it is a
    deliberate cut to a different framing, not a continuation of the pan.
@@ -495,6 +603,83 @@
    with `plate-foreground-day` and delete this rule when P16 lands. */
 :root:not([data-theme="dark"]) .hero-plate-fg {
   opacity: 0.72;
+}
+
+/* ---------------------------------------------------------------------------
+   2c. PORTRAIT WINDOWS — what a phone is actually shown.
+
+   Every plate on this stage is a 21:9 frame painted with `cover`. On a
+   portrait viewport that means the plate's HEIGHT sets the cover scale and
+   the width overflows enormously: at 390×844 the browser fits 821px of plate
+   height into 844px of stage and shows 390 / (844 / 821) = 379 source px of
+   width — 332 under the rig's 1.14 rest overscan. That is 17% of the
+   photograph, dead centre, on the majority of the site's traffic.
+
+   Centre is the wrong 17%. On the day plate it is a road and a treeline with
+   the stadium sliced in half and the pool off-frame; on the night plate it is
+   the walkway and the courts with the stadium cut at the edge. The film's
+   entire proposition — one estate, many surfaces — is invisible on a phone.
+
+   The fix is a different SOURCE, not a different size. `build-media-assets.mjs`
+   §1b cuts one 3:4 window per plate at native resolution, centred on the
+   subject that carries that frame (centres and what each contains are
+   documented per entry there). Sharpness is unchanged either way — the
+   browser was already showing ~332 source pixels across 390 CSS px — so what
+   this buys is the composition, plus roughly a third of the bytes as a side
+   effect (night 145 → 50 kB, day 186 → 66 kB).
+
+   WHY `max-aspect-ratio: 3 / 4` AND NOT A WIDTH BREAKPOINT. The window is the
+   better source in exactly the range where the viewport is narrower than the
+   window itself: there the browser crops its width, which is the same
+   operation it was doing to the landscape plate, only from a better centre.
+   At precisely 3:4 (768×1024, 1024×1366 — every iPad in portrait) it fits
+   edge to edge with nothing discarded. Past 3:4 it would start losing its own
+   top and bottom, so the landscape plate takes back over. A width breakpoint
+   cannot express that, and would get landscape phones (844×390, aspect 2.16)
+   wrong in both directions.
+
+   Both rules are repeated here at their own specificity rather than sharing
+   one: `.hero` is (0,1,0) and `:root:not([data-theme="dark"]) .hero` is
+   (0,3,0), so each can only be overridden by its own shape. Both sit after
+   their §2 originals in source order, which is what makes equal specificity
+   resolve this way.
+   --------------------------------------------------------------------------- */
+
+@media (max-aspect-ratio: 3 / 4) {
+  .hero {
+    --hero-plate: image-set(
+      url("/media/hero/plate-background-portrait.avif") type("image/avif"),
+      url("/media/hero/plate-background-portrait.webp") type("image/webp")
+    );
+  }
+
+  :root:not([data-theme="dark"]) .hero {
+    --hero-plate: image-set(
+      url("/media/hero/plate-background-day-portrait.avif") type("image/avif"),
+      url("/media/hero/plate-background-day-portrait.webp") type("image/webp")
+    );
+  }
+
+  .hero-chapter-film[data-chapter="0"] {
+    background-image: image-set(
+      url("/media/hero/chapter-clubs-portrait.avif") type("image/avif"),
+      url("/media/hero/chapter-clubs-portrait.webp") type("image/webp")
+    );
+  }
+
+  .hero-chapter-film[data-chapter="1"] {
+    background-image: image-set(
+      url("/media/hero/chapter-venues-portrait.avif") type("image/avif"),
+      url("/media/hero/chapter-venues-portrait.webp") type("image/webp")
+    );
+  }
+
+  .hero-chapter-film[data-chapter="2"] {
+    background-image: image-set(
+      url("/media/hero/chapter-intelligence-portrait.avif") type("image/avif"),
+      url("/media/hero/chapter-intelligence-portrait.webp") type("image/webp")
+    );
+  }
 }
 
 /* ---------------------------------------------------------------------------

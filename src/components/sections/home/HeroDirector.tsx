@@ -17,11 +17,14 @@
  * 2. builds one scrubbed timeline over the whole track that flies the
  *    background rig, midground and foreground plates each along their own
  *    depth-scaled copy of {@link CAMERA_PATH} (transform-only: scale +
- *    x/yPercent + rotateX — see `flyPath`), crossfades in the finale plate,
- *    and choreographs the type beats (autoAlpha + y — never layout
- *    properties);
+ *    x/yPercent + rotateX — see `flyPath`), crossfades each corner
+ *    chapter's own establishing still in and out over its beat
+ *    ({@link CHAPTER_IN}), crossfades in the finale plate, and choreographs
+ *    the type beats (autoAlpha + y — never layout properties);
  * 3. mirrors flight progress onto the chapter rail by toggling
- *    `data-active` per tick (CSS owns the transition).
+ *    `data-active` per tick (CSS owns the transition), and onto the chapter
+ *    stills' mount gate ({@link CHAPTER_REACH_AT}), so each still's bytes
+ *    are only spent once the flight is actually approaching its beat.
  *
  * `loadGsap()` returns `null` server-side and under
  * `prefers-reduced-motion: reduce`, so this component arms nothing there —
@@ -151,6 +154,7 @@
 import { useEffect } from "react";
 import { loadGsap } from "@/lib/gsap";
 import { setHeroArmed } from "@/lib/hero-armed-store";
+import { resetHeroReach, setHeroReach } from "@/lib/hero-reach-store";
 
 /**
  * One camera keyframe: `at` is timeline progress (0–1 over the whole scroll
@@ -193,6 +197,101 @@ const TILT_NEAR = 1.3;
 /** Progress at which each corner beat's caption is fully on screen — one
  *  per CAMERA_PATH corner keyframe, in the same order. */
 const BEAT_IN = [0.24, 0.46, 0.68] as const;
+
+/**
+ * CHAPTER STILL TIMELINE (Task H2)
+ * --------------------------------------------------------------------------
+ * Each corner beat crossfades from the aerial to its own establishing
+ * photograph (`Hero.tsx`'s CHAPTER STILLS note explains why a crossfade and
+ * not a cut). Four numbers per chapter, all derived rather than chosen:
+ *
+ *   in      = BEAT_IN[i] − 0.075          the picture leads its caption in
+ *   up      = in + CHAPTER_FADE           fully up 0.01 before the caption
+ *   out     = outEnd − CHAPTER_FADE_OUT
+ *   outEnd  = the next PICTURE event      (see below)
+ *
+ * The rule for `outEnd` is that a still clears exactly where the next thing
+ * the frame has to show begins: chapters 01 and 02 hand over to the next
+ * still's own entrance (0.385, 0.605), chapter 03 hands over to the finale
+ * plate's crossfade (0.80). Deriving it that way means two photographs are
+ * never dissolving through each other with the aerial underneath — the one
+ * failure mode a three-layer crossfade stack has, and the reason chapter
+ * 03's exit starts 0.045 rather than 0.02 before its caption's.
+ *
+ *   i  in     up     out    outEnd  caption in / out      hands over to
+ *   0  0.165  0.215  0.343  0.385   0.185 / 0.350-0.405   chapter 02's still
+ *   1  0.385  0.435  0.563  0.605   0.405 / 0.570-0.625   chapter 03's still
+ *   2  0.605  0.655  0.758  0.800   0.625 / 0.790-0.845   the finale plate
+ *
+ * So in every beat the photograph arrives just before the words and leaves
+ * just before them: the picture announces the place, the caption confirms
+ * it, the picture releases the frame, the caption follows it out.
+ */
+const CHAPTER_IN = [0.165, 0.385, 0.605] as const;
+
+/** Where each still has fully released the frame — see the table above. */
+const CHAPTER_OUT_END = [0.385, 0.605, 0.8] as const;
+
+/** Crossfade durations, in progress units. The entrance is longer than the
+ *  exit because it is dissolving ONTO a moving aerial (a slow dissolve reads
+ *  as arriving) while the exit is releasing back to it.
+ *
+ *  Kept SHORT on purpose. Two dense photographs dissolving through each other
+ *  produce a double exposure for as long as both are legible, and the only
+ *  levers on that band are the ease (see the tweens) and the duration. At
+ *  0.05 / 0.042 with a `power2.inOut` curve the mix passes through 35–65% in
+ *  about 0.010 of the track — roughly a fifth of what a linear 0.065 fade
+ *  spent there — and the window that frees up goes to the still's own hold,
+ *  which is the part worth looking at (0.128 of the track at full opacity per
+ *  chapter, up from 0.10). */
+const CHAPTER_FADE = 0.05;
+const CHAPTER_FADE_OUT = 0.042;
+
+/**
+ * Each still's own push, played across its whole visible window.
+ *
+ * `from` is the rest scale every chapter plate holds in CSS (the same
+ * rest-state contract the other plates keep). `to` deepens beat by beat —
+ * 1.18 / 1.20 / 1.24 — rhyming with CAMERA_PATH's own monotonic 1.53 / 1.58
+ * / 1.68, so the flight gets more committed the further in it goes on both
+ * layers at once.
+ *
+ * NO PAN, deliberately. CAMERA_PATH pans to ±14% because it is hunting for a
+ * subject inside a wide aerial; a chapter still is already ON its subject, so
+ * the same excursion would push the dugout, the lit court or the coach out of
+ * frame. The compositional work is done by `transform-origin` instead (per
+ * chapter, in `home.css` §2) — which the coverage guard likes: at
+ * |x| = |y| = 0 every scale ≥ 1 covers the stage from any origin, so these
+ * three layers contribute nothing to the per-keyframe margin audit above.
+ *
+ * Peak upscale: 1915×821 (or 1844×853) under `cover` on a 1920×1080 stage is
+ * ×1.315, and ×1.24 at the deepest push takes it to ×1.63 — well short of the
+ * base plate's ×2.21, which is why `build-media-assets.mjs` encodes the
+ * chapter stills at a lower AVIF quality than the plates.
+ */
+const CHAPTER_PUSH = [
+  { from: 1.06, to: 1.18 },
+  { from: 1.06, to: 1.2 },
+  { from: 1.06, to: 1.24 },
+] as const;
+
+/**
+ * Progress at which each chapter still is MOUNTED (not shown) — one lead
+ * time of 0.20 ahead of its own entrance, clamped at chapter 01 to "the
+ * reader has begun to scroll at all".
+ *
+ * This is the byte gate. `HeroChapterPlate` renders nothing until the reach
+ * store reaches its index, so an armed hero that is never scrolled costs
+ * none of the three stills, and a reader who stops after chapter 01 pays for
+ * one. On the 220svh track 0.20 of progress is ~260px of scroll, which is the
+ * decode head start each plate gets.
+ *
+ * If a plate has not finished decoding when its crossfade begins, the
+ * degraded state is exactly the hero that shipped before this feature: the
+ * aerial is still underneath, so the beat plays over the base plate's own
+ * camera move. A late plate is a missed cut, never a hole.
+ */
+const CHAPTER_REACH_AT = [0.015, 0.185, 0.405] as const;
 
 /** How long (in progress units) a caption takes to enter / to leave. */
 const BEAT_FADE = 0.055;
@@ -284,9 +383,23 @@ export function HeroDirector() {
         });
       };
 
+      // Chapter-still mount gate. Monotonic by construction (the store
+      // ignores any value not higher than the current one), so scrubbing
+      // back up never unmounts a photograph that has already been paid for —
+      // see `hero-reach-store.ts`.
+      const setChapterReach = (progress: number) => {
+        for (let i = CHAPTER_REACH_AT.length - 1; i >= 0; i--) {
+          if (progress >= CHAPTER_REACH_AT[i]) {
+            setHeroReach(i);
+            return;
+          }
+        }
+      };
+
       const ctx = gsap.context(() => {
         const stage = root.querySelector<HTMLElement>(".hero-stage");
         const beats = gsap.utils.toArray<HTMLElement>("[data-hero-beat]");
+        const chapterPlates = gsap.utils.toArray<HTMLElement>("[data-hero-plate-chapter]");
 
         const tl = gsap.timeline({
           defaults: { ease: "none" },
@@ -296,7 +409,10 @@ export function HeroDirector() {
             end: "bottom bottom",
             scrub: 0.75,
             invalidateOnRefresh: true,
-            onUpdate: (self) => setActiveTick(self.progress),
+            onUpdate: (self) => {
+              setActiveTick(self.progress);
+              setChapterReach(self.progress);
+            },
           },
         });
 
@@ -377,6 +493,53 @@ export function HeroDirector() {
           tl.to(beat, { autoAlpha: 0, y: -26, duration: BEAT_FADE, ease: "power2.in" }, arrive + BEAT_HOLD);
         });
 
+        // Chapter stills: the camera arrives somewhere real. Same authoritative
+        // "all hidden at position 0" pin the captions carry, for the same
+        // lazy-capture reason — without it a backwards seek could leave two
+        // opaque photographs stacked over the aerial.
+        tl.set(chapterPlates, { autoAlpha: 0 }, 0);
+
+        chapterPlates.forEach((plate, i) => {
+          const enter = CHAPTER_IN[i];
+          const clear = CHAPTER_OUT_END[i];
+          const push = CHAPTER_PUSH[i];
+
+          // Crossfade. Decorative and aria-hidden (Hero.tsx), so autoAlpha is
+          // fine — `visibility: hidden` between beats also lets the browser
+          // skip rasterising a full-screen layer it is not showing.
+          //
+          // `power2.inOut`, not `power1`: both the aerial and the still are
+          // dense, mid-tone photographs, and a LINEAR dissolve spends a third
+          // of its run in the 35–65% band where both are legible at once —
+          // read live at progress 0.355, where the dugout ghosted through the
+          // pool and two sets of pitch markings crossed. An S-curve traverses
+          // that band in roughly half the scroll while holding the clean ends
+          // longer, so the same dissolve reads as a cut-on-motion rather than
+          // a double exposure.
+          tl.fromTo(
+            plate,
+            { autoAlpha: 0 },
+            { autoAlpha: 1, duration: CHAPTER_FADE, ease: "power2.inOut", immediateRender: false },
+            enter,
+          );
+          tl.to(
+            plate,
+            { autoAlpha: 0, duration: CHAPTER_FADE_OUT, ease: "power2.inOut" },
+            clear - CHAPTER_FADE_OUT,
+          );
+
+          // The still's own push, spanning its whole visible window so the
+          // move is already under way when it dissolves in and still running
+          // when it dissolves out — the arrival reads as a continuation of
+          // the camera, not a freeze frame. Scale only; see CHAPTER_PUSH.
+          tl.fromTo(
+            plate,
+            { scale: push.from },
+            { scale: push.to, duration: clear - enter, ease: "power1.inOut", immediateRender: false },
+            enter,
+          );
+        });
+
         // Finale plate: crossfades in as the destination beat's background —
         // a deliberate cut to the nadir framing, not a continuation of the
         // pan, so it has no `flyPath` tween of its own (see file header).
@@ -422,6 +585,7 @@ export function HeroDirector() {
         ctx.revert();
         root.removeAttribute("data-armed");
         setHeroArmed(false);
+        resetHeroReach();
         ticks.forEach((tick) => tick.removeAttribute("data-active"));
       };
     })();

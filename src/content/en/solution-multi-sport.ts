@@ -35,6 +35,8 @@ export const solutionMultiSportContent: SolutionContent = {
       "Centralized operations across branches and sports: combined KPIs, branch management, scoped permissions, group reporting and the business intelligence that reads all of it together.",
     primaryCta: "Book a demo",
     secondaryCta: "See pricing",
+    imageAlt:
+      "A sports estate from the air at golden hour — a stadium, a fifty-metre pool, football pitches and a tennis block laid out across one campus",
     snapshot: {
       label: "What this looks like",
       stats: [
