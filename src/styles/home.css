@@ -75,8 +75,9 @@
 
    GROUND SEQUENCE (Task E3, §13+): the sections below the flight continue
    the same film — mono slate stamps carry the hero rail's timecode forward
-   (hero flies 00–04 since G2 cut a chapter; the ground runs 05 TRUSTED →
-   10 BRANCHES; the closing band is the unnumbered end card), grounds
+   (hero flies 00–04 since G2 cut a chapter; the ground runs 05 PRODUCT
+   FAMILY → 09 BRANCHES since Wave H removed the trust strip; the closing
+   band is the unnumbered end card), grounds
    get authored atmosphere in BOTH themes (per-section radial glows + the
    hero's film-grain tile in dark; grain-free daylight-studio shading pools
    and lifted white bands in light — Task E5), and every artifact sits on
@@ -97,8 +98,19 @@
 
 .hero {
   /* Pull the stage under the translucent sticky NavBar (72px tall) so the
-     plate runs truly full-bleed behind the blurred nav surface. */
+     plate runs truly full-bleed behind the blurred nav surface. The bar's
+     own bottom hand-off is `.site-nav::after` in `src/app/globals.css` —
+     it belongs to the chrome, not to this section, because every page has
+     the bar and only this one has a photograph under it. */
   margin-block-start: -72px;
+  /* The lit room's page colour, resolved HERE on purpose. `.hero-stage`
+     carries `.night-zone`, which re-pins `--surface-page` to obsidian in
+     both themes — correct for the film's own controls, and exactly the wrong
+     value for a band whose whole job is to reach the page BELOW the film.
+     `.hero` is outside that re-pin, and a custom property substitutes its
+     `var()`s at computed-value time on the element that declares them, so
+     the stage inherits the real page colour as a literal. */
+  --hero-handoff: var(--surface-page);
   /* Mono stack for the film-annotation stamps (beat meta, rail numbers).
      Aliases the shared token (src/styles/tokens/typography.css) since Task
      E3 extended the same annotation language to the ground sections. */
@@ -119,7 +131,13 @@
 .hero-stage {
   position: relative;
   min-height: 100svh;
-  overflow: hidden;
+  /* `clip`, not `hidden`. Both clip identically, but `hidden` makes the stage
+     a real scroll container: the overscanned plates (scale 1.14/1.154/1.259)
+     and the corner beats give it scrollable overflow, so the frame could be
+     dragged/keyboard-scrolled sideways inside its own box — the photograph
+     visibly sliding under a fixed nav. `clip` has no scroll box at all, so
+     the same overscan is purely painted and there is nothing to scroll. */
+  overflow: clip;
   /* Theme-adaptive: `--hero-ground` is the film's own base (§2) — obsidian
      under the night plate, the day plate's shaded-foliage green under the
      golden-hour one. Only ever visible for the instant before the plate
@@ -128,6 +146,35 @@
   /* Keep centered content clear of the overlaid nav. */
   padding-block-start: 72px;
   display: grid;
+}
+
+/* THE STAGE'S BOTTOM HAND-OFF.
+
+   The film used to END on a straight full-width edge: in dark, a 1px tonal
+   step where the grain-textured obsidian of the frame met the flat obsidian
+   of the page; in light, the frame's near-black ground butted directly
+   against near-white paper. The second one is the letterbox tell — the
+   photograph does not finish, it is cut off.
+
+   This band dissolves the last ~100px of the frame into whatever the room
+   below actually is (see `--hero-handoff` on `.hero`). In dark the two
+   colours are the same value, so the band is a no-op and the frame is
+   unchanged; in light it turns a hard cut into the film fading out on the
+   studio floor. It is the stage's own `::after`, so it paints last — over
+   the plates, the grade AND the foreground bokeh — which is what makes it a
+   hand-off rather than one more layer inside the composite.
+
+   It does not wash the picture: the grade's own bottom stop is already at
+   `--hero-ground` well before this band starts, so the band only ever
+   crossfades ground-colour to page-colour, never photograph to page. */
+.hero-stage::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: clamp(56px, 9vh, 120px);
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, var(--hero-handoff));
 }
 
 .hero[data-armed] .hero-stage {
@@ -333,6 +380,14 @@
   background-size: 160px 160px;
   mix-blend-mode: overlay;
   opacity: 0.07;
+  /* Fade the grain out before the frame's bottom edge. An `overlay` grain
+     tile running all the way to y=100% textures the grade's final flat
+     `--hero-ground` band, and the page immediately below it is untextured —
+     which is the 1px tonal step visible at the film's bottom edge in dark
+     theme, where the two grounds are otherwise the same colour. Grain is
+     part of the picture; it should end with the picture, not with the box. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent 96%);
+  mask-image: linear-gradient(to bottom, #000 78%, transparent 96%);
 }
 
 /* ---------------------------------------------------------------------------
@@ -662,6 +717,25 @@
   line-height: 1.35;
 }
 
+/* Phones: the two hero CTAs stack, deliberately and unconditionally.
+
+   Side by side they measured 347.6px inside a 350px column at 390px — they
+   fit by 2.4px, which is not a layout, it is a coincidence. The body face
+   still loads with `swap`, and its metric fallback runs ~3% wider per label,
+   so every cold load wrapped the row to two rows and then snapped it back to
+   one when Inter arrived: a ~70px height change in the hero's
+   vertically-centred column, and the second half of this page's measured
+   mobile CLS after the display-face fix (`src/fonts/index.ts`). Wrapping was
+   already what a phone actually rendered for the first second of every
+   visit; this only makes it the intended state instead of an accident, and
+   the row's height stops depending on which font is currently resolved. */
+@media (max-width: 30rem) {
+  .hero [data-hero-ctas] {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
 /* Keyboard safety net: GSAP fades the CTA row with plain `opacity` (never
    `visibility`), so the row stays in the tab order throughout the armed
    flight. A keyboard user tabbing into it while transparent must see and
@@ -761,6 +835,14 @@
   display: grid;
   gap: 10px;
   align-content: end;
+  /* A flex item's default `min-width: auto` is its min-content width, which
+     for a display-cased caption is the longest WORD — "INTELLIGENCE" set at
+     the beat title's 2.15rem floor is wider than a phone frame, so the body
+     refused to shrink and ran 61px past the stage's inline edge at 390px
+     (measured left 130 / right 451). Zero lets it take the width the beat
+     actually has; the narrow-viewport tier below is what then makes the type
+     fit inside it. */
+  min-inline-size: 0;
 }
 
 .hero-stamp {
@@ -820,6 +902,37 @@
   text-shadow:
     0 2px 40px rgba(4, 9, 17, 0.6),
     0 1px 3px rgba(4, 9, 17, 0.4);
+}
+
+/* Phone tier for the lower-thirds. Above this width both the chapter number
+   and the caption sit on their viewport-driven clamp middles and fit the
+   frame; at 390px BOTH are pinned to their clamp MINIMA (57.6px number,
+   34.4px title), and those minima were authored for the frame, not for the
+   frame minus a 24px inset minus an 80px chapter number. Lowering the minima
+   instead would do nothing here — the middle term already wins at every
+   width above ~168px — so the phone tier is authored as its own step. The
+   caption still reads as the frame's main event; it is simply one type rung
+   quieter where the frame is one third as wide. */
+@media (max-width: 30rem) {
+  .hero[data-armed] .hero-beat {
+    gap: 12px;
+  }
+
+  .hero-beat-no {
+    font-size: 2.6rem;
+  }
+
+  .hero-beat-body {
+    padding-inline-start: 12px;
+  }
+
+  .hero-beat-title {
+    font-size: 1.6rem;
+  }
+
+  .hero-beat-subtitle {
+    font-size: var(--fs-small);
+  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -1311,17 +1424,17 @@
   --gs-grain: 0.05;
 }
 
-/* trusted: the screen's shadow falling into the lit room — the hand-off
-   from the fixed night stage above. Wide and soft so the film's clean
-   bottom cut stays crisp and the shading never reads as smearing. */
-.gs-trusted {
-  --gs-atmo: radial-gradient(62% 90% at 50% -26%, rgba(16, 18, 20, 0.045), transparent 72%);
-}
-
 /* product: lifted white band (the ledger desk under studio light) + a
-   brand-warm key light on the heading corner. */
+   brand-warm key light on the heading corner + the hand-off from the film.
+
+   That last layer moved here from the deleted `.gs-trusted` (Wave H removed
+   the trust strip; see `src/app/[locale]/page.tsx`). It is the screen's
+   shadow falling into the lit room, and it belongs to whichever section is
+   FIRST out of the stage — that is now this one. Wide and soft so the film's
+   bottom hand-off stays clean and the shading never reads as smearing. */
 .gs-product {
   --gs-atmo:
+    radial-gradient(62% 60% at 50% -14%, rgba(16, 18, 20, 0.045), transparent 72%),
     radial-gradient(38% 52% at 14% 8%, rgba(110, 143, 0, 0.055), transparent 70%),
     linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.55) 9%, rgba(255, 255, 255, 0.55) 91%, transparent 100%);
 }
@@ -1352,16 +1465,13 @@
   --gs-atmo: radial-gradient(40% 52% at 50% 58%, rgba(70, 84, 105, 0.055), transparent 72%);
 }
 
-/* trusted: the hero hand-off — cool overhead light falling from the stage. */
-[data-theme="dark"] .gs-trusted {
-  --gs-atmo: radial-gradient(46% 70% at 50% -12%, rgba(168, 190, 224, 0.055), transparent 72%);
-}
-
-/* product: a raised ground band (the ledger desk) + cool key light on the
-   heading corner. Top/bottom hairline-free — the ground change IS the
-   separator. */
+/* product: the hero hand-off (cool overhead light falling from the stage —
+   inherited from the deleted `.gs-trusted`, see the light recipe above) + a
+   raised ground band (the ledger desk) + cool key light on the heading
+   corner. Top/bottom hairline-free — the ground change IS the separator. */
 [data-theme="dark"] .gs-product {
   --gs-atmo:
+    radial-gradient(46% 50% at 50% -8%, rgba(168, 190, 224, 0.055), transparent 72%),
     radial-gradient(38% 52% at 14% 8%, rgba(168, 190, 224, 0.05), transparent 70%),
     linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.022) 9%, rgba(255, 255, 255, 0.022) 91%, transparent 100%);
 }
@@ -1677,11 +1787,26 @@
   --tilt-dir: -1;
 }
 
+/* The bloom behind the board. It used to bleed -7% horizontally out of the
+   scene box, and that bleed was the ONE thing on the whole home page making
+   the document scroll sideways: below `lg` the scene spans the container's
+   full inner width, so 7% of it is wider than the page gutter it has to
+   bleed into (390px: gutter 20px, bleed 24.5px -> documentElement.scrollWidth
+   395; 768px: gutter 31px, bleed 49.4px -> 787). Ablation-verified in both
+   locales — hiding this one pseudo-element returned scrollWidth to
+   clientWidth exactly.
+
+   The glow itself is not the problem, so it is not what was removed: the box
+   is pulled back inside the scene horizontally and the gradient's x-radius is
+   widened by the same factor (58% of a 114%-wide box = 66% of a 100%-wide
+   one), which paints an identically-sized ellipse from a box that cannot
+   overflow. The vertical bleed is untouched — vertical overflow was never
+   the defect. */
 .board-scene::before {
   content: "";
   position: absolute;
-  inset: -10% -7%;
-  background: radial-gradient(58% 62% at 50% 46%, rgba(139, 133, 232, 0.14), transparent 70%);
+  inset: -10% 0;
+  background: radial-gradient(66% 62% at 50% 46%, rgba(139, 133, 232, 0.14), transparent 70%);
   pointer-events: none;
 }
 

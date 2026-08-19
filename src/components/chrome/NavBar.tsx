@@ -38,10 +38,19 @@ export async function NavBar() {
   return (
     <header className="site-nav border-border-subtle bg-surface-page/85 sticky start-0 end-0 top-0 z-[var(--z-nav)] border-b backdrop-blur-md">
       {/* First focusable element on every page: visually hidden until it
-          receives keyboard focus, then it's the first thing announced. */}
+          receives keyboard focus, then it's the first thing announced.
+          Every box-affecting utility here is behind `focus:` on purpose.
+          `sr-only` sets `padding: 0` alongside `width/height: 1px`, but an
+          unprefixed `px-4 py-2` in the same class list wins that cascade —
+          which inflated the hidden link to a real 32x16 positioned box in
+          the header's corner. In LTR it sat at x = -1 (harmless-looking but
+          still a stray box); in RTL its auto static position resolved to the
+          inline-end edge, putting it at x = 362..391 in a 390px viewport and
+          pushing content past the viewport edge. Padding only applies once
+          the link is actually visible. */}
       <a
         href="#main"
-        className="bg-surface-raised text-text-primary sr-only rounded-md px-4 py-2 text-[length:var(--fs-small)] font-medium focus:not-sr-only focus:absolute focus:start-4 focus:top-3 focus:z-[var(--z-toast)]"
+        className="bg-surface-raised text-text-primary sr-only rounded-md text-[length:var(--fs-small)] font-medium focus:not-sr-only focus:absolute focus:start-4 focus:top-3 focus:z-[var(--z-toast)] focus:px-4 focus:py-2"
       >
         {t("common.skipToContent")}
       </a>

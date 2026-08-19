@@ -1,6 +1,6 @@
 /**
  * BranchesStory (`#branches`) — the multi-branch convergence: many branches,
- * one organization, one operational picture (ground slate `10 / Branches` —
+ * one organization, one operational picture (ground slate `09 / Branches` —
  * see `Slate.tsx`).
  *
  * Task E3 recomposes the old single-row chip strip into a real convergence
@@ -38,7 +38,7 @@ export function BranchesStory({ content }: BranchesStoryProps) {
   return (
     <Section id="branches" className="gs gs-branches scroll-mt-24">
       <Reveal className="max-w-[1040px]">
-        <Slate no="10" label={content.stamp} />
+        <Slate no="09" label={content.stamp} />
         <h2 className="gs-title">{content.title}</h2>
         <p className="text-text-secondary mt-4 max-w-[62ch] text-[length:var(--fs-lead)] text-pretty">
           {content.subtitle}

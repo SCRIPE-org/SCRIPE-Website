@@ -1,5 +1,5 @@
 /**
- * Arabic content for the home page — full eight-section composition.
+ * Arabic content for the home page — full seven-section composition.
  *
  * Ported from the authored Arabic dictionary
  * `backup/scripe-static/js/lang-ar.js` (authored Arabic, not mirrored
@@ -64,11 +64,6 @@ export const homeContent: HomeContent = {
     ],
     primaryCta: "احجز عرضًا توضيحيًا",
     secondaryCta: "تحدث إلى المبيعات",
-  },
-  trusted: {
-    stamp: "الثقة",
-    title: "موضع ثقة المنظمات الرياضية الحديثة",
-    subtitle: "منصة واحدة للأندية والأكاديميات والمنشآت والمنظمات متعددة الرياضات.",
   },
   productFamily: {
     stamp: "عائلة المنتجات",

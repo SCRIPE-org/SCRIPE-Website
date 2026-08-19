@@ -13,16 +13,18 @@
  * for both the desktop row and this sheet, instead of each surface owning
  * its own separate instance.
  *
- * Behavior contract: Escape closes and returns focus to the toggle button;
- * Tab/Shift+Tab cycle only through the sheet's own focusable elements
- * (Tab from the last item wraps to the first, Shift+Tab from the first
- * wraps to the last) — the header hamburger/X toggle button is a DOM
- * sibling of the sheet, not inside it, so it is excluded from that cycle
- * exactly as the legacy `backup/scripe-static/js/navbar.js` implementation
- * excluded it; body scroll is locked (`overflow`/`touchAction: "none"`)
- * while open and restored on close; clicking any link inside the sheet
- * closes it so route changes never leave the sheet stuck open underneath
- * the new page.
+ * Behavior contract: opening focuses the DIALOG CONTAINER itself (it carries
+ * `tabIndex={-1}` for exactly that), never its first focusable child;
+ * Escape closes and returns focus to the toggle button; Tab/Shift+Tab cycle
+ * only through the sheet's own focusable elements (Tab from the last item
+ * wraps to the first; Shift+Tab from the first item — or from the container,
+ * which is where focus starts — wraps to the last) — the header hamburger/X
+ * toggle button is a DOM sibling of the sheet, not inside it, so it is
+ * excluded from that cycle exactly as the legacy
+ * `backup/scripe-static/js/navbar.js` implementation excluded it; body
+ * scroll is locked (`overflow`/`touchAction: "none"`) while open and
+ * restored on close; clicking any link inside the sheet closes it so route
+ * changes never leave the sheet stuck open underneath the new page.
  *
  * The sheet also carries `role="dialog" aria-modal="true"`, which instructs
  * assistive technology to treat everything outside it as inert — so the
@@ -33,6 +35,14 @@
  * `NavBar.tsx`'s skip-to-content link already uses, so it adds no visible
  * duplicate of the header's X for sighted users, but is reachable by
  * keyboard Tab and by touch screen-reader swipe navigation either way).
+ *
+ * That "no visible duplicate" only became true with the focus fix above.
+ * The open effect used to focus the sheet's FIRST FOCUSABLE ELEMENT, which
+ * is this close button — and `focus:not-sr-only` then did precisely what it
+ * is written to do, painting it at 44x44 in the sheet's top corner directly
+ * beneath the header's X. Every single open showed two stacked close
+ * buttons. Focusing the container instead leaves the sr-only treatment
+ * intact and only shows the button when a keyboard user actually tabs to it.
  *
  * The sheet renders via `createPortal(..., document.body)` (Task E5 fix-
  * round), not in place as a normal child. `NavBar.tsx`'s `<header>` carries
@@ -102,8 +112,16 @@ export function MobileNav({ localeSwitch, themeToggle }: MobileNavProps) {
   useEffect(() => {
     if (!open) return;
 
-    const first = focusableElements(sheetRef.current)[0];
-    first?.focus();
+    // Focus the DIALOG ITSELF (`tabIndex={-1}`), never its first focusable
+    // child. That child is the sr-only close button below, and `sr-only`'s
+    // partner rule `focus:not-sr-only` paints it at a real 44x44 the moment
+    // it takes focus — so auto-focusing it rendered a second, visible X
+    // directly beneath the header's own X on EVERY open. Focusing the
+    // container announces the dialog's `aria-label`, starts the tab cycle at
+    // the top of the sheet, and leaves the close button doing exactly the job
+    // it exists for: reachable by Tab and by screen-reader swipe, visible
+    // only once a keyboard user has actually tabbed to it.
+    sheetRef.current?.focus();
 
     const previousOverflow = document.body.style.overflow;
     const previousTouchAction = document.body.style.touchAction;
@@ -121,7 +139,12 @@ export function MobileNav({ localeSwitch, themeToggle }: MobileNavProps) {
       if (items.length === 0) return;
       const firstItem = items[0];
       const lastItem = items[items.length - 1];
-      if (event.shiftKey && document.activeElement === firstItem) {
+      // The sheet container is itself a valid focus position now (it is what
+      // receives focus on open), and Shift+Tab from it would otherwise walk
+      // straight out of the dialog into the header — the exact leak the trap
+      // exists to prevent. Treat "on the container" as "before the first
+      // item" and wrap to the last, same as Shift+Tab from the first item.
+      if (event.shiftKey && (document.activeElement === firstItem || document.activeElement === sheetRef.current)) {
         event.preventDefault();
         lastItem.focus();
       } else if (!event.shiftKey && document.activeElement === lastItem) {
@@ -183,8 +206,13 @@ export function MobileNav({ localeSwitch, themeToggle }: MobileNavProps) {
             role="dialog"
             aria-modal="true"
             aria-label={t("nav.siteNav")}
+            // Programmatic focus target only — never in the tab order, and no
+            // ring of its own (it is a container, not a control). See the
+            // open-effect above for why focus lands here rather than on the
+            // sheet's first focusable child.
+            tabIndex={-1}
             onClick={onSheetClick}
-            className="bg-surface-page fixed start-0 end-0 top-[72px] bottom-0 z-[var(--z-overlay)] overflow-y-auto"
+            className="bg-surface-page fixed start-0 end-0 top-[72px] bottom-0 z-[var(--z-overlay)] overflow-y-auto outline-none"
           >
             {/* Close control INSIDE the dialog boundary — see the file header
                 for why the header's own hamburger/X toggle doesn't satisfy

@@ -123,6 +123,13 @@ export function ComparisonTable({ content, plans }: ComparisonTableProps) {
       </Reveal>
 
       <Reveal y={20} className="mt-10">
+        {/* The one place on the site that overrides the global focus ring
+            (`src/app/globals.css`), and a deliberate exception rather than a
+            leftover: this is a keyboard-scrollable region spanning the full
+            content width, so the global OUTSET ring would be drawn partly
+            past the container and clipped by the panel's own rounded edge.
+            Same token, same width — only the offset is inverted so the ring
+            lands inside the panel. */}
         <div
           role="region"
           aria-label={content.title}

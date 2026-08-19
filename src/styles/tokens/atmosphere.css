@@ -122,6 +122,10 @@
   --cta-ink: var(--obsidian);
   --border-subtle: #26282c;
   --border-strong: #666a70;
+  /* Pinned like every other semantic colour here: a control that lives on the
+     film takes the film's focus ring, so tabbing into the hero CTAs in light
+     theme does not paint a daylight-olive ring over a night photograph. */
+  --focus-ring: var(--lime-400);
   --accent-academy: var(--teal-400);
   --accent-venue: var(--jade-400);
   --accent-fi: var(--indigo-400);

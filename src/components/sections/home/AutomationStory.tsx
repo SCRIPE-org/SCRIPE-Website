@@ -1,6 +1,6 @@
 /**
  * AutomationStory (`#automation`) — one booking sets off the whole chain
- * (ground slate `09 / Automation` — see `Slate.tsx`).
+ * (ground slate `08 / Automation` — see `Slate.tsx`).
  *
  * The page's one numbered STEP sequence (distinct from the ground slates'
  * timecode), because the content genuinely IS a sequence: six operational
@@ -36,7 +36,7 @@ export function AutomationStory({ content }: AutomationStoryProps) {
   return (
     <Section id="automation" className="gs gs-automation scroll-mt-24">
       <Reveal className="max-w-[1040px]">
-        <Slate no="09" label={content.stamp} />
+        <Slate no="08" label={content.stamp} />
         <h2 className="gs-title">{content.title}</h2>
         <p className="text-text-secondary mt-4 max-w-[62ch] text-[length:var(--fs-lead)] text-pretty">
           {content.subtitle}

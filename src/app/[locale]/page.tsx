@@ -1,7 +1,15 @@
 /**
- * Home page — the full eight-section Fusion composition:
- * Camera-Hero → trusted → product family → platform → solutions →
- * automation → branches → closing CTA.
+ * Home page — the full seven-section Fusion composition:
+ * Camera-Hero → product family → platform → solutions → automation →
+ * branches → closing CTA.
+ *
+ * Wave H removed the `#trusted` strip that used to sit between the hero and
+ * the product family: a heading claiming trust with nothing under it (its
+ * category-pill row had already been amputated for reading like a fake logo
+ * wall). The ground sequence's film-slate timecode renumbered with it, so it
+ * still runs contiguously from the hero's last beat — product family is now
+ * `05`, branches `09`. `src/content/types.ts`'s `HomeContent` carries the
+ * full reasoning and the condition for reinstating a trust section.
  *
  * A Server Component: content comes from the typed content pipeline
  * (`getContent("home", locale)` — parity between locales is enforced by
@@ -23,7 +31,6 @@ import { Hero } from "@/components/sections/home/Hero";
 import { PlatformOverview } from "@/components/sections/home/PlatformOverview";
 import { ProductFamily } from "@/components/sections/home/ProductFamily";
 import { SolutionsGrid } from "@/components/sections/home/SolutionsGrid";
-import { TrustStrip } from "@/components/sections/home/TrustStrip";
 import { getContent } from "@/content";
 import type { HomeContent } from "@/content/types";
 import { routing, type Locale } from "@/i18n/routing";
@@ -64,7 +71,7 @@ export async function generateMetadata({
 
 /**
  * Renders the home page: structured data (breadcrumb + software
- * application) followed by the eight sections in narrative order.
+ * application) followed by the seven sections in narrative order.
  *
  * @param props.params - Resolves to the matched `[locale]` segment.
  */
@@ -84,7 +91,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <JsonLd data={buildSoftwareApplication(origin, locale)} />
 
       <Hero content={content.hero} />
-      <TrustStrip content={content.trusted} />
       <ProductFamily content={content.productFamily} />
       <PlatformOverview content={content.platform} />
       <SolutionsGrid content={content.solutions} />

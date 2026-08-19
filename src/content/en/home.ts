@@ -1,5 +1,5 @@
 /**
- * English content for the home page — full eight-section composition.
+ * English content for the home page — full seven-section composition.
  *
  * Every string is ported from the legacy static site's home page
  * (`backup/scripe-static/index.html`, referenced below by its `data-i18n`
@@ -22,11 +22,15 @@
  *   `rosters-session-plans-cover-and-load-for` (the last from
  *   `backup/scripe-static/platform.html`); the heading/subtitle are composed
  *   from the same claims vocabulary, no new metrics or claims invented.
- * - all other sections port their legacy section verbatim (`#trusted`,
- *   `#platform`, `#solutions`, `#automation`, `#branches`, `.sc-cta-section`).
- *   The legacy trust strip's internal production note ("Category placeholders
- *   — replace with partner marks once approved") is intentionally dropped:
- *   it was an authoring note, not public copy.
+ * - all other sections port their legacy section verbatim (`#platform`,
+ *   `#solutions`, `#automation`, `#branches`, `.sc-cta-section`).
+ * - the legacy `#trusted` strip is NOT ported. Its production note
+ *   ("Category placeholders — replace with partner marks once approved")
+ *   named the problem exactly: there was nothing real to put in it. Wave H
+ *   removed the section rather than keep an unbacked "trusted by" claim
+ *   standing over an empty proof slot — see `HomeContent` in
+ *   `src/content/types.ts` for the full reasoning and the condition for
+ *   bringing it back.
  */
 import type { HomeContent } from "../types";
 
@@ -72,11 +76,6 @@ export const homeContent: HomeContent = {
     ],
     primaryCta: "Book a demo",
     secondaryCta: "Talk to sales",
-  },
-  trusted: {
-    stamp: "Trusted",
-    title: "Trusted by modern sports organizations",
-    subtitle: "One platform for clubs, academies, venues and multi-sport organizations.",
   },
   productFamily: {
     stamp: "Product family",

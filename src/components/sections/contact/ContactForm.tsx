@@ -23,8 +23,36 @@
  * comment). `translateServerFieldError` below is what turns a server key
  * back into displayed copy via `t("forms." + key)`, so a client-caught error
  * and a server-caught error for the same field render identically either
- * way. `forms.sent`/`sentBody`/`notConnected`/`sendAnother`/`sending`/`send`
- * are the submit/result-state vocabulary.
+ * way. `forms.sent`/`sentBody`/`notConnectedTitle`/`notConnected`/
+ * `sendAnother`/`sending`/`send` are the submit/result-state vocabulary.
+ *
+ * ── "not connected" is NOT a success state (binding) ───────────────────────
+ * `submitLead` returns `status: "not-connected"` in exactly the cases where
+ * the submission did NOT reach anybody: `LEADS_ENDPOINT` unset, the endpoint
+ * refusing/erroring, the request timing out, or any unexpected throw inside
+ * the action (see that file's "WHY THIS FUNCTION NEVER THROWS" header). The
+ * visitor's details were not delivered and were not stored anywhere.
+ *
+ * That outcome therefore must NOT reuse the resolved-success composition
+ * (check glyph + "Thanks." + "Submit another request"), which is what an
+ * audit caught it doing: a green tick and a thank-you over a submission that
+ * went nowhere is a lie told at the exact moment the visitor is most likely
+ * to act on it. Instead:
+ *
+ * - `showConfirmation` covers only the states where the submission is
+ *   genuinely finished — `"sent"`, and `"spam"` (which `submit-lead.ts`
+ *   deliberately makes indistinguishable from `"sent"`; see its header).
+ *   That branch is untouched and is what a live `LEADS_ENDPOINT` will show.
+ * - `"not-connected"` keeps the FORM MOUNTED and renders a neutral,
+ *   informational notice at the top of the card. Keeping the form mounted is
+ *   the substantive part: the inputs are uncontrolled, so replacing the form
+ *   with a panel would throw away everything the visitor typed and make
+ *   "try again" mean "retype all of it". Re-submitting is a real action here
+ *   precisely because a delivery failure can be transient.
+ *
+ * Visual treatment is deliberately neutral (overlay surface, strong border,
+ * muted alert glyph, secondary text) — never the accent/tick vocabulary the
+ * success panel owns.
  *
  * ── Organization-type option source (binding decision) ────────────────────
  * The five `type` options are NOT page content. Four
@@ -82,11 +110,13 @@
  * On ANY invalid submission — client-side (immediate) or server-side (the
  * action returns `status: "invalid"`) — the first invalid field in field
  * order is focused, so a keyboard/screen-reader user lands exactly where the
- * fix is needed instead of having to hunt for it. On a resolved submission
- * (any of `sent`/`not-connected`/`spam`), the confirmation panel's own
- * heading is focused and the panel carries `role="status"` (an implicit
- * polite live region), so both a sighted keyboard user and a screen-reader
- * user learn the outcome without hunting for it either.
+ * fix is needed instead of having to hunt for it. On a delivered submission
+ * (`sent`/`spam`), the confirmation panel's own heading is focused and the
+ * panel carries `role="status"` (an implicit polite live region), so both a
+ * sighted keyboard user and a screen-reader user learn the outcome without
+ * hunting for it either. `not-connected` gets the same treatment on its own
+ * in-form notice heading — the outcome is different, the way it is announced
+ * is not.
  */
 import { useActionState, useEffect, useRef, useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
@@ -212,11 +242,12 @@ function translateServerFieldError(key: string | undefined, t: (key: string) => 
 }
 
 /**
- * Renders the demo-request form card: eyebrow/intro, the honeypot and
- * time-trap fields, the six visible fields, the submit button/footnote, and
- * the confirmation/not-connected panel that replaces the form once a
- * submission resolves. See this file's header for the full behavioral
- * contract.
+ * Renders the demo-request form card: eyebrow/intro, the undelivered-
+ * submission notice, the honeypot and time-trap fields, the six visible
+ * fields, and the submit button/footnote — plus the confirmation panel that
+ * replaces the whole card once a submission is genuinely delivered. See this
+ * file's header for the full behavioral contract, in particular why
+ * `not-connected` renders in-form instead of as that panel.
  *
  * @param props - See {@link ContactFormProps}.
  */
@@ -227,6 +258,25 @@ export function ContactForm({ content }: ContactFormProps) {
   const [dismissed, setDismissed] = useState(false);
   const [formInstance, setFormInstance] = useState(0);
   const [startedAt, setStartedAt] = useState("");
+  /** Last submitted values, mirrored back onto each control's `defaultValue`.
+   *
+   *  React 19 RESETS a `<form action={...}>` once its action completes — for
+   *  every outcome, not just success. That is right for a delivered lead and
+   *  wrong for every other result: an undelivered submission and a
+   *  server-rejected one both leave the visitor on a form they must now
+   *  retype from scratch, which is also what made the honest "your answers
+   *  are still in the fields below" copy untrue when it was first written
+   *  (measured: all four fields came back empty).
+   *
+   *  Rather than fight the reset or echo the lead back through the server
+   *  action's result (which would put contact details in a response payload
+   *  for no reason — see `submit-lead.ts`'s PII rules), the values are
+   *  captured client-side in `handleSubmit` and become the controls' new
+   *  DEFAULTS. A native form reset restores each control to its default, so
+   *  React's own reset now restores what was typed instead of clearing it.
+   *  The inputs stay uncontrolled throughout: `defaultValue` only writes the
+   *  attribute, never the live value, so nothing interferes with typing. */
+  const [retained, setRetained] = useState<Record<string, string>>({});
 
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
@@ -234,6 +284,7 @@ export function ContactForm({ content }: ContactFormProps) {
   const phoneRef = useRef<HTMLInputElement>(null);
   const messageRef = useRef<HTMLTextAreaElement>(null);
   const panelHeadingRef = useRef<HTMLHeadingElement>(null);
+  const noticeHeadingRef = useRef<HTMLHeadingElement>(null);
 
   /** Focuses the DOM node behind one {@link ValidatedField}. A small switch
    *  rather than a `Record<ValidatedField, RefObject<...>>` lookup — the
@@ -272,8 +323,14 @@ export function ContactForm({ content }: ContactFormProps) {
     if (first) focusField(first);
   }, [state]);
 
-  const showConfirmation =
-    !dismissed && (state?.status === "sent" || state?.status === "not-connected" || state?.status === "spam");
+  // Only genuinely-delivered outcomes resolve the form. `"spam"` is here
+  // because `submit-lead.ts` guarantees a bot can never tell it apart from
+  // `"sent"`; `"not-connected"` is deliberately NOT here — see the file
+  // header's "not connected is NOT a success state".
+  const showConfirmation = !dismissed && (state?.status === "sent" || state?.status === "spam");
+  // Suppressed while a retry is in flight so the old notice never sits above
+  // a submission that is currently being re-attempted.
+  const showNotConnected = !dismissed && !isPending && state?.status === "not-connected";
   const rawServerFieldErrors = state?.status === "invalid" ? (state.fieldErrors ?? {}) : {};
   // Translate each server-reported message KEY into displayed copy — see
   // `translateServerFieldError`'s doc comment and this file's header
@@ -289,6 +346,10 @@ export function ContactForm({ content }: ContactFormProps) {
     if (showConfirmation) panelHeadingRef.current?.focus();
   }, [showConfirmation]);
 
+  useEffect(() => {
+    if (showNotConnected) noticeHeadingRef.current?.focus();
+  }, [showNotConnected]);
+
   /** Reads and validates every tracked field from a submitted `<form>`,
    *  blocking the action from dispatching (via `preventDefault`) when any
    *  fail — see this file's header for why that stops React's form action
@@ -297,6 +358,17 @@ export function ContactForm({ content }: ContactFormProps) {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     const data = new FormData(event.currentTarget);
     const errors: Partial<Record<ValidatedField, string>> = {};
+
+    // Captured before any early return, so the values survive React's
+    // post-action form reset on every outcome — see `retained`'s declaration.
+    setRetained({
+      name: String(data.get("name") ?? ""),
+      email: String(data.get("email") ?? ""),
+      organization: String(data.get("organization") ?? ""),
+      phone: String(data.get("phone") ?? ""),
+      type: String(data.get("type") ?? ""),
+      message: String(data.get("message") ?? ""),
+    });
 
     for (const field of VALIDATED_FIELDS) {
       const message = validateField(field, String(data.get(field) ?? ""), t);
@@ -321,12 +393,14 @@ export function ContactForm({ content }: ContactFormProps) {
   function startAnother(): void {
     setDismissed(true);
     setClientErrors({});
+    // Drop the retained defaults too — "another request" means a blank form,
+    // not the delivered one pre-filled again.
+    setRetained({});
     setFormInstance((n) => n + 1);
     requestAnimationFrame(() => nameRef.current?.focus());
   }
 
   if (showConfirmation) {
-    const isNotConnected = state?.status === "not-connected";
     return (
       <Reveal className="atmo-lift min-w-0 rounded-lg border border-border-strong bg-surface-raised p-8 sm:p-10">
         <div role="status">
@@ -355,7 +429,7 @@ export function ContactForm({ content }: ContactFormProps) {
             {t("forms.sent")}
           </h2>
           <p className="mt-3 max-w-[52ch] text-[length:var(--fs-body)] text-pretty text-text-secondary">
-            {isNotConnected ? t("forms.notConnected") : t("forms.sentBody")}
+            {t("forms.sentBody")}
           </p>
           <Button type="button" variant="outline" className="mt-6" onClick={startAnother}>
             {t("forms.sendAnother")}
@@ -381,6 +455,49 @@ export function ContactForm({ content }: ContactFormProps) {
           <p className="text-[length:var(--fs-small)] text-pretty text-text-secondary">{content.intro}</p>
         </div>
 
+        {/* Undelivered-submission notice. Deliberately NOT the success
+            composition — no tick, no accent, no "Thanks." — and deliberately
+            ABOVE a form that is still mounted and still holds everything the
+            visitor typed. See this file's header. */}
+        {showNotConnected && (
+          <div
+            role="status"
+            className="grid gap-3 rounded-md border border-border-strong bg-surface-overlay p-5 sm:grid-cols-[auto_1fr] sm:gap-4"
+          >
+            <span
+              aria-hidden="true"
+              className="grid size-9 shrink-0 place-items-center rounded-md border border-border-strong text-text-secondary"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 8v5" />
+                <path d="M12 16.5v.01" />
+              </svg>
+            </span>
+            <div className="grid min-w-0 gap-1.5">
+              <h2
+                ref={noticeHeadingRef}
+                tabIndex={-1}
+                className="font-display text-[length:var(--fs-lead)] font-semibold text-text-primary outline-none"
+              >
+                {t("forms.notConnectedTitle")}
+              </h2>
+              <p className="max-w-[56ch] text-[length:var(--fs-small)] text-pretty text-text-secondary">
+                {t("forms.notConnected")}
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Honeypot: a real visitor never perceives this field by any
             channel — sight, screen reader, or Tab key. */}
         <input
@@ -404,6 +521,7 @@ export function ContactForm({ content }: ContactFormProps) {
               required
               maxLength={FIELD_LIMITS.name}
               autoComplete="name"
+              defaultValue={retained.name ?? ""}
               placeholder={content.placeholders.name}
               className={CONTROL_CLASS}
             />
@@ -417,6 +535,7 @@ export function ContactForm({ content }: ContactFormProps) {
               required
               maxLength={FIELD_LIMITS.email}
               autoComplete="email"
+              defaultValue={retained.email ?? ""}
               placeholder={content.placeholders.email}
               className={CONTROL_CLASS}
             />
@@ -430,6 +549,7 @@ export function ContactForm({ content }: ContactFormProps) {
               required
               maxLength={FIELD_LIMITS.organization}
               autoComplete="organization"
+              defaultValue={retained.organization ?? ""}
               placeholder={content.placeholders.organization}
               className={CONTROL_CLASS}
             />
@@ -450,6 +570,7 @@ export function ContactForm({ content }: ContactFormProps) {
               inputMode="tel"
               maxLength={FIELD_LIMITS.phone}
               autoComplete="tel"
+              defaultValue={retained.phone ?? ""}
               placeholder={content.placeholders.phone}
               className={cx(CONTROL_CLASS, "text-start")}
             />
@@ -457,7 +578,7 @@ export function ContactForm({ content }: ContactFormProps) {
         </div>
 
         <Field label={t("forms.type")} hint={content.hints.type}>
-          <select name="type" defaultValue="" className={CONTROL_CLASS}>
+          <select name="type" defaultValue={retained.type ?? ""} className={CONTROL_CLASS}>
             <option value="" disabled>
               {t("forms.typePlaceholder")}
             </option>
@@ -474,6 +595,7 @@ export function ContactForm({ content }: ContactFormProps) {
             ref={messageRef}
             name="message"
             maxLength={FIELD_LIMITS.message}
+            defaultValue={retained.message ?? ""}
             placeholder={content.placeholders.message}
             className={cx(CONTROL_CLASS, "min-h-[120px] resize-y")}
           />

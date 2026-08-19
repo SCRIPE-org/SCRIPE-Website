@@ -1,6 +1,6 @@
 /**
  * ProductFamily (`#product`) — the three SCRIPE products as elevated ledger
- * cards with abstract product-UI vignettes (ground slate `06 / Product
+ * cards with abstract product-UI vignettes (ground slate `05 / Product
  * family` — see `Slate.tsx`).
  *
  * Presentation thesis (Task E3 evolution of the row system): products are
@@ -117,7 +117,7 @@ export function ProductFamily({ content }: ProductFamilyProps) {
   return (
     <Section id="product" className="gs gs-product scroll-mt-24">
       <Reveal className="max-w-[1040px]">
-        <Slate no="06" label={content.stamp} />
+        <Slate no="05" label={content.stamp} />
         <h2 className="gs-title">{content.title}</h2>
         <p className="text-text-secondary mt-4 max-w-[62ch] text-[length:var(--fs-lead)] text-pretty">
           {content.subtitle}

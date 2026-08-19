@@ -44,10 +44,6 @@
   --lime-600: #6e8f00;
   --lime-700: #4c6600;
 
-  /* primitives: azure — focus only, deliberately distinct from lime so a
-     focus ring always reads against a lime-filled control, not just the page */
-  --azure-500: #1e6feb;
-
   /* primitives: teal — Academy context */
   --teal-400: #5ac8e0;
   --teal-600: #0e7490;
@@ -95,7 +91,16 @@
   --cta-ink: var(--lime-400);
   --border-subtle: #dcded6;
   --border-strong: #8b9088;
-  --focus-ring: var(--azure-500);
+  /* focus role: the ring is brand, not browser-default. This used to be an
+     azure primitive (#1E6FEB) chosen so a ring would still read against a
+     lime-filled control — but the global rule keeps `outline-offset: 2px`,
+     so the ring never lands ON a fill in the first place, and a saturated
+     blue rectangle in a lime/obsidian system reads as "unstyled", which is
+     worse than the problem it solved. Daylight takes the darkest lime stop
+     (the same one `--accent-text` uses as running text): 5.98:1 on the
+     tinted page, comfortably clear of the 3:1 non-text floor. See the focus
+     block in `src/app/globals.css` for the full contract. */
+  --focus-ring: var(--lime-700);
   --accent-academy: var(--teal-600);
   --accent-venue: var(--jade-600);
   --accent-fi: var(--indigo-600);
@@ -122,7 +127,8 @@
   --cta-ink: var(--obsidian);
   --border-subtle: #26282c;
   --border-strong: #666a70;
-  --focus-ring: var(--azure-500);
+  /* focus role: full-brightness lime on obsidian — 15.8:1. */
+  --focus-ring: var(--lime-400);
   --accent-academy: var(--teal-400);
   --accent-venue: var(--jade-400);
   --accent-fi: var(--indigo-400);

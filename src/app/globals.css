@@ -55,9 +55,56 @@ body {
   font-family: var(--font-body);
 }
 
-:focus-visible {
-  outline: 2px solid var(--focus-ring);
-  outline-offset: 2px;
+/* ---------------------------------------------------------------------------
+   THE FOCUS RING (single source of truth)
+
+   One base rule owns keyboard focus for every focusable element on the site.
+   Components do not redeclare it; the two that do are genuine exceptions and
+   are noted at their call sites (`ComparisonTable.tsx` needs an INSET ring
+   because it is an `overflow-x-auto` scroll container whose outset ring would
+   be clipped by its own rounded panel; two `tabIndex={-1}` headings in
+   `ContactForm.tsx` carry `outline-none` because they are programmatic focus
+   targets for a status announcement, not interactive controls).
+
+   Two things this rule fixes beyond simply existing:
+
+   1. COLOUR. `--focus-ring` was azure (`#1E6FEB`) in both themes. On a site
+      whose entire palette is signal lime on obsidian, a saturated blue
+      rectangle — around, among other things, the lime CTA — is
+      indistinguishable from the browser's own unstyled default: the one
+      visual the rest of this design system exists to avoid. It is now the
+      brand accent, at the stop each ground can carry (lime-700 on daylight
+      paper at 5.98:1, lime-400 on obsidian at 15.8:1, and lime-400 again
+      inside `.night-zone` so the ring over the hero film belongs to the film
+      — see `colors.css`). `outline-offset` is what made azure defensible in
+      the first place ("must read against a lime-filled control") and it is
+      kept: the ring never touches the control's own fill, it sits on the
+      surface behind it, so a lime ring around the lime CTA still reads as
+      two marks separated by a dark gap.
+
+   2. TIMING. A focus indicator must be present the instant focus lands, not
+      animated in. Tailwind's `transition`/`transition-colors` utilities —
+      which `Button` and most interactive surfaces here use — include
+      `outline-color` in their property list, so a ring declared ONLY inside
+      `:focus-visible` interpolated from the element's inherited
+      `currentColor` to the ring colour across `--motion-quick`: a ~200ms
+      colour fade on the indicator. Rather than fight every component's
+      transition list, `outline-color` is resolved at all times below, so by
+      the time `outline-style` flips (a discrete, non-animatable change) the
+      colour is already correct and the transition has nothing to
+      interpolate. `:where(*)` keeps this at zero specificity inside `base`,
+      so any component that genuinely needs a different outline colour still
+      wins with a plain utility.
+   --------------------------------------------------------------------------- */
+@layer base {
+  :where(*) {
+    outline-color: var(--focus-ring);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
 }
 
 /* Light-theme nav (Task E5): the lit room's chrome, designed rather than
@@ -73,6 +120,40 @@ html:not([data-theme="dark"]) .site-nav {
   backdrop-filter: blur(16px) saturate(160%);
   border-block-end-color: rgba(16, 18, 20, 0.08);
   box-shadow: 0 14px 36px -28px rgba(16, 18, 20, 0.4);
+  --nav-spill: color-mix(in srgb, var(--clean-white) 60%, transparent);
+}
+
+/* THE NAV'S BOTTOM HAND-OFF.
+
+   The bar is 72px of near-opaque surface sitting ON TOP of whatever scrolls
+   under it, and the home hero deliberately runs its photograph full-bleed
+   beneath it (`.hero`'s -72px margin). Without this, the wash simply STOPPED
+   at y=72: a razor-straight horizontal line across the frame, with a blurred,
+   tinted photograph above it and a sharp, untinted one below. In light theme
+   that line is a warm-grey slab meeting a mid-tone photo at zero transition
+   — the single most damaging edge on the page, and the reason the hero read
+   as a letterboxed JPEG rather than as cinema running under the chrome.
+
+   A short spill below the bar carries the chrome's own colour out and down to
+   nothing, so the wash tapers instead of ending. It lives on the header (a
+   pseudo-element inside the header's own stacking context) so it paints over
+   page content in the same order the bar does, and it is inert to input. On
+   every non-hero page the spill is page-colour over page-colour, i.e.
+   invisible — it only ever does work where something real is running under
+   the bar. `--nav-spill` defaults to the dark bar's own surface and is
+   re-pointed by the light rule above, so each theme spills its own chrome. */
+.site-nav {
+  --nav-spill: color-mix(in srgb, var(--surface-page) 78%, transparent);
+}
+
+.site-nav::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 100%;
+  block-size: clamp(28px, 4vh, 52px);
+  pointer-events: none;
+  background: linear-gradient(to bottom, var(--nav-spill), transparent);
 }
 
 ::selection {

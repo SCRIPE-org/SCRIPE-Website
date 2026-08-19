@@ -125,8 +125,8 @@ export interface BranchChip {
 }
 
 /**
- * Content for the home page — the full eight-section composition:
- * hero → trusted → product family → platform → solutions → automation →
+ * Content for the home page — the full seven-section composition:
+ * hero → product family → platform → solutions → automation →
  * branches → closing CTA. Copy is ported from the legacy static site
  * (`backup/scripe-static/index.html` + `js/lang-ar.js`); the product-family
  * section additionally draws on the current Sports Operations OS product
@@ -186,24 +186,25 @@ export interface HomeContent {
     /** Label of the secondary call-to-action button. */
     secondaryCta: string;
   };
-  /** Honest positioning strip (`#trusted`) — heading + sentence only, never
-   *  a logo wall (a cleanup wave removed the former category-pill row for
-   *  reading like one by position/styling despite not naming customers —
-   *  see `TrustStrip.tsx`'s header). */
-  trusted: {
+  /* NOTE: there is no `trusted` slice. The home page used to open its ground
+     sequence on a `#trusted` strip — a film slate, an `<h2>` reading "Trusted
+     by modern sports organizations", and one sentence. An earlier cleanup had
+     already amputated its category-pill row for reading like a customer-logo
+     wall, which left the CLAIM standing over nothing: ~300px of vertical
+     space asserting trust with zero proof beneath it, in the exact position
+     where a reader expects marks. An empty proof slot reads as "no
+     customers", which is a worse answer than not raising the question. The
+     section is gone (Wave H); its one honest sentence — who the platform is
+     for — is already carried, in more useful form, by `productFamily` and by
+     `solutions`. Restore a strip here only when there are real, nameable
+     customers to put in it. */
+  /** Product family section (`#product`) — the three SCRIPE products, and
+   *  the first beat of the ground sequence. */
+  productFamily: {
     /** Film-slate stamp label — the ground sequence continues the hero
-     *  rail's timecode below the fold (`06 / <stamp>`; see `src/styles/
+     *  rail's timecode below the fold (`05 / <stamp>`; see `src/styles/
      *  home.css` §13). Short label, genuine per locale; the number itself
      *  is layout (Latin digits, board-times precedent), never content. */
-    stamp: string;
-    /** Section heading. */
-    title: string;
-    /** Supporting sentence. */
-    subtitle: string;
-  };
-  /** Product family section (`#product`) — the three SCRIPE products. */
-  productFamily: {
-    /** Film-slate stamp label (`07 / <stamp>`) — see `trusted.stamp`. */
     stamp: string;
     /** Section heading. */
     title: string;
@@ -215,7 +216,7 @@ export interface HomeContent {
   /** Platform overview (`#platform`) — narrative + operations-board evidence. */
   platform: {
     /** Small section marker label — doubles as this section's film-slate
-     *  stamp (`08 / <label>`; see `trusted.stamp` for the system). */
+     *  stamp (`06 / <label>`; see `productFamily.stamp` for the system). */
     label: string;
     /** Section heading. */
     title: string;
@@ -242,7 +243,7 @@ export interface HomeContent {
   };
   /** Solutions grid (`#solutions`) — the four organization shapes. */
   solutions: {
-    /** Film-slate stamp label (`09 / <stamp>`) — see `trusted.stamp`. */
+    /** Film-slate stamp label (`07 / <stamp>`) — see `productFamily.stamp`. */
     stamp: string;
     /** Section heading. */
     title: string;
@@ -255,7 +256,7 @@ export interface HomeContent {
   };
   /** Automation chain story (`#automation`). */
   automation: {
-    /** Film-slate stamp label (`10 / <stamp>`) — see `trusted.stamp`. */
+    /** Film-slate stamp label (`08 / <stamp>`) — see `productFamily.stamp`. */
     stamp: string;
     /** Section heading. */
     title: string;
@@ -268,7 +269,7 @@ export interface HomeContent {
   };
   /** Multi-branch convergence story (`#branches`). */
   branches: {
-    /** Film-slate stamp label (`11 / <stamp>`) — see `trusted.stamp`. */
+    /** Film-slate stamp label (`09 / <stamp>`) — see `productFamily.stamp`. */
     stamp: string;
     /** Section heading. */
     title: string;
