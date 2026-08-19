@@ -18,3 +18,9 @@ next-env.d.ts
 
 # Scratch workspace
 .superpowers/
+
+# Next.js auto-generates these agent instruction files on every `next dev` run
+# (node_modules/next/dist/server/lib/generate-agent-files.js). The project keeps its
+# own guidance in docs/ and the parent monorepo; ignore the generated stubs.
+/AGENTS.md
+/CLAUDE.md
