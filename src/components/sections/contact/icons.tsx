@@ -65,6 +65,29 @@ export function ChannelIcon({ id }: ChannelIconProps) {
   );
 }
 
+/** The submit button's in-progress glyph — a stroke ring with one open gap,
+ *  rotated continuously via `.spinner` (`motion-utilities.css` §6) while
+ *  `ContactForm`'s `isPending` is true. `currentColor` stroke, so it inherits
+ *  the button's own ink color in every variant with no extra prop. */
+export function SpinnerIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      aria-hidden="true"
+      focusable="false"
+      className="spinner"
+    >
+      <path d="M12 3a9 9 0 1 1-9 9" />
+    </svg>
+  );
+}
+
 /** The muted checklist glyph for the "what happens next" list — the same
  *  vocabulary `src/components/sections/company/MissionVision.tsx`'s
  *  `CheckGlyph` establishes, kept as an independent copy per this page's own

@@ -126,6 +126,7 @@ import { Button } from "@/components/ui/Button";
 import { cx } from "@/components/ui/cx";
 import { Field } from "@/components/ui/Field";
 import { submitLead, type LeadActionResult } from "@/lib/leads/submit-lead";
+import { SpinnerIcon } from "./icons";
 
 export interface ContactFormProps {
   /** The form card's narrative copy slice of the contact page content. */
@@ -644,6 +645,7 @@ export function ContactForm({ content }: ContactFormProps) {
 
         <div className="flex flex-wrap items-center gap-4">
           <Button type="submit" size="lg" disabled={isPending}>
+            {isPending && <SpinnerIcon />}
             {isPending ? t("forms.sending") : content.submitCta}
           </Button>
           <p className="flex-1 text-[length:var(--fs-meta)] text-text-muted">{content.footnote}</p>

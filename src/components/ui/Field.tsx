@@ -103,7 +103,7 @@ export function Field({ label, error, hint, required, className, children }: Fie
       </label>
       {control}
       {showHint && (
-        <p id={hintId} className="text-[length:var(--fs-small)] text-text-muted">
+        <p id={hintId} className="field-message text-[length:var(--fs-small)] text-text-muted">
           {hint}
         </p>
       )}
@@ -114,7 +114,14 @@ export function Field({ label, error, hint, required, className, children }: Fie
         // warm/attention color that already flips correctly per theme, so
         // it's reused here rather than adding a new token file edit outside
         // this task's scope. Revisit once a dedicated status color lands.
-        <p id={errorId} role="alert" className="text-[length:var(--fs-small)] text-accent-club">
+        //
+        // `.field-message` (motion-utilities.css §5): a validation error is
+        // one of the most emotionally-loaded moments in a form, and it used
+        // to just snap into existence with no transition at all — the one
+        // rough edge on an otherwise carefully choreographed page. Pure CSS
+        // (@starting-style), so this stays the zero-JS Server Component this
+        // file's own header describes.
+        <p id={errorId} role="alert" className="field-message text-[length:var(--fs-small)] text-accent-club">
           {error}
         </p>
       )}

@@ -163,3 +163,93 @@
     }
   }
 }
+
+/* ---------------------------------------------------------------------------
+   5. Field validation messages — enter with the reveal system's own vocabulary
+   `Field.tsx` (a Server Component — no hooks, no client JS) renders its
+   error/hint paragraph via a plain conditional: the DOM node is only ever
+   PRESENT once there's a message to show, never present-but-hidden. That
+   node still needs an entrance, or a validation error snaps into existence
+   with no transition at all — one of the most emotionally-loaded moments in
+   a form (the exact instant a visitor learns they did something wrong),
+   landing with the same jarring "elements appearing without transition feel
+   broken" failure the rest of the site's motion doctrine exists to avoid.
+
+   `@starting-style` gives a newly-inserted element a FROM state for the
+   browser to transition out of, entirely in CSS — no mount-tracking `useEffect`,
+   no client boundary, so `Field` stays exactly the zero-JS Server Component
+   its own header documents. Where `@starting-style` isn't supported the
+   element simply appears at its resting (visible) state immediately — the
+   same "static, not broken" degrade every other transition in this file
+   already guarantees.
+
+   Distance and duration deliberately DON'T reuse `--rv-y`/`--motion-standard`:
+   a reveal-on-scroll is a section arriving; this is a single line of text
+   answering a question the visitor just asked by clicking submit — smaller
+   travel (0.35rem vs 1rem), quicker settle (`--motion-quick`, 200ms — the
+   same bracket `--ease-enter`'s home page uses for immediate UI feedback,
+   not narrative motion), same `--ease-enter` curve and same `--motion-travel`
+   reduced-motion switch as the rest of this file, so it reads as the same
+   motion LANGUAGE at a different, appropriately smaller scale.
+   --------------------------------------------------------------------------- */
+
+.field-message {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity var(--motion-quick) var(--ease-enter),
+    transform var(--motion-quick) var(--ease-enter);
+
+  @starting-style {
+    opacity: 0;
+    transform: translateY(calc(-0.35rem * var(--motion-travel)));
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   6. Loading spinner — submit-button in-progress state
+   The contact form's submit button used to swap its label text only
+   ("Send request" → "Sending…") with no other signal that anything was
+   happening — a plain text change is easy to miss, especially given the
+   round-trip includes a real network request that can take a visible moment.
+   `.spinner` is a small stroke-ring glyph (`ContactIcons.tsx`'s
+   `SpinnerIcon`) that rotates continuously while `isPending`, composed as an
+   ordinary child next to the "Sending…" label — `Button.tsx`'s own
+   `gap-2` spaces icon and text with no Button.tsx changes needed.
+
+   This is the one motion case in the file that does NOT scale via
+   `--motion-travel`: a rotation has no "distance" to shrink toward zero the
+   way a reveal's translateY does, so the usual token would either do nothing
+   (travel=1) or freeze the icon into a static ring (travel=0) — the latter
+   is exactly the outcome wanted under reduced motion, just expressed
+   directly rather than through a distance token. A continuously-spinning
+   glyph is also the one motion pattern accessibility guidance treats as
+   conveying STATE ("an operation is in progress") rather than decoration,
+   so it earns the plain `prefers-reduced-motion` gate below instead of
+   being removed outright: reduced-motion visitors still see the ring shape
+   (the button's disabled state and label already say "Sending…"), they just
+   don't see it turn.
+
+   700ms/linear, not the page's `--ease-enter`/`--ease-exit` curves: per
+   emil-design-eng, continuous motion (marquees, progress indicators, this)
+   wants `linear` specifically — an eased spin visibly speeds up and slows
+   down once per rotation, which reads as stuttering rather than smooth. A
+   fast spin also measurably improves perceived load time over a slow one
+   at the same actual latency, so 700ms was chosen at the brisk end of a
+   comfortable loop rather than a leisurely one. */
+
+.spinner {
+  flex-shrink: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .spinner {
+    animation: spinner-spin 700ms linear infinite;
+  }
+
+  @keyframes spinner-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}

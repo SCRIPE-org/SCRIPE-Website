@@ -118,6 +118,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         href="/media/hero/plate-background.avif"
         type="image/avif"
         media="(min-aspect-ratio: 3.0001/4)"
+        fetchPriority="high"
       />
       <link
         rel="preload"
@@ -125,6 +126,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         href="/media/hero/plate-background-portrait.avif"
         type="image/avif"
         media="(max-aspect-ratio: 3/4)"
+        fetchPriority="high"
       />
 
       <Hero content={content.hero} />
