@@ -26,4 +26,4 @@ next-env.d.ts
 /CLAUDE.md
 
 # Local permission overrides -- machine-specific, never shared
-.claude/settings.local.json
+.claude/

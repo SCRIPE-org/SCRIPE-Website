@@ -134,7 +134,7 @@ const RTL_CONTROL_CHARS = [
 const FACES = [
   { file: "Archivo-var.woff2", script: "latin" },
   { file: "Inter-var.woff2", script: "latin" },
-  { file: "NotoKufiArabic-var.woff2", script: "arabic" },
+  { file: "Cairo-var.woff2", script: "arabic" },
   { file: "NotoSansArabic-var.woff2", script: "arabic" },
 ];
 

@@ -28,7 +28,10 @@
  * ground, the real 3D brand mark, "SCRIPE" wordmark in Archivo ExtraBold,
  * lime `#C0FF00` tagline — mirrored right-to-left, with the REAL Arabic
  * tagline (not the English-fallback placeholder the Satori route still
- * ships, since it structurally cannot do better).
+ * ships, since it structurally cannot do better). Tagline face is Cairo,
+ * matching the live site's Arabic display face (`src/fonts/index.ts`) —
+ * originally Noto Kufi Arabic, replaced when that face was swapped out
+ * sitewide for Cairo.
  *
  * SOURCE OF TRUTH FOR COPY — the Arabic tagline is read from
  * `messages/ar.json`'s `footer.tagline` at build time, never hardcoded
@@ -41,8 +44,8 @@
  * `.ttf` instances `scripts/build-og-fonts.py` derives for Satori — those
  * exist only because Satori cannot parse variable WOFF2 at all; a real
  * browser parses it natively):
- *   - `src/fonts/Archivo-var.woff2`        (wordmark, weight 800)
- *   - `src/fonts/NotoKufiArabic-var.woff2` (tagline,  weight 600)
+ *   - `src/fonts/Archivo-var.woff2`  (wordmark, weight 800)
+ *   - `src/fonts/Cairo-var.woff2`    (tagline,  weight 600)
  * `font-weight` on a `100 900`-range @font-face selects the matching point
  * on the `wght` axis — exactly what `next/font/local` already does for the
  * live site (`src/fonts/index.ts`), so this card's type matches production
@@ -89,8 +92,8 @@
  *
  * Deterministic for a given tagline + font + mark input; overwrites
  * `public/og/og-ar.png` in place. Re-run whenever `messages/ar.json`'s
- * `footer.tagline`, `src/fonts/NotoKufiArabic-var.woff2`/
- * `Archivo-var.woff2`, or `public/brand/mark/scripe-mark-og.png` changes.
+ * `footer.tagline`, `src/fonts/Cairo-var.woff2`/`Archivo-var.woff2`, or
+ * `public/brand/mark/scripe-mark-og.png` changes.
  */
 import { createRequire } from "node:module";
 import { existsSync, readdirSync } from "node:fs";
@@ -174,9 +177,9 @@ async function buildHtml() {
     throw new Error("messages/ar.json is missing footer.tagline — the AR OG card has no source-of-truth copy.");
   }
 
-  const [archivoDataUri, kufiDataUri, markDataUri] = await Promise.all([
+  const [archivoDataUri, cairoDataUri, markDataUri] = await Promise.all([
     toDataUri("src/fonts/Archivo-var.woff2", "font/woff2"),
-    toDataUri("src/fonts/NotoKufiArabic-var.woff2", "font/woff2"),
+    toDataUri("src/fonts/Cairo-var.woff2", "font/woff2"),
     toDataUri("public/brand/mark/scripe-mark-og.png", "image/png"),
   ]);
 
@@ -192,9 +195,9 @@ async function buildHtml() {
     font-style: normal;
   }
   @font-face {
-    font-family: "Noto Kufi Arabic";
-    src: url(${kufiDataUri}) format("woff2");
-    font-weight: 100 900;
+    font-family: "Cairo";
+    src: url(${cairoDataUri}) format("woff2");
+    font-weight: 200 1000;
     font-style: normal;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -229,7 +232,7 @@ async function buildHtml() {
     unicode-bidi: isolate;
   }
   .tagline {
-    font-family: "Noto Kufi Arabic", sans-serif;
+    font-family: "Cairo", sans-serif;
     font-weight: 600;
     font-size: 40px;
     line-height: 1.35;
