@@ -174,25 +174,61 @@ function parseLeadInput(formData: FormData): LeadInput {
 
 /**
  * Builds the JSON payload POSTed to the lead-intake endpoint from a
- * validated lead. Deliberately excludes `companyWebsite`/`startedAt` — both
- * are bot-defense mechanics with no meaning to a lead-intake backend, the
- * same way the legacy static site's own `contact.js` only ever POSTed its
- * five visible fields (never its honeypot). Field order matches
- * `ContactForm.tsx`'s own field order.
+ * validated lead.
+ *
+ * WAVE N — matched to the REAL backend contract, not a generic guess.
+ * ---------------------------------------------------------------------
+ * `LEADS_ENDPOINT` is meant to point at SCRIPE-Backend's own public
+ * lead-capture route, `POST /api/v1/auth/signup/contact-sales`
+ * (`SelfServiceSignupController.cs`) — the same one the real product app's
+ * signup wizard calls for its own "Contact Sales" step
+ * (`SCRIPE-Frontend/src/modules/shared/auth/signup/src/data/services/
+ * signup.endpoints.ts`), the only unauthenticated, anonymous-friendly
+ * lead-intake route in that backend (every other lead/CRM route is
+ * `[Authorize]` + `[AdminOnly]`). This is not this repo's own invention —
+ * matching it is the whole point.
+ *
+ * That controller deserializes into `ContactSalesRequest` (a C# record):
+ * `CompanyName`, `ContactName`, `Email` (required); `Phone`, `EditionKey`,
+ * `Message`, `BusinessType`, `TeamSize`, `PrimaryPriority` (all optional).
+ * ASP.NET Core's default `System.Text.Json` binding is case-insensitive, so
+ * camelCase here is safe and is the more conventional JSON casing to send.
+ *
+ * Field mapping, and why each one lands where it does:
+ * - `name` -> `contactName`, `email` -> `email`, `organization` ->
+ *   `companyName` — this form's three REQUIRED fields
+ *   (`REQUIRED_FIELDS` in `validate.ts`) map exactly onto the backend's
+ *   three required fields. No fallback/derivation needed on either side.
+ * - `type` -> `businessType` — this form's organization-type dropdown
+ *   (`club`/`academy`/`venue`/`multi-sport`/`other`, `validate.ts`'s
+ *   `KNOWN_ORG_TYPES`) is the same concept `businessType` names on the
+ *   backend, just collected earlier in a different flow (this form, not
+ *   a multi-step signup wizard's discovery step).
+ * - `editionKey`/`teamSize`/`primaryPriority` are deliberately OMITTED
+ *   (not sent as empty strings) — this form collects none of that
+ *   information, and the backend record declares all three optional
+ *   (`string?`), so omitting the keys entirely is the honest shape: this
+ *   submission genuinely doesn't have an opinion on them, which is a
+ *   different thing from asserting an empty one.
+ *
+ * Still excludes `companyWebsite`/`startedAt` (this form's OWN bot-defense
+ * fields — meaningless to any lead-intake backend, this one included).
  *
  * @param lead - A validated lead (`LeadValidation["lead"]` from an `ok: true`
  *   result).
- * @returns A plain object safe to `JSON.stringify`.
+ * @returns A plain object safe to `JSON.stringify`, shaped for
+ *   `ContactSalesRequest`.
  */
 function toLeadPayload(lead: LeadInput): Record<string, string> {
-  return {
-    name: lead.name,
+  const payload: Record<string, string> = {
+    contactName: lead.name,
     email: lead.email,
-    organization: lead.organization,
-    phone: lead.phone ?? "",
-    type: lead.type ?? "",
-    message: lead.message ?? "",
+    companyName: lead.organization,
   };
+  if (lead.phone) payload.phone = lead.phone;
+  if (lead.type) payload.businessType = lead.type;
+  if (lead.message) payload.message = lead.message;
+  return payload;
 }
 
 /**
@@ -221,6 +257,16 @@ export async function submitLead(_prev: unknown, formData: FormData): Promise<Le
 
     // Read at CALL time, not module load time — see this file's header,
     // "why the env var is read inside submitLead", for why.
+    //
+    // MUST be the Cloudflare-fronted host (https://api.scripe.org/...), NEVER
+    // the raw Render origin (https://scripe-backend.onrender.com/...) even
+    // though the backend's own AllowedHosts accepts both. A separate
+    // `CloudflareOriginVerificationMiddleware` sits in front of every route on
+    // that backend (`GeoIp:RequireCloudflareOriginVerification=true` in its
+    // production config) and 403s any request missing the header Cloudflare's
+    // own Transform Rule injects for traffic that actually transits it — a
+    // direct server-to-server call to the Render origin skips that entirely
+    // and gets flatly rejected, no matter how correct everything else here is.
     const leadsEndpoint = process.env.LEADS_ENDPOINT;
     if (!leadsEndpoint) {
       // No backend wired yet — the honest degraded state, not a fabricated
@@ -235,7 +281,15 @@ export async function submitLead(_prev: unknown, formData: FormData): Promise<Le
       signal: AbortSignal.timeout(TIMEOUT_MS),
     });
 
-    if (!response.ok) {
+    // A 409 from this endpoint means `workspace_exists` or `duplicate_lead`
+    // (SelfServiceSignupController's own contact-sales handler) — the
+    // submission reached the backend and IS on record, just not as a new
+    // row. Folding that into "not-connected" would be a real regression:
+    // that status's own copy says "this form is not connected to a live
+    // inbox yet", which is false the moment a 409 comes back — the inbox is
+    // very much connected, it just already has this visitor. `sent` is the
+    // honest outcome here, not `not-connected`.
+    if (!response.ok && response.status !== 409) {
       // Status code only — never the response body, never the request we
       // just sent. See this file's header, "PII-free logging".
       console.error("[leads] delivery failed with non-2xx status", response.status);
