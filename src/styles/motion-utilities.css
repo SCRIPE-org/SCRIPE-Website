@@ -253,3 +253,166 @@
     }
   }
 }
+
+/* ---------------------------------------------------------------------------
+   7. Form-result panels — mount-triggered, NEVER scroll-triggered
+   `ContactForm.tsx`'s confirmation panel ("Thanks.") and undelivered-
+   submission notice ("Nothing was sent.") both used to be wrapped in
+   `Reveal` — the shared-IntersectionObserver primitive built for content a
+   visitor scrolls DOWN INTO. That's the wrong tool for either of these: both
+   appear because of a `useActionState` result flipping, at the exact scroll
+   position the visitor is already looking at — there is no "scrolling into
+   view" event for the observer to key off. Confirmed live (production,
+   DevTools): a genuine `{"status":"sent"}` response rendered the full
+   confirmation markup — verified via direct DOM/computed-style inspection,
+   real text, real nodes, `offsetParent` non-null — permanently stuck at
+   `opacity: 0`, because the shared observer's callback rides the browser's
+   own compositing/rendering pipeline, and had no scroll-driven intersection
+   change to react to. A tab that's momentarily backgrounded, occluded, or
+   just never scrolls again after this point can leave that observer
+   callback waiting indefinitely — the exact "sent, but the screen goes
+   blank" report this section exists to close. `.field-message` (§5) already
+   established the correct alternative for JS-state-triggered content in
+   this codebase: `@starting-style`, which fires the instant the element is
+   inserted into the DOM, with zero dependency on viewport intersection,
+   scrolling, or compositing timing ever occurring again.
+
+   Two registers, matching the file's own documented emotional weight for
+   each outcome (`ContactForm.tsx`'s "not connected is NOT a success state"
+   binding): `.result-panel` for the genuine success moment gets the bigger
+   entrance (rise distance and duration sit between `.field-message`'s quiet
+   inline nudge and the page-level `[data-rv]` reveal — a whole panel
+   arriving is a bigger beat than a line of hint text, but this is still
+   inline UI feedback, not a section entrance); `.notice-panel` for the
+   neutral undelivered-submission notice stays at `.field-message`'s own
+   quiet scale, matching the muted, no-tick-no-accent treatment that notice
+   already commits to elsewhere. */
+
+.result-panel {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition:
+    opacity var(--motion-standard) var(--ease-enter),
+    transform var(--motion-standard) var(--ease-enter);
+
+  @starting-style {
+    opacity: 0;
+    transform: translateY(calc(0.75rem * var(--motion-travel))) scale(calc(1 - 0.03 * var(--motion-travel)));
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   7a. The confirmation panel's signature beat
+   Per this codebase's own motion doctrine ("spend boldness in exactly one
+   place"), the ONE moment on this page worth a real flourish is the instant
+   a visitor's demo request is confirmed — everything else on the page stays
+   quiet by comparison. Three layered, sequenced details, all pure CSS,
+   all gated behind `prefers-reduced-motion: no-preference` because none of
+   them carry information the final settled state (a solid checkmark, the
+   "Thanks." heading) doesn't already convey on its own:
+
+   1. `.result-panel-icon` pops in (scale 0.7 -> 1, `@starting-style` — never
+      scale(0), nothing in the real world appears from literally nothing).
+   2. `.result-panel-icon` ALSO blooms a soft ring of brand lime
+      (`currentColor`, already `text-accent-text` on this element) that
+      flashes and decays — a `@keyframes` animation, not `@starting-style`,
+      because a bloom-then-settle needs a true midpoint keyframe rather than
+      one start state and one end state. `color-mix()` keeps the glow's
+      opacity theme-correct without a dedicated token: this is the exact
+      color the checkmark itself already renders in, just softened.
+   3. `.result-panel-check`'s stroke draws itself in rather than appearing
+      whole, via `stroke-dasharray`/`stroke-dashoffset` — the same technique
+      Stripe/Linear-style confirmation checks use, and a strong signal of
+      "this was actually crafted" for a moment the whole page's conversion
+      funnel exists to lead toward. `24` comfortably exceeds this path's real
+      length (~22.6, from `M20 6 9 17l-5-5`'s two segments) — a dasharray
+      longer than the path only means the drawn line simply stops at the
+      path's own end, so exact precision isn't required.
+
+   Delays are staggered (badge pop first, glow alongside it, check-draw
+   last) so the beat reads as one continuous gesture — badge arrives, ring
+   flashes, check completes — rather than three things happening at once. */
+.result-panel-icon {
+  position: relative;
+  transform: scale(1);
+  transition: transform var(--motion-quick) var(--ease-enter);
+  transition-delay: 120ms;
+
+  @starting-style {
+    transform: scale(0.7);
+  }
+}
+
+.result-panel-check {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset var(--motion-standard) var(--ease-enter);
+  transition-delay: 260ms;
+
+  @starting-style {
+    stroke-dashoffset: 24;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .result-panel-icon {
+    animation: result-icon-glow var(--motion-deliberate) var(--ease-exit) 120ms both;
+  }
+
+  @keyframes result-icon-glow {
+    0% {
+      box-shadow: 0 0 0 0 color-mix(in srgb, currentColor 55%, transparent);
+    }
+    35% {
+      box-shadow: 0 0 20px 5px color-mix(in srgb, currentColor 45%, transparent);
+    }
+    100% {
+      box-shadow: 0 0 0 0 transparent;
+    }
+  }
+}
+
+/* Heading/body/button arrive as a quick, quiet stagger after the icon's own
+   beat finishes — the same fade+rise vocabulary as `.result-panel` itself,
+   just faster and smaller (`--motion-quick`, 0.5rem) since these are text
+   lines settling into a panel that's already arrived, not the panel's own
+   entrance. */
+.result-panel-heading,
+.result-panel-body,
+.result-panel-cta {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity var(--motion-quick) var(--ease-enter),
+    transform var(--motion-quick) var(--ease-enter);
+
+  @starting-style {
+    opacity: 0;
+    transform: translateY(calc(0.5rem * var(--motion-travel)));
+  }
+}
+
+.result-panel-heading {
+  transition-delay: 160ms;
+}
+
+.result-panel-body {
+  transition-delay: 220ms;
+}
+
+.result-panel-cta {
+  transition-delay: 280ms;
+}
+
+.notice-panel {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity var(--motion-quick) var(--ease-enter),
+    transform var(--motion-quick) var(--ease-enter);
+
+  @starting-style {
+    opacity: 0;
+    transform: translateY(calc(-0.35rem * var(--motion-travel)));
+  }
+}

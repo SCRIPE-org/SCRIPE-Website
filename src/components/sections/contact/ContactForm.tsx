@@ -443,41 +443,53 @@ export function ContactForm({ content }: ContactFormProps) {
   }
 
   if (showConfirmation) {
+    // `.result-panel`/`.result-panel-icon` (motion-utilities.css §7/§7a), NOT
+    // `Reveal`: this panel appears because `state.status` just flipped, at
+    // the scroll position the visitor is already looking at — there is no
+    // "scrolling into view" event for `Reveal`'s IntersectionObserver to key
+    // off, and confirmed live that leaves it stuck at `opacity: 0`
+    // indefinitely (a real "sent" response, real DOM, permanently invisible
+    // — the exact "nothing happened" report this replaces). A plain
+    // `@starting-style` transition fires on insertion regardless of
+    // viewport/compositing state, which is the guarantee this moment needs.
+    // §7a's own header covers the badge pop + glow bloom + check-draw +
+    // heading/body/button stagger this branch's classes wire up below.
     return (
-      <Reveal className="atmo-lift min-w-0 rounded-lg border border-border-strong bg-surface-raised p-8 sm:p-10">
-        <div role="status">
-          <span
-            aria-hidden="true"
-            className="grid size-11 place-items-center rounded-md border border-border-subtle text-accent-text"
+      <div
+        role="status"
+        className="result-panel atmo-lift min-w-0 rounded-lg border border-border-strong bg-surface-raised p-8 sm:p-10"
+      >
+        <span
+          aria-hidden="true"
+          className="result-panel-icon grid size-11 place-items-center rounded-md border border-border-subtle text-accent-text"
+        >
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
-            <svg
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M20 6 9 17l-5-5" />
-            </svg>
-          </span>
-          <h2
-            ref={panelHeadingRef}
-            tabIndex={-1}
-            className="mt-5 font-display text-[length:var(--fs-h2)] font-semibold text-balance text-text-primary outline-none"
-          >
-            {t("forms.sent")}
-          </h2>
-          <p className="mt-3 max-w-[52ch] text-[length:var(--fs-body)] text-pretty text-text-secondary">
-            {t("forms.sentBody")}
-          </p>
-          <Button type="button" variant="outline" className="mt-6" onClick={startAnother}>
-            {t("forms.sendAnother")}
-          </Button>
-        </div>
-      </Reveal>
+            <path d="M20 6 9 17l-5-5" className="result-panel-check" />
+          </svg>
+        </span>
+        <h2
+          ref={panelHeadingRef}
+          tabIndex={-1}
+          className="result-panel-heading mt-5 font-display text-[length:var(--fs-h2)] font-semibold text-balance text-text-primary outline-none"
+        >
+          {t("forms.sent")}
+        </h2>
+        <p className="result-panel-body mt-3 max-w-[52ch] text-[length:var(--fs-body)] text-pretty text-text-secondary">
+          {t("forms.sentBody")}
+        </p>
+        <Button type="button" variant="outline" className="result-panel-cta mt-6" onClick={startAnother}>
+          {t("forms.sendAnother")}
+        </Button>
+      </div>
     );
   }
 
@@ -504,7 +516,7 @@ export function ContactForm({ content }: ContactFormProps) {
         {showNotConnected && (
           <div
             role="status"
-            className="grid gap-3 rounded-md border border-border-strong bg-surface-overlay p-5 sm:grid-cols-[auto_1fr] sm:gap-4"
+            className="notice-panel grid gap-3 rounded-md border border-border-strong bg-surface-overlay p-5 sm:grid-cols-[auto_1fr] sm:gap-4"
           >
             <span
               aria-hidden="true"
