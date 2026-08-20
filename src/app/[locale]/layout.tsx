@@ -14,6 +14,7 @@ import { ThemeGuard } from "@/theme/ThemeGuard";
 import { LOCKED_THEME, THEME_LOCKED_TO_DARK } from "@/theme/theme-lock";
 import { NO_JS_SCRIPT, THEME_SCRIPT } from "@/theme/theme-script";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -116,6 +117,7 @@ export default async function LocaleLayout({
           <Footer />
         </NextIntlClientProvider>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
