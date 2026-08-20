@@ -2,25 +2,26 @@
  * Self-hosted variable font declarations.
  *
  * FONT CHOICES — Latin: Archivo (display) + Inter (body). Arabic: Cairo
- * (display) + Noto Sans Arabic (body). Cairo replaced Noto Kufi Arabic as
- * the Arabic display face (this task) — Kufi's letterforms read as cold/
- * industrial for a headline face; Cairo is the most widely adopted modern
- * Arabic UI/display face on Google Fonts, geometric enough to pair with
- * Archivo's own geometric character without a style clash. Noto Sans
- * Arabic stays as the body face: it was never the face under complaint,
- * and it remains one of the most legible, broadest-coverage Arabic text
- * faces available.
+ * (display) + Tajawal (body). This pair replaced Noto Kufi Arabic/Noto Sans
+ * Arabic (this task) — Cairo and Tajawal are not two independently-picked
+ * faces, they're a designed companion pair: both commissioned from the same
+ * Google Fonts Arabic-UI project (Mohamed Gaber), Cairo scoped for
+ * headline/UI use and Tajawal for running text, sharing the same
+ * geometric-humanist construction so the two roles read as one typeface
+ * system rather than a display face bolted onto an unrelated body face.
+ * Cairo also geometrically echoes Archivo's own construction, so the EN and
+ * AR display faces feel like one brand rather than two independent choices.
  *
- * Two fixes here from the audit that predates the Cairo swap (still load-
- * bearing, so kept in force for the new face too):
+ * Two fixes here from the audit that predates the Cairo/Tajawal swap (still
+ * load-bearing, so kept in force for the new faces too):
  *
- * 1. `preload: false` on `cairo`/`notoSans`. `next/font/local` emits a
+ * 1. `preload: false` on `cairo`/`tajawal`. `next/font/local` emits a
  *    `<link rel="preload">` for every `localFont()` call it sees executed
  *    while rendering a page — which is EVERY call in this module, since the
  *    root layout imports the module unconditionally and `fontClassesFor()`
  *    only controls which `.variable` CLASS NAMES end up on `<html>`, not
  *    which `localFont()` calls run. Before this fix, English-locale pages
- *    (which never reference `--font-cairo`/`--font-noto-sans` in any
+ *    (which never reference `--font-cairo`/`--font-tajawal` in any
  *    matching CSS — see `fontClassesFor` below) still preloaded both Arabic
  *    fonts on every load: 100% wasted bytes on `en`. `preload: false` stops
  *    the eager `<link>`; the browser now only ever fetches these two when a
@@ -75,10 +76,11 @@
  *    if Arabic ever gets its own entry point, where a locale-scoped preload
  *    becomes possible without taxing `en`.
  *
- *    The BODY faces (`inter`, `notoSans`) deliberately keep `swap`: running
+ *    The BODY faces (`inter`, `tajawal`) deliberately keep `swap`: running
  *    text in a fallback is a far larger legibility cost than a heading in
- *    one, their metric fallbacks are genuine metric matches (no width axis
- *    involved), and measurement attributed no shift to them.
+ *    one. `tajawal` additionally has no variable axis to mismatch — it
+ *    ships as 7 discrete static weights (see point 3 below), so there is no
+ *    width-axis-style CLS mechanism for it to trigger in the first place.
  * 3. Every `.woff2` under this directory is subsetted (Latin faces to
  *    Latin + Latin Extended + the punctuation/symbols actually used in
  *    `src/content`/`messages`; Arabic faces to the Arabic block(s) + Latin
@@ -91,10 +93,10 @@
  *    (`scripts/subset-fonts.mjs` — documented, rerunnable, no project
  *    dependency added; that script's own header has the exact
  *    character-range method and the scratch-install recipe for its one
- *    build-time dependency). Cairo's source is Google Fonts' own variable
- *    instance (`ofl/cairo/Cairo[slnt,wght].ttf` in the `google/fonts`
- *    repo — `wght` 200–1000; it also carries an unused `slnt` axis, kept
- *    untouched per the same "never reduce a variation axis" rule).
+ *    build-time dependency). Cairo's source is Google Fonts' own
+ *    Arabic-unicode-range split of its variable instance (`wght` 200–1000).
+ *    Tajawal has no variable instance on Google Fonts at all — its 7
+ *    static weight files are each subsetted independently, same policy.
  */
 import localFont from "next/font/local";
 
@@ -142,15 +144,22 @@ export const cairo = localFont({
   preload: false,
 });
 
-export const notoSans = localFont({
+export const tajawal = localFont({
+  // No variable instance on Google Fonts — 7 discrete static weights, one
+  // `src` entry each. `next/font/local` treats this as one logical family:
+  // the browser resolves any requested `font-weight` to its nearest listed
+  // instance via normal CSS font matching (there is no 600 instance; 500 or
+  // 700 wins depending on the browser's matching algorithm).
   src: [
-    {
-      path: "./NotoSansArabic-var.woff2",
-      weight: "100 900",
-      style: "normal",
-    },
+    { path: "./Tajawal-200.woff2", weight: "200", style: "normal" },
+    { path: "./Tajawal-300.woff2", weight: "300", style: "normal" },
+    { path: "./Tajawal-400.woff2", weight: "400", style: "normal" },
+    { path: "./Tajawal-500.woff2", weight: "500", style: "normal" },
+    { path: "./Tajawal-700.woff2", weight: "700", style: "normal" },
+    { path: "./Tajawal-800.woff2", weight: "800", style: "normal" },
+    { path: "./Tajawal-900.woff2", weight: "900", style: "normal" },
   ],
-  variable: "--font-noto-sans",
+  variable: "--font-tajawal",
   display: "swap",
   // See cairo above.
   preload: false,
@@ -158,7 +167,7 @@ export const notoSans = localFont({
 
 export function fontClassesFor(locale: "en" | "ar"): string {
   if (locale === "ar") {
-    return [archivo.variable, inter.variable, cairo.variable, notoSans.variable].join(" ");
+    return [archivo.variable, inter.variable, cairo.variable, tajawal.variable].join(" ");
   }
   return [archivo.variable, inter.variable].join(" ");
 }

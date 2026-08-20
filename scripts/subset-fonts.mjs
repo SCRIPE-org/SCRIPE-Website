@@ -2,7 +2,7 @@
 /**
  * Font subsetting pipeline (Wave G Task G1's method, made reproducible).
  *
- * `src/fonts/*.woff2` are pre-subsetted — G1 cut the 4 shipped faces from
+ * `src/fonts/*.woff2` are pre-subsetted — G1 cut the shipped faces from
  * their full-glyph originals down to 48–55% of their prior size (see
  * `.superpowers/sdd/2026-08-17-website-fusion-rebuild/task-g1-report.md`
  * §5) by keeping only the glyphs the site can ever render. That report
@@ -26,23 +26,26 @@
  *      Mathematical Operators blocks — headroom for copy edits that stay
  *      within "the kind of character a Latin marketing page uses" without
  *      needing a re-subset for every wording tweak.
- *   3 For the two ARABIC faces (Noto Kufi Arabic, Noto Sans Arabic), keep
- *      the scanned set FILTERED TO the Arabic script blocks only (Arabic,
- *      Arabic Supplement, Arabic Extended-A) plus the full Arabic block
- *      ranges for the same headroom reason, Western digits 0–9 (SAR/CRM-
- *      style figures embedded in Arabic copy use Western numerals per this
- *      project's own hard rule — see `src/content/en/pricing.ts`'s header),
- *      and the bidi/shaping control characters Arabic text needs (ZWJ,
- *      ZWNJ, LRM, RLM, ALM, the LRE/RLE/PDF/LRO/RLO/LRI/RLI/FSI/PDI bidi
- *      controls). Latin LETTERS embedded in Arabic copy (brand names like
- *      "SCRIPE", abbreviations like "CRM") are deliberately EXCLUDED from
- *      the Arabic faces' own subset: they already render correctly via the
- *      `--font-*-ar-base` (Archivo/Inter) fallback stacks in
- *      `src/styles/tokens/typography.css`, so the Arabic font never needs
+ *   3 For the ARABIC faces (Cairo, and Tajawal's 7 static weight files),
+ *      keep the scanned set FILTERED TO the Arabic script blocks only
+ *      (Arabic, Arabic Supplement, Arabic Extended-A) plus the full Arabic
+ *      block ranges for the same headroom reason, Western digits 0–9
+ *      (SAR/CRM-style figures embedded in Arabic copy use Western numerals
+ *      per this project's own hard rule — see `src/content/en/pricing.ts`'s
+ *      header), and the bidi/shaping control characters Arabic text needs
+ *      (ZWJ, ZWNJ, LRM, RLM, ALM, the LRE/RLE/PDF/LRO/RLO/LRI/RLI/FSI/PDI
+ *      bidi controls). Latin LETTERS embedded in Arabic copy (brand names
+ *      like "SCRIPE", abbreviations like "CRM") are deliberately EXCLUDED
+ *      from the Arabic faces' own subset: they already render correctly via
+ *      the `--font-*-ar-base` (Archivo/Inter) fallback stacks in
+ *      `src/styles/tokens/typography.css`, so the Arabic fonts never need
  *      to carry Latin-letter glyphs at all.
  *   4. Variable axes are NEVER reduced — every call omits `variationAxes`,
- *      so the full weight range (all four faces) and Archivo's width axis
- *      survive untouched. Subsetting here only drops unused GLYPHS.
+ *      so Archivo's/Inter's/Cairo's full weight ranges (and Archivo's width
+ *      axis) survive untouched. Tajawal has no variable axis to preserve —
+ *      it ships as 7 independent static weight files, each subsetted on its
+ *      own with the identical Arabic-script text. Subsetting here only ever
+ *      drops unused GLYPHS, on any face.
  *
  * Requires `subset-font` (HarfBuzz/`hb-subset` compiled to WASM). Per this
  * project's "no new deps for a one-off tool" discipline (the same rule
@@ -130,12 +133,20 @@ const RTL_CONTROL_CHARS = [
   .map((cp) => String.fromCodePoint(cp))
   .join("");
 
-/** The four shipped faces and which kept-range policy applies to each. */
+/** Every shipped font FILE and which kept-range policy applies to it.
+ *  Tajawal has no variable instance, so its 7 static weights are 7 separate
+ *  entries here — each subsetted independently with the same Arabic text. */
 const FACES = [
   { file: "Archivo-var.woff2", script: "latin" },
   { file: "Inter-var.woff2", script: "latin" },
   { file: "Cairo-var.woff2", script: "arabic" },
-  { file: "NotoSansArabic-var.woff2", script: "arabic" },
+  { file: "Tajawal-200.woff2", script: "arabic" },
+  { file: "Tajawal-300.woff2", script: "arabic" },
+  { file: "Tajawal-400.woff2", script: "arabic" },
+  { file: "Tajawal-500.woff2", script: "arabic" },
+  { file: "Tajawal-700.woff2", script: "arabic" },
+  { file: "Tajawal-800.woff2", script: "arabic" },
+  { file: "Tajawal-900.woff2", script: "arabic" },
 ];
 
 /**

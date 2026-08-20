@@ -12,7 +12,7 @@
   --font-display-base: var(--font-archivo), system-ui, sans-serif;
   --font-body-base: var(--font-inter), system-ui, sans-serif;
   --font-display-ar-base: var(--font-cairo), var(--font-archivo), system-ui, sans-serif;
-  --font-body-ar-base: var(--font-noto-sans), var(--font-inter), system-ui, sans-serif;
+  --font-body-ar-base: var(--font-tajawal), var(--font-inter), system-ui, sans-serif;
   /* film-annotation mono (hero beat stamps, ground-sequence section slates,
      rail numbers). System monos only — no font payload. Latin digits in both
      locales (the board-times precedent). */
