@@ -118,7 +118,7 @@
  * in-form notice heading — the outcome is different, the way it is announced
  * is not.
  */
-import { useActionState, useEffect, useRef, useState, type FormEvent } from "react";
+import { useActionState, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import type { ContactContent } from "@/content/types";
 import { Reveal } from "@/components/motion/Reveal";
@@ -131,6 +131,13 @@ import { SpinnerIcon } from "./icons";
 export interface ContactFormProps {
   /** The form card's narrative copy slice of the contact page content. */
   content: ContactContent["form"];
+  /** The page's "what happens next" + contact-channel side panel
+   *  (`ContactExpect`), server-rendered by `contact/page.tsx` and passed in
+   *  as an opaque children slot — see that file's header for why it isn't
+   *  imported here directly. Rendered beside the form in the default 2-column
+   *  layout; suppressed entirely once a submission is confirmed, when this
+   *  component takes over the full width instead. */
+  children: ReactNode;
 }
 
 /** Field names this form validates and can show a `Field` error for. Order
@@ -249,16 +256,18 @@ function translateServerFieldError(key: string | undefined, t: (key: string) => 
 }
 
 /**
- * Renders the demo-request form card: eyebrow/intro, the undelivered-
- * submission notice, the honeypot and time-trap fields, the six visible
- * fields, and the submit button/footnote — plus the confirmation panel that
- * replaces the whole card once a submission is genuinely delivered. See this
- * file's header for the full behavioral contract, in particular why
- * `not-connected` renders in-form instead of as that panel.
+ * Renders this page's whole interactive section: in the default state, the
+ * demo-request form card (eyebrow/intro, the undelivered-submission notice,
+ * the honeypot and time-trap fields, the six visible fields, and the submit
+ * button/footnote) beside `children` (`ContactExpect`) in a 2-column grid —
+ * OR, once a submission is genuinely delivered, a single full-width
+ * confirmation panel that replaces BOTH columns entirely. See this file's
+ * header for the full behavioral contract, in particular why `not-connected`
+ * renders in-form instead of as that panel.
  *
  * @param props - See {@link ContactFormProps}.
  */
-export function ContactForm({ content }: ContactFormProps) {
+export function ContactForm({ content, children }: ContactFormProps) {
   const t = useTranslations();
   const [state, formAction, isPending] = useActionState<LeadActionResult | null, FormData>(submitLead, null);
   const [clientErrors, setClientErrors] = useState<Partial<Record<ValidatedField, string>>>({});
@@ -443,226 +452,248 @@ export function ContactForm({ content }: ContactFormProps) {
   }
 
   if (showConfirmation) {
-    // `.result-panel`/`.result-panel-icon` (motion-utilities.css §7/§7a), NOT
-    // `Reveal`: this panel appears because `state.status` just flipped, at
-    // the scroll position the visitor is already looking at — there is no
-    // "scrolling into view" event for `Reveal`'s IntersectionObserver to key
-    // off, and confirmed live that leaves it stuck at `opacity: 0`
-    // indefinitely (a real "sent" response, real DOM, permanently invisible
-    // — the exact "nothing happened" report this replaces). A plain
-    // `@starting-style` transition fires on insertion regardless of
-    // viewport/compositing state, which is the guarantee this moment needs.
-    // §7a's own header covers the badge pop + glow bloom + check-draw +
-    // heading/body/button stagger this branch's classes wire up below.
+    // A full-width takeover, not a card in the form's old grid cell — see
+    // `contact/page.tsx`'s header for why this branch renders instead of
+    // that 2-column layout entirely (both `children`/`ContactExpect` and the
+    // grid disappear here). This is deliberately the SAME "obsidian panel +
+    // lime horizon" brand moment every page's closing CTA already ends on
+    // (`.atmo-cta-panel`/`-horizon`/`-bloom`/`-grain`, `night-zone` — see
+    // e.g. `platform/ClosingCta.tsx`) rather than a bespoke treatment: a
+    // confirmed demo request is exactly the kind of moment that vocabulary
+    // exists for, and reusing it means this page's biggest beat looks like
+    // it belongs to the same site instead of inventing a second one.
+    //
+    // `.result-panel` (motion-utilities.css §7), NOT `Reveal`: this panel
+    // appears because `state.status` just flipped, at the scroll position
+    // the visitor is already looking at — there is no "scrolling into view"
+    // event for `Reveal`'s IntersectionObserver to key off, and confirmed
+    // live that leaves it stuck at `opacity: 0` indefinitely (a real "sent"
+    // response, real DOM, permanently invisible — the exact "nothing
+    // happened" report this replaces). A plain `@starting-style` transition
+    // fires on insertion regardless of viewport/compositing state, which is
+    // the guarantee this moment needs. §7a's own header covers the badge
+    // pop + glow bloom + check-draw + heading/body/button stagger the
+    // classes below wire up, now at this panel's larger scale.
     return (
-      <div
-        role="status"
-        className="result-panel atmo-lift min-w-0 rounded-lg border border-border-strong bg-surface-raised p-8 sm:p-10"
-      >
-        <span
-          aria-hidden="true"
-          className="result-panel-icon grid size-11 place-items-center rounded-md border border-border-subtle text-accent-text"
-        >
-          <svg
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+      <div role="status" className="result-panel atmo-cta-panel night-zone px-6 py-14 text-center sm:px-10 sm:py-16">
+        <span className="atmo-cta-horizon" aria-hidden="true" />
+        <span className="atmo-cta-bloom" aria-hidden="true" />
+        <span className="atmo-cta-grain" aria-hidden="true" />
+
+        <div className="relative mx-auto flex max-w-[640px] flex-col items-center gap-6">
+          <span
+            aria-hidden="true"
+            className="result-panel-icon grid size-16 place-items-center rounded-full border border-accent/40 bg-accent/10 text-accent-text"
           >
-            <path d="M20 6 9 17l-5-5" className="result-panel-check" />
-          </svg>
-        </span>
-        <h2
-          ref={panelHeadingRef}
-          tabIndex={-1}
-          className="result-panel-heading mt-5 font-display text-[length:var(--fs-h2)] font-semibold text-balance text-text-primary outline-none"
-        >
-          {t("forms.sent")}
-        </h2>
-        <p className="result-panel-body mt-3 max-w-[52ch] text-[length:var(--fs-body)] text-pretty text-text-secondary">
-          {t("forms.sentBody")}
-        </p>
-        <Button type="button" variant="outline" className="result-panel-cta mt-6" onClick={startAnother}>
-          {t("forms.sendAnother")}
-        </Button>
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M20 6 9 17l-5-5" className="result-panel-check" />
+            </svg>
+          </span>
+          <h2
+            ref={panelHeadingRef}
+            tabIndex={-1}
+            className="result-panel-heading atmo-title font-display text-[length:var(--fs-display)] text-balance text-white outline-none"
+          >
+            {t("forms.sent")}
+          </h2>
+          <p className="result-panel-body max-w-[52ch] text-[length:var(--fs-lead)] text-pretty text-white/78">
+            {t("forms.sentBody")}
+          </p>
+          <Button
+            type="button"
+            variant="outline"
+            className="result-panel-cta mt-2 border-white/30 text-white hover:bg-white/10 active:bg-white/10"
+            onClick={startAnother}
+          >
+            {t("forms.sendAnother")}
+          </Button>
+        </div>
       </div>
     );
   }
 
   return (
-    <Reveal className="min-w-0">
-      <form
-        key={formInstance}
-        noValidate
-        action={formAction}
-        onSubmit={handleSubmit}
-        className="atmo-panel grid gap-6 rounded-lg p-6 sm:p-8"
-      >
-        <div className="grid gap-1.5">
-          <span className="text-[length:var(--fs-meta)] font-semibold uppercase tracking-[0.14em] text-accent-text [&:lang(ar)]:tracking-normal [&:lang(ar)]:normal-case">
-            {content.eyebrow}
-          </span>
-          <p className="text-[length:var(--fs-small)] text-pretty text-text-secondary">{content.intro}</p>
-        </div>
-
-        {/* Undelivered-submission notice. Deliberately NOT the success
-            composition — no tick, no accent, no "Thanks." — and deliberately
-            ABOVE a form that is still mounted and still holds everything the
-            visitor typed. See this file's header. */}
-        {showNotConnected && (
-          <div
-            role="status"
-            className="notice-panel grid gap-3 rounded-md border border-border-strong bg-surface-overlay p-5 sm:grid-cols-[auto_1fr] sm:gap-4"
-          >
-            <span
-              aria-hidden="true"
-              className="grid size-9 shrink-0 place-items-center rounded-md border border-border-strong text-text-secondary"
-            >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="12" cy="12" r="9" />
-                <path d="M12 8v5" />
-                <path d="M12 16.5v.01" />
-              </svg>
+    <div className="grid items-start gap-8 lg:grid-cols-[1.6fr_1fr] lg:gap-12">
+      <Reveal className="min-w-0">
+        <form
+          key={formInstance}
+          noValidate
+          action={formAction}
+          onSubmit={handleSubmit}
+          className="atmo-panel grid gap-6 rounded-lg p-6 sm:p-8"
+        >
+          <div className="grid gap-1.5">
+            <span className="text-[length:var(--fs-meta)] font-semibold uppercase tracking-[0.14em] text-accent-text [&:lang(ar)]:tracking-normal [&:lang(ar)]:normal-case">
+              {content.eyebrow}
             </span>
-            <div className="grid min-w-0 gap-1.5">
-              <h2
-                ref={noticeHeadingRef}
-                tabIndex={-1}
-                className="font-display text-[length:var(--fs-lead)] font-semibold text-text-primary outline-none"
-              >
-                {t("forms.notConnectedTitle")}
-              </h2>
-              <p className="max-w-[56ch] text-[length:var(--fs-small)] text-pretty text-text-secondary">
-                {t("forms.notConnected")}
-              </p>
-            </div>
+            <p className="text-[length:var(--fs-small)] text-pretty text-text-secondary">{content.intro}</p>
           </div>
-        )}
 
-        {/* Honeypot: a real visitor never perceives this field by any
-            channel — sight, screen reader, or Tab key. */}
-        <input
-          type="text"
-          name="company_website"
-          defaultValue=""
-          tabIndex={-1}
-          autoComplete="off"
-          aria-hidden="true"
-          className="sr-only"
-        />
-        {/* Time-trap: filled on mount, read only by the server action. */}
-        <input type="hidden" name="startedAt" value={startedAt} />
+          {/* Undelivered-submission notice. Deliberately NOT the success
+              composition — no tick, no accent, no "Thanks." — and deliberately
+              ABOVE a form that is still mounted and still holds everything the
+              visitor typed. See this file's header. */}
+          {showNotConnected && (
+            <div
+              role="status"
+              className="notice-panel grid gap-3 rounded-md border border-border-strong bg-surface-overlay p-5 sm:grid-cols-[auto_1fr] sm:gap-4"
+            >
+              <span
+                aria-hidden="true"
+                className="grid size-9 shrink-0 place-items-center rounded-md border border-border-strong text-text-secondary"
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M12 8v5" />
+                  <path d="M12 16.5v.01" />
+                </svg>
+              </span>
+              <div className="grid min-w-0 gap-1.5">
+                <h2
+                  ref={noticeHeadingRef}
+                  tabIndex={-1}
+                  className="font-display text-[length:var(--fs-lead)] font-semibold text-text-primary outline-none"
+                >
+                  {t("forms.notConnectedTitle")}
+                </h2>
+                <p className="max-w-[56ch] text-[length:var(--fs-small)] text-pretty text-text-secondary">
+                  {t("forms.notConnected")}
+                </p>
+              </div>
+            </div>
+          )}
 
-        <div className="grid gap-5 sm:grid-cols-2">
-          <Field label={t("forms.name")} required error={clientErrors.name ?? serverErrors.name}>
-            <input
-              ref={nameRef}
-              type="text"
-              name="name"
-              required
-              maxLength={FIELD_LIMITS.name}
-              autoComplete="name"
-              defaultValue={retained.name ?? ""}
-              placeholder={content.placeholders.name}
-              className={CONTROL_CLASS}
-            />
-          </Field>
-
-          <Field label={t("forms.email")} required error={clientErrors.email ?? serverErrors.email}>
-            <input
-              ref={emailRef}
-              type="email"
-              name="email"
-              required
-              maxLength={FIELD_LIMITS.email}
-              autoComplete="email"
-              defaultValue={retained.email ?? ""}
-              placeholder={content.placeholders.email}
-              className={CONTROL_CLASS}
-            />
-          </Field>
-
-          <Field label={t("forms.organization")} required error={clientErrors.organization ?? serverErrors.organization}>
-            <input
-              ref={organizationRef}
-              type="text"
-              name="organization"
-              required
-              maxLength={FIELD_LIMITS.organization}
-              autoComplete="organization"
-              defaultValue={retained.organization ?? ""}
-              placeholder={content.placeholders.organization}
-              className={CONTROL_CLASS}
-            />
-          </Field>
-
-          <Field
-            label={t("forms.phone")}
-            hint={content.hints.phone}
-            error={clientErrors.phone ?? serverErrors.phone}
-          >
-            {/* Phone numbers stay LTR even on the Arabic page — dir="ltr" is
-                physical here on purpose, not a logical-property omission. */}
-            <input
-              ref={phoneRef}
-              type="tel"
-              name="phone"
-              dir="ltr"
-              inputMode="tel"
-              maxLength={FIELD_LIMITS.phone}
-              autoComplete="tel"
-              defaultValue={retained.phone ?? ""}
-              placeholder={content.placeholders.phone}
-              className={cx(CONTROL_CLASS, "text-start")}
-            />
-          </Field>
-        </div>
-
-        <Field label={t("forms.type")} hint={content.hints.type}>
-          <select ref={typeRef} name="type" defaultValue={retained.type ?? ""} className={CONTROL_CLASS}>
-            <option value="" disabled>
-              {t("forms.typePlaceholder")}
-            </option>
-            {ORG_TYPE_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {t(option.labelKey)}
-              </option>
-            ))}
-          </select>
-        </Field>
-
-        <Field label={t("forms.message")} error={clientErrors.message ?? serverErrors.message}>
-          <textarea
-            ref={messageRef}
-            name="message"
-            maxLength={FIELD_LIMITS.message}
-            defaultValue={retained.message ?? ""}
-            placeholder={content.placeholders.message}
-            className={cx(CONTROL_CLASS, "min-h-[120px] resize-y")}
+          {/* Honeypot: a real visitor never perceives this field by any
+              channel — sight, screen reader, or Tab key. */}
+          <input
+            type="text"
+            name="company_website"
+            defaultValue=""
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            className="sr-only"
           />
-        </Field>
+          {/* Time-trap: filled on mount, read only by the server action. */}
+          <input type="hidden" name="startedAt" value={startedAt} />
 
-        <div className="flex flex-wrap items-center gap-4">
-          <Button type="submit" size="lg" disabled={isPending}>
-            {isPending && <SpinnerIcon />}
-            {isPending ? t("forms.sending") : content.submitCta}
-          </Button>
-          <p className="flex-1 text-[length:var(--fs-meta)] text-text-muted">{content.footnote}</p>
-        </div>
-      </form>
-    </Reveal>
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Field label={t("forms.name")} required error={clientErrors.name ?? serverErrors.name}>
+              <input
+                ref={nameRef}
+                type="text"
+                name="name"
+                required
+                maxLength={FIELD_LIMITS.name}
+                autoComplete="name"
+                defaultValue={retained.name ?? ""}
+                placeholder={content.placeholders.name}
+                className={CONTROL_CLASS}
+              />
+            </Field>
+
+            <Field label={t("forms.email")} required error={clientErrors.email ?? serverErrors.email}>
+              <input
+                ref={emailRef}
+                type="email"
+                name="email"
+                required
+                maxLength={FIELD_LIMITS.email}
+                autoComplete="email"
+                defaultValue={retained.email ?? ""}
+                placeholder={content.placeholders.email}
+                className={CONTROL_CLASS}
+              />
+            </Field>
+
+            <Field label={t("forms.organization")} required error={clientErrors.organization ?? serverErrors.organization}>
+              <input
+                ref={organizationRef}
+                type="text"
+                name="organization"
+                required
+                maxLength={FIELD_LIMITS.organization}
+                autoComplete="organization"
+                defaultValue={retained.organization ?? ""}
+                placeholder={content.placeholders.organization}
+                className={CONTROL_CLASS}
+              />
+            </Field>
+
+            <Field
+              label={t("forms.phone")}
+              hint={content.hints.phone}
+              error={clientErrors.phone ?? serverErrors.phone}
+            >
+              {/* Phone numbers stay LTR even on the Arabic page — dir="ltr" is
+                  physical here on purpose, not a logical-property omission. */}
+              <input
+                ref={phoneRef}
+                type="tel"
+                name="phone"
+                dir="ltr"
+                inputMode="tel"
+                maxLength={FIELD_LIMITS.phone}
+                autoComplete="tel"
+                defaultValue={retained.phone ?? ""}
+                placeholder={content.placeholders.phone}
+                className={cx(CONTROL_CLASS, "text-start")}
+              />
+            </Field>
+          </div>
+
+          <Field label={t("forms.type")} hint={content.hints.type}>
+            <select ref={typeRef} name="type" defaultValue={retained.type ?? ""} className={CONTROL_CLASS}>
+              <option value="" disabled>
+                {t("forms.typePlaceholder")}
+              </option>
+              {ORG_TYPE_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {t(option.labelKey)}
+                </option>
+              ))}
+            </select>
+          </Field>
+
+          <Field label={t("forms.message")} error={clientErrors.message ?? serverErrors.message}>
+            <textarea
+              ref={messageRef}
+              name="message"
+              maxLength={FIELD_LIMITS.message}
+              defaultValue={retained.message ?? ""}
+              placeholder={content.placeholders.message}
+              className={cx(CONTROL_CLASS, "min-h-[120px] resize-y")}
+            />
+          </Field>
+
+          <div className="flex flex-wrap items-center gap-4">
+            <Button type="submit" size="lg" disabled={isPending}>
+              {isPending && <SpinnerIcon />}
+              {isPending ? t("forms.sending") : content.submitCta}
+            </Button>
+            <p className="flex-1 text-[length:var(--fs-meta)] text-text-muted">{content.footnote}</p>
+          </div>
+        </form>
+      </Reveal>
+      {children}
+    </div>
   );
 }

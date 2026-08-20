@@ -2,7 +2,12 @@
  * Contact page — the site's only form and its one true conversion surface: a
  * typography-led hero followed by a two-column "conversation" (the
  * demo-request form beside a "what happens next" + honest contact-channel
- * side panel), collapsing to a single stacked column under `lg`.
+ * side panel), collapsing to a single stacked column under `lg` — UNTIL a
+ * submission is confirmed, at which point `ContactForm` takes over the whole
+ * width with the site's own biggest brand moment (the same obsidian/lime
+ * "horizon" panel every page's closing CTA ends on) instead of leaving a
+ * small card in one grid cell beside empty space. See `ContactForm.tsx`'s
+ * header for that branch.
  *
  * A Server Component: content comes from the typed content pipeline
  * (`getContent("contact", locale)` — parity between locales is enforced by
@@ -89,11 +94,21 @@ export default async function Contact({ params }: { params: Promise<{ locale: st
 
       <ContactHero content={content.hero} />
 
+      {/* `ContactExpect` is passed as `children` rather than imported by
+          `ContactForm` directly: `ContactForm` is this page's one "use
+          client" leaf (see its own header), and a Client Component that
+          imports a Server Component into its own module bundles that
+          component's code to the client too — silently costing
+          `ContactExpect` the zero-client-bundle-weight guarantee ITS OWN
+          header documents. Passing it as a server-rendered `children` prop
+          keeps it a true Server Component; `ContactForm` only ever sees its
+          already-rendered output, and can still choose whether to render
+          that slot at all (it hides `children` entirely once a submission is
+          confirmed — see `ContactForm.tsx`'s header for why). */}
       <Section id="form" className="!pt-0">
-        <div className="grid items-start gap-8 lg:grid-cols-[1.6fr_1fr] lg:gap-12">
-          <ContactForm content={content.form} />
+        <ContactForm content={content.form}>
           <ContactExpect expect={content.expect} channels={content.channels} />
-        </div>
+        </ContactForm>
       </Section>
     </>
   );
